@@ -8,6 +8,9 @@ const char crlf = '\r\n';
 
 Map::Map(string fileName) {
     this->fileName = fileName;
+    this->objectList = new DynamicObjectList();
+    this->objectList->add_head(new Teleporter(1,2,3,4));
+    this->objectList->add_tail(new Teleporter(2,2,3,4));
     ifstream inputFile; /* Dichiarazione di tipo */
     inputFile.open(fileName);
     int column = 0;

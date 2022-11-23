@@ -4,7 +4,7 @@
 
 #include "Teleporter.hpp"
 
-Teleporter::Teleporter(int x, int y, int teleport_x, int teleport_y): Object(x,y, '@') {
+Teleporter::Teleporter(int x, int y, int teleport_x, int teleport_y): Object(x,y, '@', 'T') {
     this->teleport_x = teleport_x;
 }
 

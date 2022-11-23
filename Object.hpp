@@ -2,19 +2,21 @@
 // Created by matteo on 23/11/2022.
 //
 
-#ifndef SUPERALFABROS_OBJECT_H
-#define SUPERALFABROS_OBJECT_H
+#ifndef SUPERALFABROS_OBJECT_HPP
+#define SUPERALFABROS_OBJECT_HPP
 
 
 class Object {
-    protected:
+protected:
 
-    public:
-        int x;
-        int y;
-        char drawing;
-        Object(int x, int y, char drawing);
+public:
+    int x;
+    int y;
+    char drawing;
+    char objectType;
+    Object(int x, int y, char drawing, char objectType);
 };
 
+typedef Object* pObject;
 
-#endif //SUPERALFABROS_OBJECT_H
+#endif //SUPERALFABROS_OBJECT_HPP
