@@ -8,13 +8,14 @@
 #include <string>
 #include <fstream>
 #include <iostream>
-#include "Player.hpp"
-#include "Teleporter.hpp"
-#include "DynamicObjectList.hpp"
+#include "../Objects/Player.hpp"
+#include "../Objects/Teleporter.hpp"
+#include "../Objects/Spikes.hpp"
+#include "../Lists/DynamicObjectList.hpp"
 
 using namespace std;
 
-// create a class Map that will contain a map and all the objects inside
+// this class contains a map and all the objects inside
 class Map {
 protected:
     // name or path of the file that contains the instructions
@@ -22,13 +23,15 @@ protected:
     // array containing line by line what will be drawn
     string objectTable[30];
     // instance ot the dynamic object list containing various objects such as enemies, teleporters and so on
-    pDynamicObjectList objectList{};
+    pDynamicObjectList objectList;
     // pointer to the player instance
     pPlayer player;
     // last x position of the player to save the progress
-    int lastX;
+    int lastX{};
     // last y position of the player to save the progress
-    int lastY;
+    int lastY{};
+    // parse object from string stored into the map file
+    void objectParser(string line);
 public:
     // Constructor of the class: will set the player pointer, read the file and create the dynamic object list from
     // there, as well as spawning the Player

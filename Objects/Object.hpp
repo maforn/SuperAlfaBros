@@ -1,0 +1,26 @@
+//
+// Created by matteo on 23/11/2022.
+//
+
+#ifndef SUPERALFABROS_OBJECT_HPP
+#define SUPERALFABROS_OBJECT_HPP
+
+// the standard superclass for any object created in the map
+class Object {
+public:
+    // x coordinates
+    int x;
+    // y coordinates
+    int y;
+    // which char will be drawn on the screen
+    char drawing;
+    // which kind of subclass it is (stored as a char), for example T for teleporter
+    char objectType;
+    // Constructor of the class: will set all the variables as specified
+    Object(int x, int y, char drawing, char objectType);
+};
+
+// set a name for the pointer to the class Object
+typedef Object* pObject;
+
+#endif //SUPERALFABROS_OBJECT_HPP

@@ -5,8 +5,8 @@
 #ifndef SUPERALFABROS_DYNAMICLEVELLIST_HPP
 #define SUPERALFABROS_DYNAMICLEVELLIST_HPP
 
-#include "Map.hpp"
-#include "MapFiles.hpp"
+#include "../Map/Map.hpp"
+#include "../Map/MapFiles.hpp"
 #include <ctime>
 #include <cstdlib>
 
