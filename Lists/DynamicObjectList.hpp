@@ -5,7 +5,7 @@
 #ifndef SUPERALFABROS_DYNAMICOBJECTLIST_HPP
 #define SUPERALFABROS_DYNAMICOBJECTLIST_HPP
 
-#include "Object.hpp"
+#include "../Objects/Object.hpp"
 
 // create a class for the dynamic object list that will manage all the objects of a level
 class DynamicObjectList {
@@ -21,8 +21,8 @@ public:
     DynamicObjectList();
 
     // add elements to the list
-    void addTail(pObject pObj, char type);
-    void addHead(pObject pObj, char type);
+    void addTail(pObject pObj);
+    void addHead(pObject pObj);
 };
 
 // set a name for the pointer to the class DynamicObjectList

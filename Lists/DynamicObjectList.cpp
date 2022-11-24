@@ -7,7 +7,6 @@
 // the struct must contain a superclass object, type that will help get the subclass and the next and previous objects
 struct DynamicObjectList::listObject {
     Object *obj;
-    char type;
     listObject *next;
     listObject *prev;
 };
@@ -16,9 +15,8 @@ DynamicObjectList::DynamicObjectList() {
     this->objects = nullptr;
 }
 
-void DynamicObjectList::addTail(pObject pObj, char type) {
+void DynamicObjectList::addTail(pObject pObj) {
     listObjects tmp = new listObject;
-    tmp->type = type;
     tmp->next = nullptr;
     tmp->prev = nullptr;
     tmp->obj = pObj;
@@ -34,9 +32,8 @@ void DynamicObjectList::addTail(pObject pObj, char type) {
     }
 }
 
-void DynamicObjectList::addHead(pObject pObj, char type) {
+void DynamicObjectList::addHead(pObject pObj) {
     listObjects tmp = new listObject;
-    tmp->type = type;
     tmp->next = nullptr;
     tmp->prev = nullptr;
     tmp->obj = pObj;
