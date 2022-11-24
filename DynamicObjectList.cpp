@@ -4,26 +4,29 @@
 
 #include "DynamicObjectList.hpp"
 
+// the struct must contain a superclass object, type that will help get the subclass and the next and previous objects
 struct DynamicObjectList::listObject {
     Object *obj;
+    char type;
     listObject *next;
     listObject *prev;
 };
 
 DynamicObjectList::DynamicObjectList() {
-    this->objects = NULL;
+    this->objects = nullptr;
 }
 
-void DynamicObjectList::add_tail(pObject pObj) {
+void DynamicObjectList::addTail(pObject pObj, char type) {
     listObjects tmp = new listObject;
-    tmp->next = NULL;
-    tmp->prev = NULL;
+    tmp->type = type;
+    tmp->next = nullptr;
+    tmp->prev = nullptr;
     tmp->obj = pObj;
-    if (this->objects == NULL) {
+    if (this->objects == nullptr) {
         this->objects = tmp;
     } else {
         listObjects iter = this->objects;
-        while (iter->next != NULL) {
+        while (iter->next != nullptr) {
             iter = iter->next;
         }
         tmp->prev = iter;
@@ -31,12 +34,13 @@ void DynamicObjectList::add_tail(pObject pObj) {
     }
 }
 
-void DynamicObjectList::add_head(pObject pObj) {
+void DynamicObjectList::addHead(pObject pObj, char type) {
     listObjects tmp = new listObject;
-    tmp->next = NULL;
-    tmp->prev = NULL;
+    tmp->type = type;
+    tmp->next = nullptr;
+    tmp->prev = nullptr;
     tmp->obj = pObj;
-    if (this->objects == NULL) {
+    if (this->objects == nullptr) {
         this->objects = tmp;
     } else {
         tmp->next = this->objects;

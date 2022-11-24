@@ -15,5 +15,7 @@ public:
     void teleport_to(Object &obj);
 };
 
+// set a name for the pointer to the class Teleporter
+typedef Teleporter *pTeleporter;
 
 #endif //SUPERALFABROS_TELEPORTER_HPP

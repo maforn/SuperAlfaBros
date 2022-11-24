@@ -1,15 +1,15 @@
 //
 // Created by matteo on 23/11/2022.
 //
-#include "Map.hpp"
+#include "DynamicLevelList.hpp"
 
 
 int main () {
-    Map *m = new Map(R"(C:\Users\admin\Desktop\Uni\Programmazione\Progetto\SuperAlfaBros\map.map)");
-
-    for (int i = 0; i < 30; ++i) {
-        cout << m->objectTable[i] << endl;
-    }
+    // create a new player instance
+    pPlayer player = new Player();
+    string mapsFolder = "..\\maps\\";
+    // create the levels dynamic lists
+    pDynamicLevelList levels = new DynamicLevelList(player, mapsFolder);
 
     return 0;
 }
