@@ -6,6 +6,7 @@
 #define SUPERALFABROS_MAPFILES_HPP
 
 #include <string>
+#include <cstring>
 
 using namespace std;
 

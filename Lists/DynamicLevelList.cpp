@@ -50,8 +50,12 @@ void DynamicLevelList::addHead() {
     tmp->next = this->levels;
 }
 
-// set the current level to the next one in the list
-void DynamicLevelList::goNext() {
+// go to the next level (and if necessary create it)
+void DynamicLevelList::nextLevel() {
+    // add a new level if there is none
+    if (this->levels->next == nullptr) {
+        this->addTail();
+    }
     //save player coord
     this->levels->map->savePlayerCoord();
     // set the current level to the next level
@@ -60,8 +64,12 @@ void DynamicLevelList::goNext() {
     this->levels->map->spawnPlayer();
 }
 
-// set the current level to the previous one in the list
-void DynamicLevelList::goPrev() {
+// go to the previous level (and if necessary create it)
+void DynamicLevelList::prevLevel() {
+    // add a new level if there is none
+    if (this->levels->prev == nullptr) {
+        this->addHead();
+    }
     //save player coord
     this->levels->map->savePlayerCoord();
     // set the current level to the previous level
@@ -70,27 +78,11 @@ void DynamicLevelList::goPrev() {
     this->levels->map->spawnPlayer();
 }
 
-// go to the next level (and if necessary create it)
-void DynamicLevelList::nextLevel() {
-    if (this->levels->next == nullptr) {
-        this->addTail();
-    }
-    this->goNext();
-}
-
-// go to the previous level (and if necessary create it)
-void DynamicLevelList::prevLevel() {
-    if (this->levels->next == nullptr) {
-        this->addHead();
-    }
-    this->goPrev();
-}
-
 /*================== PUBLIC FUNCTIONS =========================*/
 
 // Constructor of the class: will set the pointer to the player so that the new maps will have enemies of proportional strength
 // will also initialize and create the first map and set it to the internal pointer;
-DynamicLevelList::DynamicLevelList(pPlayer player, const string& mapsFolder) {
+DynamicLevelList::DynamicLevelList(pPlayer player, const string &mapsFolder) {
     // create the dynamic list of the maps contained in the specified folder
     this->mapFiles = new MapFiles(mapsFolder);
     this->player = player;

@@ -30,10 +30,6 @@ private:
     void addTail();
     // add a new map to the head of the dynamic pointer list
     void addHead();
-    // set the current level to the next one in the list
-    void goNext();
-    // set the current level to the previous one in the list
-    void goPrev();
     // go to the next level (and if necessary create it)
     void nextLevel();
     // go to the previous level (and if necessary create it)
