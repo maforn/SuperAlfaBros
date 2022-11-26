@@ -5,7 +5,7 @@
 #include "Object.hpp"
 
 // Constructor of the class: will set all the variables as specified
-Object::Object(int x, int y, char drawing, char objectType) {
+Object::Object(int x, int y, std::wstring drawing, char objectType) {
     this->x = x;
     this->y = y;
     this->drawing = drawing;

@@ -32,6 +32,9 @@ public:
 
     // return a random map file path from the dynamic list created from the directory specified initially
     string randomMapFile ();
+
+    // Destructor of the class: delete free pointers
+    ~MapFiles();
 };
 
 // set a name for the pointer to the class MapFiles

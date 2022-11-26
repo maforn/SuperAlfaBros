@@ -18,7 +18,7 @@ public:
     Teleporter(int x, int y, int teleport_x, int teleport_y);
 
     // teleport an Object to the specified x and y
-    void teleport_to(pObject obj);
+    void teleportObject(pObject obj);
 };
 
 // set a name for the pointer to the class Teleporter

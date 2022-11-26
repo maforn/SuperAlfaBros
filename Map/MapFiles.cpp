@@ -82,3 +82,13 @@ string MapFiles::randomMapFile() {
     // return the file name as a string
     return iterator->fileName;
 }
+
+// Destructor of the class: delete all pointers
+MapFiles::~MapFiles() {
+    pMapFile tmp;
+    while (this->mapFileList != nullptr) {
+        tmp = this->mapFileList;
+        this->mapFileList = this->mapFileList->next;
+        delete tmp;
+    }
+}

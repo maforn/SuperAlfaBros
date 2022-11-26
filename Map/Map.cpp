@@ -4,10 +4,11 @@
 
 #include "Map.hpp"
 
+#include <codecvt>
 
 // Constructor of the class: will set the player pointer, read the file and create the dynamic object list from
 // there, as well as spawning the Player
-Map::Map(const string& fileName, pPlayer player) {
+Map::Map(const string &fileName, pPlayer player) {
     // store the filename
     this->fileName = fileName;
     // store the pointer to the player
@@ -16,17 +17,18 @@ Map::Map(const string& fileName, pPlayer player) {
     this->objectList = new DynamicObjectList();
 
     // declare and then use the inputFile to open the file whose name was provided
-    ifstream inputFile;
+    wifstream inputFile;
     inputFile.open(fileName);
     // check that the file can be opened
-    if(!inputFile.is_open()) {
+    if (!inputFile.is_open()) {
         perror("Error open");
         exit(EXIT_FAILURE);
     }
 
     // all the lines starting with a letter will contain the information about where the player should spawn or about
     // which object the map contains, as well as their coordinates and characteristic stored as type,x,y,...
-    string line;
+    wstring line;
+    inputFile.imbue(locale(locale(), new codecvt_utf8<wchar_t>));
     getline(inputFile, line);
     while (line[0] >= 'A' && line[0] <= 'Z') {
         // parse the object encoded into the file
@@ -38,7 +40,7 @@ Map::Map(const string& fileName, pPlayer player) {
     this->objectTable[0] = line;
     // read the remaining file line by line and store the graphic contained
     int column = 1;
-    while(getline(inputFile, this->objectTable[column])) {
+    while (getline(inputFile, this->objectTable[column])) {
         column++;
     }
     // close the inputFile
@@ -60,20 +62,20 @@ void Map::savePlayerCoord() {
 }
 
 // parse object from string stored into the map file
-void Map::objectParser(string line) {
+void Map::objectParser(wstring line) {
     // DEBUG
-    cout << line << endl;
+    wcout << line << endl;
     // get the first char of the string structured as type,x,y,...
     switch (line[0]) {
         case 'P': // case Player
             // remove the first two useless chars
             line.erase(0, 2); // remove the first two useless chars ("P,")
             // set lastX to the first number before ','
-            this->lastX  = stoi(line.substr(0, line.find(',')));
+            this->lastX = stoi(line.substr(0, line.find(',')));
             // remove the x,
             line.erase(0, line.find(',') + 1);
             // set lastY to the remaining number
-            this->lastY  = stoi(line);
+            this->lastY = stoi(line);
             break;
 
         case 'T': // case Teleporter
@@ -98,7 +100,7 @@ void Map::objectParser(string line) {
             toY = stoi(line.substr(0, line.find(',')));
 
             // add to the dynamic object list the new object as an object of type Teleporter
-            this->objectList->addTail(new Teleporter(x, y,toX, toY));
+            this->objectList->addTail(new Teleporter(x, y, toX, toY));
             break;
 
         case 'S': // stands for spikes
@@ -117,6 +119,53 @@ void Map::objectParser(string line) {
             break;
 
         default: // none of the previous cases were matched
-            cout << "Invalid encoding: " << line << endl;
+            wcout << "Invalid encoding: " << line << endl;
+    }
+}
+
+// draw the skeleton of the map that was read from the file
+void Map::drawBaseMap(WINDOW *win) {
+    for (int i = 0; i < OBJECT_TABLE_LENGTH; ++i) {
+        waddwstr(win, objectTable[i].c_str());
+    }
+}
+
+// draw the objects contained in the object list
+void Map::drawObjects(WINDOW *win) {
+    this->objectList->drawAllObjects(win);
+}
+
+// Destructor of the class: delete all pointers
+Map::~Map() {
+    delete this->objectList;
+}
+
+char Map::detectCollision(int x, int y, pObject &pObj) {
+    if (objectTable[y][x] != L' ') {
+        return 'W';
+    }
+    return objectList->getObjectInPos(x, y, pObj);
+}
+
+
+// move player to x y checking collisions
+void Map::movePlayer(int x, int y) {
+    pObject pObj = nullptr;
+    switch (this->detectCollision(x, y, pObj)) {
+        case 'w': // it's a wall, so we do nothing
+            break;
+        case 'S':
+            // it's a spike, we do nothing but receive damage:
+            this->player->damagePlayer(((pSpikes)pObj)->damage);
+            break;
+        case 'T':
+            // it's a teleporter, se we teleport to destination:
+            ((pTeleporter)pObj)->teleportObject(this->player);
+            break;
+        case ' ':
+            // blank space: we can move there
+            this->player->x = x;
+            this->player->y = y;
+            break;
     }
 }

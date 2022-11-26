@@ -5,6 +5,8 @@
 #ifndef SUPERALFABROS_OBJECT_HPP
 #define SUPERALFABROS_OBJECT_HPP
 
+#include <string>
+
 // the standard superclass for any object created in the map
 class Object {
 public:
@@ -13,11 +15,11 @@ public:
     // y coordinates
     int y;
     // which char will be drawn on the screen
-    char drawing;
+    std::wstring drawing;
     // which kind of subclass it is (stored as a char), for example T for teleporter
     char objectType;
     // Constructor of the class: will set all the variables as specified
-    Object(int x, int y, char drawing, char objectType);
+    Object(int x, int y, std::wstring drawing, char objectType);
 };
 
 // set a name for the pointer to the class Object

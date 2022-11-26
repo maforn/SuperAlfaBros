@@ -6,6 +6,7 @@
 #define SUPERALFABROS_DYNAMICOBJECTLIST_HPP
 
 #include "../Objects/Object.hpp"
+#include <ncurses.h>
 
 // create a class for the dynamic object list that will manage all the objects of a level
 class DynamicObjectList {
@@ -20,9 +21,21 @@ public:
     // Constructor of the class: does actually nothing
     DynamicObjectList();
 
-    // add elements to the list
+    // draw all the objects
+    void drawAllObjects(WINDOW *win);
+
+    // add an element to the list
     void addTail(pObject pObj);
     void addHead(pObject pObj);
+
+    // remove an element from the list
+    void removeElement(pObject obj);
+
+    // if exists, get the object in x, y and return the type while setting the pointer
+    char getObjectInPos(int x, int y, pObject &pObj);
+
+    // Destructor of the class: delete free pointers
+    ~DynamicObjectList();
 };
 
 // set a name for the pointer to the class DynamicObjectList
