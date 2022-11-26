@@ -45,6 +45,9 @@ public:
     pMap nextMap();
     // moves to the previous map and returns the pointer
     pMap prevMap();
+
+    // Destructor of the class: delete free pointers
+    ~DynamicLevelList();
 };
 
 // set a name for the pointer to the class DynamicLevelList

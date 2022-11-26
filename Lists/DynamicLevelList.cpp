@@ -105,3 +105,14 @@ pMap DynamicLevelList::prevMap() {
     this->prevLevel();
     return this->levels->map;
 }
+
+// Destructor of the class: delete free pointers
+DynamicLevelList::~DynamicLevelList() {
+    delete mapFiles;
+    levelList tmp;
+    while (this->levels != nullptr) {
+        tmp = this->levels;
+        this->levels = this->levels->next;
+        delete tmp;
+    }
+}

@@ -6,6 +6,7 @@
 #define SUPERALFABROS_PLAYER_HPP
 
 #include "Object.hpp"
+#include <ncurses.h>
 
 // subclass of the superclass Object, will inherit all the characteristic of Object. Implements the player
 class Player: public Object {
@@ -20,6 +21,10 @@ public:
 
     // calculate damage scaled on the level TODO: use a decent equation
     int calculateDamage ();
+    // draw the player on a screen
+    void drawPlayer(WINDOW *win);
+    // damage the player of a certain amount
+    void damagePlayer(int dmg);
 };
 
 // set a name for the pointer to the class Player

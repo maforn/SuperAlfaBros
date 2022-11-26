@@ -10,10 +10,12 @@
 // subclass of the superclass Object, will inherit all the characteristic of Object. Implements a trap like spikes
 class Spikes: public Object{
 protected:
-    int damage;
 public:
     // Constructor of the class: will set the new vars and use the constructor of the superclass
     Spikes(int x, int y, int damage);
+
+    // the damage that this will deal
+    int damage;
 };
 
 // set a name for the pointer to the class Spikes
