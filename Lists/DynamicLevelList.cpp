@@ -52,12 +52,12 @@ void DynamicLevelList::addHead() {
 
 // go to the next level (and if necessary create it)
 void DynamicLevelList::nextLevel() {
+    //save player coord
+    this->levels->map->savePlayerCoord();
     // add a new level if there is none
     if (this->levels->next == nullptr) {
         this->addTail();
     }
-    //save player coord
-    this->levels->map->savePlayerCoord();
     // set the current level to the next level
     this->levels = this->levels->next;
     // set player coord
@@ -66,12 +66,12 @@ void DynamicLevelList::nextLevel() {
 
 // go to the previous level (and if necessary create it)
 void DynamicLevelList::prevLevel() {
+    //save player coord
+    this->levels->map->savePlayerCoord();
     // add a new level if there is none
     if (this->levels->prev == nullptr) {
         this->addHead();
     }
-    //save player coord
-    this->levels->map->savePlayerCoord();
     // set the current level to the previous level
     this->levels = this->levels->prev;
     // set player coord
@@ -94,18 +94,6 @@ pMap DynamicLevelList::currentMap() {
     return this->levels->map;
 }
 
-// moves to the next map and returns the pointer
-pMap DynamicLevelList::nextMap() {
-    this->nextLevel();
-    return this->levels->map;
-}
-
-// moves to the previous map and returns the pointer
-pMap DynamicLevelList::prevMap() {
-    this->prevLevel();
-    return this->levels->map;
-}
-
 // Destructor of the class: delete free pointers
 DynamicLevelList::~DynamicLevelList() {
     delete mapFiles;
@@ -114,5 +102,45 @@ DynamicLevelList::~DynamicLevelList() {
         tmp = this->levels;
         this->levels = this->levels->next;
         delete tmp;
+    }
+}
+
+// move player to x y checking collisions
+void DynamicLevelList::movePlayer(int x, int y) {
+    // helper pointer used to access the other object that is colliding
+    pObject pObj = nullptr;
+    // switch decision based on what it is colliding with
+    switch (this->currentMap()->detectCollision(x, y, pObj)) {
+        case 'W': // it's a wall, so we do nothing
+            break;
+        case 'E':
+            // it's an exit or an entrance, so we will move to the next map
+            if (x == 0) {
+                this->prevLevel();
+            } else {
+                this->nextLevel();
+            }
+            break;
+        case 'S':
+            // it's a spike, we do nothing but receive damage:
+            this->player->receiveDamage(((pSpikes)pObj)->damage);
+            break;
+        case 'B':
+            // it's a bomb: it explodes (so we remove it) and we receive damage:
+            this->player->receiveDamage(((pBomb)pObj)->damage);
+            this->currentMap()->removeObject(pObj);
+            // move the player to the position after the explosion
+            this->player->x = x;
+            this->player->y = y;
+            break;
+        case 'T':
+            // it's a teleporter, se we teleport to destination:
+            ((pTeleporter)pObj)->teleportObject(this->player);
+            break;
+        case ' ':
+            // blank space: we can move there
+            this->player->x = x;
+            this->player->y = y;
+            break;
     }
 }

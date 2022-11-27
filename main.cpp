@@ -10,7 +10,9 @@ int main() {
     // create the levels dynamic lists
     pDynamicLevelList levels = new DynamicLevelList(player, mapsFolder);
 
+    // initiate screen with ncurses
     initscr();
+    // set locale so that special chars will be recognized
     setlocale(LC_ALL, "");
     // parameters for window
     int height, width, start_y, start_x;
@@ -23,34 +25,43 @@ int main() {
     WINDOW *win = newwin(height, width, start_y, start_x);
     refresh();
 
-    curs_set(0); // HIDE CURSOR
+    // hide the blinking cursor
+    curs_set(0);
 
+    // clear the window
     wclear(win);
+    // draw the base map, then all the objects and then the player
     levels->currentMap()->drawBaseMap(win);
     levels->currentMap()->drawObjects(win);
     player->drawPlayer(win);
+    // refresh the window with the new data drawn
     wrefresh(win);
+
+    // detect player moves
     int choice;
     do {
+        // get choice from keyboard
         choice = wgetch(win);
         switch (choice) {
-            case 'w':
-                levels->currentMap()->movePlayer(player->x, player->y - 1);
+            case 'w': // move player forward
+                levels->movePlayer(player->x, player->y - 1);
                 break;
-            case 's':
-                levels->currentMap()->movePlayer(player->x, player->y + 1);
+            case 's': // move player backward
+                levels->movePlayer(player->x, player->y + 1);
                 break;
-            case 'a':
-                levels->currentMap()->movePlayer(player->x - 1, player->y);
+            case 'a': // move player leftward
+                levels->movePlayer(player->x - 1, player->y);
                 break;
-            case 'd':
-                levels->currentMap()->movePlayer(player->x + 1, player->y);
+            case 'd': // move player rightward
+                levels->movePlayer(player->x + 1, player->y);
                 break;
         }
+        // clear the windows and draw everything again
         wclear(win);
         levels->currentMap()->drawBaseMap(win);
         levels->currentMap()->drawObjects(win);
         player->drawPlayer(win);
+        // refresh the window
         wrefresh(win);
     } while (choice != KEY_EXIT);
     getch();

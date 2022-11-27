@@ -118,6 +118,21 @@ void Map::objectParser(wstring line) {
 
             break;
 
+        case 'B': // stands for bomb
+            // remove the first two useless chars
+            line.erase(0, 2); // remove the first two useless chars ("B,")
+
+            // set x to the first number before ','
+            x = stoi(line.substr(0, line.find(',')));
+            // remove the x,
+            line.erase(0, line.find(',') + 1);
+            // set y to the remaining number
+            y = stoi(line.substr(0, line.find(',')));
+
+            this->objectList->addTail(new Bomb(x, y, this->player->calculateDamage() * 2));
+
+            break;
+
         default: // none of the previous cases were matched
             wcout << "Invalid encoding: " << line << endl;
     }
@@ -140,32 +155,21 @@ Map::~Map() {
     delete this->objectList;
 }
 
+// detect a collision with the wall or with an object, return the type as a char
+// and pass the pointer back if the object exists
 char Map::detectCollision(int x, int y, pObject &pObj) {
-    if (objectTable[y][x] != L' ') {
+    // first check that it is an exit or entrance
+    if (objectTable[y][x] == L'░') {
+        return 'E';
+    } // then check that it is not colliding with a map "brick"
+    else if (objectTable[y][x] != L' ') {
         return 'W';
     }
+    // then check that is not colliding with an object
     return objectList->getObjectInPos(x, y, pObj);
 }
 
-
-// move player to x y checking collisions
-void Map::movePlayer(int x, int y) {
-    pObject pObj = nullptr;
-    switch (this->detectCollision(x, y, pObj)) {
-        case 'w': // it's a wall, so we do nothing
-            break;
-        case 'S':
-            // it's a spike, we do nothing but receive damage:
-            this->player->damagePlayer(((pSpikes)pObj)->damage);
-            break;
-        case 'T':
-            // it's a teleporter, se we teleport to destination:
-            ((pTeleporter)pObj)->teleportObject(this->player);
-            break;
-        case ' ':
-            // blank space: we can move there
-            this->player->x = x;
-            this->player->y = y;
-            break;
-    }
+// remove and object from the objectList
+void Map::removeObject(pObject pObj) {
+    this->objectList->removeElement(pObj);
 }

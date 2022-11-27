@@ -17,12 +17,11 @@ int Player::calculateDamage() {
 
 // draw the player on a screen
 void Player::drawPlayer(WINDOW *win) {
-    printf("%d - %d\n", this->y, this->x);
     mvwaddwstr(win, this->y, this->x, this->drawing.c_str());
 }
 
 // damage the player of a certain amount
-void Player::damagePlayer(int dmg) {
+void Player::receiveDamage(int dmg) {
     this->life -= dmg;
     if (this->life <= 0) {
         //TODO: GAMEOVER
