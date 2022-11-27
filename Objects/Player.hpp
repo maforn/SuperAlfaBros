@@ -23,8 +23,8 @@ public:
     int calculateDamage ();
     // draw the player on a screen
     void drawPlayer(WINDOW *win);
-    // damage the player of a certain amount
-    void damagePlayer(int dmg);
+    // the player receives a certain amount of damage
+    void receiveDamage(int dmg);
 };
 
 // set a name for the pointer to the class Player

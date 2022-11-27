@@ -50,7 +50,7 @@ void DynamicObjectList::drawAllObjects(WINDOW *win) {
     }
 }
 
-// Precondition: not called on an empty array
+// Precondition: not called on an empty list
 void DynamicObjectList::removeElement(pObject obj) {
     listObjects iterator = this->objects;
     if (obj == iterator->obj) {
@@ -63,7 +63,7 @@ void DynamicObjectList::removeElement(pObject obj) {
             prev = iterator;
             iterator = iterator->next;
         }
-        prev = iterator->next;
+        prev->next = iterator->next;
         delete iterator;
     }
 
@@ -79,14 +79,18 @@ DynamicObjectList::~DynamicObjectList() {
     }
 }
 
+// if it exists, get the object in x, y and return the type while setting the pointer to the object
 char DynamicObjectList::getObjectInPos(int x, int y, pObject &pObj) {
     listObjects iterator = this->objects;
+    // iterate the object list
     while (iterator != nullptr) {
+        // if an object is found return the objectType and set the pointer to the object
         if (iterator->obj->y == y && iterator->obj->x == x) {
             pObj = iterator->obj;
             return iterator->obj->objectType;
         }
         iterator = iterator->next;
     }
+    // if no collision was found the player can move there
     return ' ';
 }

@@ -116,3 +116,43 @@ DynamicLevelList::~DynamicLevelList() {
         delete tmp;
     }
 }
+
+// move player to x y checking collisions
+void DynamicLevelList::movePlayer(int x, int y) {
+    // helper pointer used to access the other object that is colliding
+    pObject pObj = nullptr;
+    // switch decision based on what it is colliding with
+    switch (this->currentMap()->detectCollision(x, y, pObj)) {
+        case 'W': // it's a wall, so we do nothing
+            break;
+        case 'E':
+            // it's an exit or an entrance, so we will move to the next map
+            if (x == 0) {
+                this->prevLevel();
+            } else {
+                this->nextLevel();
+            }
+            break;
+        case 'S':
+            // it's a spike, we do nothing but receive damage:
+            this->player->receiveDamage(((pSpikes)pObj)->damage);
+            break;
+        case 'B':
+            // it's a bomb: it explodes (so we remove it) and we receive damage:
+            this->player->receiveDamage(((pBomb)pObj)->damage);
+            this->currentMap()->removeObject(pObj);
+            // move the player
+            this->player->x = x;
+            this->player->y = y;
+            break;
+        case 'T':
+            // it's a teleporter, se we teleport to destination:
+            ((pTeleporter)pObj)->teleportObject(this->player);
+            break;
+        case ' ':
+            // blank space: we can move there
+            this->player->x = x;
+            this->player->y = y;
+            break;
+    }
+}

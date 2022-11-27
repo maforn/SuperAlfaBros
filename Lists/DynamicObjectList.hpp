@@ -31,7 +31,7 @@ public:
     // remove an element from the list
     void removeElement(pObject obj);
 
-    // if exists, get the object in x, y and return the type while setting the pointer
+    // if it exists, get the object in x, y and return the type while setting the pointer
     char getObjectInPos(int x, int y, pObject &pObj);
 
     // Destructor of the class: delete free pointers

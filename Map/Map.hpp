@@ -9,8 +9,7 @@
 #include <fstream>
 #include <iostream>
 #include "../Objects/Player.hpp"
-#include "../Objects/Teleporter.hpp"
-#include "../Objects/Spikes.hpp"
+#include "../Objects/AllObjects.hpp"
 #include "../Lists/DynamicObjectList.hpp"
 
 using namespace std;
@@ -49,8 +48,8 @@ public:
     void savePlayerCoord();
     // detect player collision with objects
     char detectCollision(int x, int y, pObject &pObj);
-    // move player to x y checking collisions
-    void movePlayer(int x, int y);
+    // remove and object from the objectList
+    void removeObject(pObject pObj);
 
     // Destructor of the class: delete free pointers
     ~Map();

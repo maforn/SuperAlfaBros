@@ -46,6 +46,9 @@ public:
     // moves to the previous map and returns the pointer
     pMap prevMap();
 
+    // move player to x y checking collisions
+    void movePlayer(int x, int y);
+
     // Destructor of the class: delete free pointers
     ~DynamicLevelList();
 };
