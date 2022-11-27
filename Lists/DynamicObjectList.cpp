@@ -10,10 +10,12 @@ struct DynamicObjectList::listObject {
     listObject *next;
 };
 
+// initiate the pointer to null
 DynamicObjectList::DynamicObjectList() {
     this->objects = nullptr;
 }
 
+// add element to the tail of the list
 void DynamicObjectList::addTail(pObject pObj) {
     listObjects tmp = new listObject;
     tmp->next = nullptr;
@@ -29,6 +31,7 @@ void DynamicObjectList::addTail(pObject pObj) {
     }
 }
 
+// add element to the head of the list
 void DynamicObjectList::addHead(pObject pObj) {
     listObjects tmp = new listObject;
     tmp->next = nullptr;
@@ -43,20 +46,25 @@ void DynamicObjectList::addHead(pObject pObj) {
 
 // draw all the objects
 void DynamicObjectList::drawAllObjects(WINDOW *win) {
+    // iterate all object
     listObjects iterator = this->objects;
     while (iterator != nullptr) {
+        // draw them at the specified x, y
         mvwaddwstr(win, iterator->obj->y, iterator->obj->x, iterator->obj->drawing.c_str());
         iterator = iterator->next;
     }
 }
 
 // Precondition: not called on an empty list
+// remove an element from the list
 void DynamicObjectList::removeElement(pObject obj) {
     listObjects iterator = this->objects;
+    // if it's the first object just remove it
     if (obj == iterator->obj) {
         this->objects = iterator->next;
         delete iterator;
     } else {
+        // iterate until the right object is found
         listObjects prev = iterator;
         iterator = iterator->next;
         while (iterator->obj != obj) {

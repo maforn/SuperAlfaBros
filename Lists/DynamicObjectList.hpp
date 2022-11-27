@@ -18,7 +18,7 @@ private:
     // create a pointer to the list of objects
     listObjects objects;
 public:
-    // Constructor of the class: does actually nothing
+    // Constructor of the class: set object to null
     DynamicObjectList();
 
     // draw all the objects

@@ -17,7 +17,6 @@ int Player::calculateDamage() {
 
 // draw the player on a screen
 void Player::drawPlayer(WINDOW *win) {
-    printf("%d - %d\n", this->y, this->x);
     mvwaddwstr(win, this->y, this->x, this->drawing.c_str());
 }
 

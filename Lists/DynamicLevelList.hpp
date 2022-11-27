@@ -41,10 +41,6 @@ public:
 
     // returns the pointer of the current map
     pMap currentMap();
-    // moves to the next map and returns the pointer
-    pMap nextMap();
-    // moves to the previous map and returns the pointer
-    pMap prevMap();
 
     // move player to x y checking collisions
     void movePlayer(int x, int y);

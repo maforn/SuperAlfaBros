@@ -52,12 +52,12 @@ void DynamicLevelList::addHead() {
 
 // go to the next level (and if necessary create it)
 void DynamicLevelList::nextLevel() {
+    //save player coord
+    this->levels->map->savePlayerCoord();
     // add a new level if there is none
     if (this->levels->next == nullptr) {
         this->addTail();
     }
-    //save player coord
-    this->levels->map->savePlayerCoord();
     // set the current level to the next level
     this->levels = this->levels->next;
     // set player coord
@@ -66,12 +66,12 @@ void DynamicLevelList::nextLevel() {
 
 // go to the previous level (and if necessary create it)
 void DynamicLevelList::prevLevel() {
+    //save player coord
+    this->levels->map->savePlayerCoord();
     // add a new level if there is none
     if (this->levels->prev == nullptr) {
         this->addHead();
     }
-    //save player coord
-    this->levels->map->savePlayerCoord();
     // set the current level to the previous level
     this->levels = this->levels->prev;
     // set player coord
@@ -91,18 +91,6 @@ DynamicLevelList::DynamicLevelList(pPlayer player, const string &mapsFolder) {
 
 // returns the pointer of the current map
 pMap DynamicLevelList::currentMap() {
-    return this->levels->map;
-}
-
-// moves to the next map and returns the pointer
-pMap DynamicLevelList::nextMap() {
-    this->nextLevel();
-    return this->levels->map;
-}
-
-// moves to the previous map and returns the pointer
-pMap DynamicLevelList::prevMap() {
-    this->prevLevel();
     return this->levels->map;
 }
 
@@ -141,7 +129,7 @@ void DynamicLevelList::movePlayer(int x, int y) {
             // it's a bomb: it explodes (so we remove it) and we receive damage:
             this->player->receiveDamage(((pBomb)pObj)->damage);
             this->currentMap()->removeObject(pObj);
-            // move the player
+            // move the player to the position after the explosion
             this->player->x = x;
             this->player->y = y;
             break;
