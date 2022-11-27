@@ -173,3 +173,10 @@ char Map::detectCollision(int x, int y, pObject &pObj) {
 void Map::removeObject(pObject pObj) {
     this->objectList->removeElement(pObj);
 }
+
+// set the map as the first one: remove the left exit
+void Map::setFirstMap() {
+    for (int i = 1; i < OBJECT_TABLE_LENGTH - 1; ++i) {
+        this->objectTable[i][0] = L'║';
+    }
+}
