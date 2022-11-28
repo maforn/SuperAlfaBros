@@ -23,7 +23,8 @@ void Player::drawPlayer(WINDOW *win) {
 // damage the player of a certain amount
 void Player::receiveDamage(int dmg) {
     this->life -= dmg;
-    if (this->life <= 0) {
-        //TODO: GAMEOVER
-    }
+}
+
+int Player::getLife() {
+    return this->life;
 }

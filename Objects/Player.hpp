@@ -25,6 +25,8 @@ public:
     void drawPlayer(WINDOW *win);
     // the player receives a certain amount of damage
     void receiveDamage(int dmg);
+    // get the player life
+    int getLife();
 };
 
 // set a name for the pointer to the class Player
