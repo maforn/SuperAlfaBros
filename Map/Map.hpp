@@ -38,6 +38,8 @@ public:
     // there, as well as spawning the Player
     Map(const string& fileName, pPlayer player);
 
+    // set the map as the first one: remove the left exit
+    void setFirstMap();
     // draw the skeleton of the map that was read from the file
     void drawBaseMap(WINDOW *win);
     // draw the objects contained in the object list

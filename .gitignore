@@ -33,4 +33,5 @@
 
 # IDEs
 cmake-build-debug
+CMakeCache.txt
 .idea

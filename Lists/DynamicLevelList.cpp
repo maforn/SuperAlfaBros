@@ -69,9 +69,9 @@ void DynamicLevelList::prevLevel() {
     //save player coord
     this->levels->map->savePlayerCoord();
     // add a new level if there is none
-    if (this->levels->prev == nullptr) {
+    /*if (this->levels->prev == nullptr) { // AS OF LAST UPDATE CAN ONLY CREATE WITH NEXT, KEEPING IN CASE I CHANGE IDEA
         this->addHead();
-    }
+    }*/
     // set the current level to the previous level
     this->levels = this->levels->prev;
     // set player coord
@@ -87,6 +87,7 @@ DynamicLevelList::DynamicLevelList(pPlayer player, const string &mapsFolder) {
     this->mapFiles = new MapFiles(mapsFolder);
     this->player = player;
     initialize(this->levels);
+    this->levels->map->setFirstMap();
 }
 
 // returns the pointer of the current map
@@ -110,7 +111,7 @@ void DynamicLevelList::movePlayer(int x, int y) {
     // helper pointer used to access the other object that is colliding
     pObject pObj = nullptr;
     // switch decision based on what it is colliding with
-    switch (this->currentMap()->detectCollision(x, y, pObj)) {
+    switch (this->levels->map->detectCollision(x, y, pObj)) {
         case 'W': // it's a wall, so we do nothing
             break;
         case 'E':
@@ -128,7 +129,7 @@ void DynamicLevelList::movePlayer(int x, int y) {
         case 'B':
             // it's a bomb: it explodes (so we remove it) and we receive damage:
             this->player->receiveDamage(((pBomb)pObj)->damage);
-            this->currentMap()->removeObject(pObj);
+            this->levels->map->removeObject(pObj);
             // move the player to the position after the explosion
             this->player->x = x;
             this->player->y = y;
