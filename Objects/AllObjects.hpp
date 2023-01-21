@@ -8,5 +8,6 @@
 #include "../Objects/Teleporter.hpp"
 #include "../Objects/Spikes.hpp"
 #include "../Objects/Bomb.hpp"
+#include "../Objects/Patrol.hpp"
 
 #endif //SUPERALFABROS_ALLOBJECTS_H

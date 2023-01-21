@@ -5,6 +5,7 @@
 #include "Map.hpp"
 
 #include <codecvt>
+#include <thread>
 
 // Constructor of the class: will set the player pointer, read the file and create the dynamic object list from
 // there, as well as spawning the Player
@@ -24,7 +25,6 @@ Map::Map(const string &fileName, pPlayer player) {
         perror("Error open");
         exit(EXIT_FAILURE);
     }
-
     // all the lines starting with a letter will contain the information about where the player should spawn or about
     // which object the map contains, as well as their coordinates and characteristic stored as type,x,y,...
     wstring line;
@@ -133,6 +133,34 @@ void Map::objectParser(wstring line) {
 
             break;
 
+        case 'R': // case Patrol
+            // remove the first two useless chars
+            line.erase(0, 2); // remove the first two useless chars ("R,")
+            // create params that will be passed to the patrol constructor
+            int x1, y1, x2, y2;
+
+            // set x to the first number before ','
+            x1 = stoi(line.substr(0, line.find(',')));
+            // remove the x,
+            line.erase(0, line.find(',') + 1);
+            // set y to the new first number before ','
+            y1 = stoi(line.substr(0, line.find(',')));
+            // remove the y,
+            line.erase(0, line.find(',') + 1);
+            // set toX to the new first number before ','
+            x2 = stoi(line.substr(0, line.find(',')));
+            // remove the toX,
+            line.erase(0, line.find(',') + 1);
+            // set toY to the remaining number
+            y2 = stoi(line.substr(0, line.find(',')));
+
+            // add to the dynamic object list the new object as an object of type Patrol
+            Patrol* patrol = new Patrol(x1, y1, x1, y1, x2, y2);
+
+
+            this->objectList->addTail(patrol);
+
+            break;
         default: // none of the previous cases were matched
             wcout << "Invalid encoding: " << line << endl;
     }
