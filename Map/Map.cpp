@@ -161,8 +161,10 @@ void Map::objectParser(wstring line) {
             this->objectList->addTail(patrol);
 
             break;
-        default: // none of the previous cases were matched
+        /*
+         default: // none of the previous cases were matched
             wcout << "Invalid encoding: " << line << endl;
+            */
     }
 }
 
@@ -207,4 +209,8 @@ void Map::setFirstMap() {
     for (int i = 1; i < OBJECT_TABLE_LENGTH - 1; ++i) {
         this->objectTable[i][0] = L'║';
     }
+}
+
+void Map::moveObjects(WINDOW *win) {
+    this->objectList->moveObjects(win);
 }

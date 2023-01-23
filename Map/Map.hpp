@@ -55,6 +55,8 @@ public:
 
     // Destructor of the class: delete free pointers
     ~Map();
+
+    void moveObjects(WINDOW *win);
 };
 
 // set a name for the pointer to the class Map

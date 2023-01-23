@@ -17,8 +17,7 @@ protected:
 public:
     Patrol(int x, int y, int x1, int y1, int x2, int y2);
     void drawPatrol(WINDOW *win);
-    void movePatrol();
-    void movePatrolThread();
+    virtual void move(WINDOW *win);
 };
 
 

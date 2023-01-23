@@ -34,6 +34,9 @@ public:
     // if it exists, get the object in x, y and return the type while setting the pointer
     char getObjectInPos(int x, int y, pObject &pObj);
 
+    // move all the objects
+    void moveObjects(WINDOW *win);
+
     // Destructor of the class: delete free pointers
     ~DynamicObjectList();
 };

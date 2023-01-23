@@ -16,11 +16,14 @@ void Patrol::drawPatrol(WINDOW *win) {
     mvwaddwstr(win, this->y, this->x, this->drawing.c_str());
 }
 
-void Patrol::movePatrol() {
+
+ void Patrol::move(WINDOW *win) {
+     mvwaddwstr(win, this->y, this->x , L" ");
     if ((this->x == this->x1 && this->y == this->y1) || (this->x == this->x2 && this->y == this->y2) ){
         // cambia direzione
         this->direction = !this->direction;
-    } else if (this->direction){
+    }
+    if (this->direction){
         // vai verso x1,y1
         if (this->x < this->x1){
             this->x++;
@@ -43,11 +46,8 @@ void Patrol::movePatrol() {
             this->y--;
         }
     }
+    this->drawPatrol(win);
+
 }
 
-void Patrol::movePatrolThread() {
-    while (true){
-        this->movePatrol();
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    }
-}
+

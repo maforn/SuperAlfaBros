@@ -11,3 +11,7 @@ Object::Object(int x, int y, std::wstring drawing, char objectType) {
     this->drawing = drawing;
     this->objectType = objectType;
 }
+
+void Object::move(WINDOW *win) {
+    // do nothing
+}

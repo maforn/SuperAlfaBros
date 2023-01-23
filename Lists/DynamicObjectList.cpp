@@ -10,13 +10,17 @@ struct DynamicObjectList::listObject {
     listObject *next;
 };
 
+void moveAllObjects();
+
+void moveObjects();
+
 // initiate the pointer to null
 DynamicObjectList::DynamicObjectList() {
     this->objects = nullptr;
 }
 
 // add element to the tail of the list
-void DynamicObjectList::addTail(pObject pObj) {
+void DynamicObjectList:: addTail(pObject pObj) {
     listObjects tmp = new listObject;
     tmp->next = nullptr;
     tmp->obj = pObj;
@@ -101,4 +105,12 @@ char DynamicObjectList::getObjectInPos(int x, int y, pObject &pObj) {
     }
     // if no collision was found the player can move there
     return ' ';
+}
+
+void DynamicObjectList::moveObjects(WINDOW *win) {
+    listObjects iterator = this->objects;
+    while (iterator != nullptr) {
+        iterator->obj->move(win);
+        iterator = iterator->next;
+    }
 }

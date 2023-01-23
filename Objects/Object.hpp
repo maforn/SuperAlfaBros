@@ -6,6 +6,7 @@
 #define SUPERALFABROS_OBJECT_HPP
 
 #include <string>
+#include <ncurses.h>
 
 // the standard superclass for any object created in the map
 class Object {
@@ -20,6 +21,8 @@ public:
     char objectType;
     // Constructor of the class: will set all the variables as specified
     Object(int x, int y, std::wstring drawing, char objectType);
+
+    virtual void move(WINDOW *win);
 };
 
 // set a name for the pointer to the class Object
