@@ -8,7 +8,6 @@
 
 #include "Object.hpp"
 #include <ncurses.h>
-#include <thread>
 
 class Patrol: public Object  {
 protected:
