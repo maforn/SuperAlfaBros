@@ -132,13 +132,9 @@ int main() {
             if (levels->currentMap()!=lastMap) // if map changes
             {
                 // clear the window and draw Map and Objects
-                isRunning = false;
-                th.join();
                 wclear(win);
                 levels->currentMap()->drawBaseMap(win);
                 levels->currentMap()->drawObjects(win);
-                isRunning = true;
-                thread th(work, win, levels);
             }
             mvwaddwstr(win, lasty, lastx, L" "); // clear previous coordinate where player was
             player->drawPlayer(win);
