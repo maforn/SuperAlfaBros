@@ -5,7 +5,7 @@
 #ifndef SUPERALFABROS_SHIELD_HPP
 #define SUPERALFABROS_SHIELD_HPP
 
-#include "Object.hpp"
+#include "../Object.hpp"
 #include "Weapon.hpp"
 #include <ncurses.h>
 

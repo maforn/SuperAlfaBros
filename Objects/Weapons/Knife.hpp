@@ -5,7 +5,7 @@
 #ifndef SUPERALFABROS_KNIFE_HPP
 #define SUPERALFABROS_KNIFE_HPP
 
-#include "AllObjects.hpp"
+#include "../AllObjects.hpp"
 #include <ncurses.h>
 
 class Knife : public Weapon{
