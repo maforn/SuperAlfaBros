@@ -5,12 +5,14 @@
 #ifndef SUPERALFABROS_GUN_HPP
 #define SUPERALFABROS_GUN_HPP
 
-#include "AllObjects.hpp"
+#include "Object.hpp"
+#include "Weapon.hpp"
 #include <ncurses.h>
 
 class Gun : public Weapon{
 protected:
 public:
+    Gun(int x, int y, int level);
 };
 
 

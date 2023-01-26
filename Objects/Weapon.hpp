@@ -16,8 +16,7 @@ protected:
     std::wstring drawingRight;
     std::wstring drawingLeft;
 public:
-    void incrementLevel();
-    void decrementLevel();
+    Weapon(int x, int y, int level, int damage, std::wstring drawing, char objectType, std::wstring drawingRight, std::wstring drawingLeft);
     int getDamage();
     void pointRight();
     void pointLeft();

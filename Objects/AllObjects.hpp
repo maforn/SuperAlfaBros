@@ -9,6 +9,7 @@
 #include "../Objects/Spikes.hpp"
 #include "../Objects/Bomb.hpp"
 #include "../Objects/Patrol.hpp"
-#include "../Objects/weapon.hpp"
+#include "../Objects/Weapon.hpp"
+
 
 #endif //SUPERALFABROS_ALLOBJECTS_H

@@ -8,12 +8,10 @@
 #include "AllObjects.hpp"
 #include <ncurses.h>
 
-class Knife: public Weapon{
+class Knife : public Weapon{
 protected:
-
 public:
-
-
+    Knife(int x, int y, int level);
 };
 
 
