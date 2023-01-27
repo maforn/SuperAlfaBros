@@ -45,12 +45,12 @@ void DynamicObjectList::addHead(pObject pObj) {
 }
 
 // draw all the objects
-void DynamicObjectList::drawAllObjects(WINDOW *win) {
+void DynamicObjectList::drawAllObjects(WINDOW *win, int verticalShift) {
     // iterate all object
     listObjects iterator = this->objects;
     while (iterator != nullptr) {
         // draw them at the specified x, y
-        mvwaddwstr(win, iterator->obj->y, iterator->obj->x, iterator->obj->drawing.c_str());
+        mvwaddwstr(win, iterator->obj->y + verticalShift, iterator->obj->x, iterator->obj->drawing.c_str());
         iterator = iterator->next;
     }
 }

@@ -41,9 +41,9 @@ public:
     // set the map as the first one: remove the left exit
     void setFirstMap();
     // draw the skeleton of the map that was read from the file
-    void drawBaseMap(WINDOW *win);
+    void drawBaseMap(WINDOW *win, int verticalShift);
     // draw the objects contained in the object list
-    void drawObjects(WINDOW *win);
+    void drawObjects(WINDOW *win, int verticalShift);
     // set the player coord to lastX and lastY
     void spawnPlayer();
     // save the player coord to lastX and lastY
