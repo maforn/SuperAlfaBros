@@ -4,7 +4,7 @@
 
 #include "Shield.hpp"
 
-Shield::Shield(int x, int y, int level) : Weapon(x, y, level, 0, L"=", 's', L"=", L"=") {
+Shield::Shield(int x, int y, int level) : Weapon(x, y, level, 0, L")", 'w', L")", L"(") {
     life = level*2;
 }
 int Shield::getLife(){

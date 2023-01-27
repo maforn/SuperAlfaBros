@@ -12,8 +12,10 @@
 
 class Bullet : public Weapon{
 protected:
+    char direction;
 public:
-    Bullet(int x, int y, int level);
+    Bullet(int x, int y, int level, char direction);
+    virtual void move(WINDOW *win);
 };
 
 

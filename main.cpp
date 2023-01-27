@@ -3,6 +3,8 @@
 #include <cmath>
 #include <unistd.h>
 #include <thread>
+#include "Objects/AllObjects.hpp"
+#include "Objects/Weapons/AllWeapons.hpp"
 
 static bool isRunning = true;
 
@@ -22,6 +24,7 @@ inline double CurrentTime_milliseconds()
             (chrono::high_resolution_clock::now().time_since_epoch()).count();
 }
 
+void clearXY(WINDOW *win, int x, int y);
 
 
 int main() {
@@ -84,6 +87,10 @@ int main() {
     int choice;
 
     auto start = CurrentTime_milliseconds();
+
+    // DEBUG:: set a weapon to the player
+    player->setWeapon(new Knife(player->x+1,player->y,1));
+
     thread th(work, win, levels);
     do {
 
@@ -95,16 +102,22 @@ int main() {
         choice = getch();
         switch (choice) {
             case 'w': // move player forward
-                levels->movePlayer(player->x, player->y - 1);
+                levels->movePlayer(win, player->x, player->y - 1);
                 break;
             case 's': // move player backward
-                levels->movePlayer(player->x, player->y + 1);
+                levels->movePlayer(win, player->x, player->y + 1);
                 break;
             case 'a': // move player leftward
-                levels->movePlayer(player->x - 1, player->y);
+                levels->movePlayer(win, player->x - 1, player->y);
                 break;
             case 'd': // move player rightward
-                levels->movePlayer(player->x + 1, player->y);
+                levels->movePlayer(win, player->x + 1, player->y);
+                break;
+            case 'q': // use weapon to left
+                player->useWeaponLeft(win);
+                break;
+            case 'e': // use weapon to right
+                player->useWeaponRight(win);
                 break;
             /*case ' ': // jump where and if possible, maximum of 3
                 if(lasty > 1) levels->movePlayer(player->x, player->y-1);   // if within bounds
@@ -136,13 +149,14 @@ int main() {
                 levels->currentMap()->drawBaseMap(win);
                 levels->currentMap()->drawObjects(win);
             }
-            mvwaddwstr(win, lasty, lastx, L" "); // clear previous coordinate where player was
+
+            clearXY(win, lastx, lasty); // clear previous coordinate where player was
             player->drawPlayer(win);
             // refresh the window
             wrefresh(win);
         }
 
-    } while (choice != 'q' && player->getLife()>0);
+    } while (choice != 27 && player->getLife()>0); // 27 is the escape key
     isRunning = false;
     th.join();
     nodelay(stdscr, FALSE);
@@ -163,4 +177,8 @@ int main() {
     endwin();
 
     return 0;
+}
+
+void clearXY(WINDOW *win, int x, int y) {
+    mvwaddwstr(win, y, x, L" ");
 }

@@ -107,7 +107,7 @@ DynamicLevelList::~DynamicLevelList() {
 }
 
 // move player to x y checking collisions
-void DynamicLevelList::movePlayer(int x, int y) {
+void DynamicLevelList::movePlayer(WINDOW* win, int x, int y) {
     // helper pointer used to access the other object that is colliding
     pObject pObj = nullptr;
     // switch decision based on what it is colliding with
@@ -131,8 +131,7 @@ void DynamicLevelList::movePlayer(int x, int y) {
             this->player->receiveDamage(((pBomb)pObj)->damage);
             this->levels->map->removeObject(pObj);
             // move the player to the position after the explosion
-            this->player->x = x;
-            this->player->y = y;
+            this->player->movePlayer(win, x, y);
             break;
         case 'T':
             // it's a teleporter, se we teleport to destination:
@@ -140,8 +139,7 @@ void DynamicLevelList::movePlayer(int x, int y) {
             break;
         case ' ':
             // blank space: we can move there
-            this->player->x = x;
-            this->player->y = y;
+            this->player->movePlayer(win, x, y);
             break;
     }
 }

@@ -15,3 +15,8 @@ Object::Object(int x, int y, std::wstring drawing, char objectType) {
 void Object::move(WINDOW *win) {
     // do nothing
 }
+
+void Object::draw(WINDOW *win) {
+    // draw the object on the screen
+    mvwaddwstr(win, y, x, drawing.c_str());
+}

@@ -14,7 +14,7 @@ protected:
     int life;
 public:
     Shield(int x, int y, int level);
-    int getLife();
+    virtual int getLife();
     void setLife(int life);
     void receiveDamage(int damage);
 };

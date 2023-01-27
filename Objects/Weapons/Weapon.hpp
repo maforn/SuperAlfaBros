@@ -15,11 +15,17 @@ protected:
     int damage;
     std::wstring drawingRight;
     std::wstring drawingLeft;
+    const wchar_t *covering;
 public:
+    bool isRight;
     Weapon(int x, int y, int level, int damage, std::wstring drawing, char objectType, std::wstring drawingRight, std::wstring drawingLeft);
     int getDamage();
+    virtual void useRight(WINDOW *win);
+    virtual void useLeft(WINDOW *win);
     void pointRight();
     void pointLeft();
+    void moveWeapon(WINDOW *win, int x, int y);
+    void spown();
 };
 
 

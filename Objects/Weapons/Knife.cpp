@@ -4,6 +4,6 @@
 
 #include "Knife.hpp"
 
-Knife::Knife(int x, int y, int level) : Weapon(x, y, level, level*2, L">", 'w', L"<", L">") {
+Knife::Knife(int x, int y, int level) : Weapon(x, y, level, level*2, L">", 'w', L">", L"<") {
 
 }

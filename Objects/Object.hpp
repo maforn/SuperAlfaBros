@@ -23,6 +23,7 @@ public:
     Object(int x, int y, std::wstring drawing, char objectType);
 
     virtual void move(WINDOW *win);
+    virtual void draw(WINDOW *win);
 };
 
 // set a name for the pointer to the class Object

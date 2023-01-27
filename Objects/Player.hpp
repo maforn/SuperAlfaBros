@@ -6,6 +6,7 @@
 #define SUPERALFABROS_PLAYER_HPP
 
 #include "Object.hpp"
+#include "Weapons/Weapon.hpp"
 #include <ncurses.h>
 
 // subclass of the superclass Object, will inherit all the characteristic of Object. Implements the player
@@ -15,6 +16,8 @@ protected:
     int life;
     // how much damage the player deals
     int damage{};
+
+    Weapon *pWeapon;
 public:
     // Constructor of the class: will set the new vars and use the constructor of the superclass
     Player(int x, int y, int life);
@@ -27,6 +30,13 @@ public:
     void receiveDamage(int dmg);
     // get the player life
     int getLife();
+    // return the weapon of the player
+    Weapon*  getWeapon();
+    // set the weapon of the player
+    void setWeapon(Weapon *pWeapon);
+    void useWeaponRight(WINDOW *win);
+    void useWeaponLeft(WINDOW *win);
+    void movePlayer(WINDOW *win, int x, int y);
 };
 
 // set a name for the pointer to the class Player
