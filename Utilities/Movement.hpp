@@ -12,7 +12,7 @@
 #define width 90
 #define start_x 0
 #define start_y 0
-#define MAX_JUMPS 6
+#define MAX_JUMPS 3
 
 class Movement {
 protected:
