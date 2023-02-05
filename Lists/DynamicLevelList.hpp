@@ -43,7 +43,9 @@ public:
     pMap currentMap();
 
     // move player to x y checking collisions
-    void movePlayer(int x, int y);
+    void movePlayer(WINDOW* win, int x, int y);
+
+    bool detectCollisionWeapon(int x, int y);
 
     // Destructor of the class: delete free pointers
     ~DynamicLevelList();
