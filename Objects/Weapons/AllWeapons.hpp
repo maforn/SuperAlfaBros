@@ -10,5 +10,6 @@
 #include "Shield.hpp"
 #include "Knife.hpp"
 #include "Gun.hpp"
+#include "Bullet.hpp"
 
 #endif //SUPERALFABROS_ALLWEAPONS_HPP

@@ -14,5 +14,5 @@ public:
     Knife(int x, int y, int level);
 };
 
-
+typedef Knife *pKnife;
 #endif //SUPERALFABROS_KNIFE_HPP

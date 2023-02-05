@@ -15,8 +15,9 @@ protected:
     char direction;
 public:
     Bullet(int x, int y, int level, char direction);
-    virtual void move(WINDOW *win);
+    void move(WINDOW *win, int x, int y);
+    pCords getNewPos();
 };
 
-
+typedef Bullet *pBullet;
 #endif //SUPERALFABROS_BULLET_HPP

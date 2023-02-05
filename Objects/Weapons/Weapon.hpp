@@ -17,6 +17,7 @@ protected:
     std::wstring drawingLeft;
     const wchar_t *covering;
 public:
+    bool canBeDrawn;
     bool isRight;
     Weapon(int x, int y, int level, int damage, std::wstring drawing, char objectType, std::wstring drawingRight, std::wstring drawingLeft);
     int getDamage();
@@ -28,5 +29,6 @@ public:
     void spown();
 };
 
+typedef Weapon *pWeapon;
 
 #endif //SUPERALFABROS_WEAPON_HPP

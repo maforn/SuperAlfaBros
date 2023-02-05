@@ -14,10 +14,11 @@ protected:
     int life;
 public:
     Shield(int x, int y, int level);
-    virtual int getLife();
+    int getLife();
     void setLife(int life);
     void receiveDamage(int damage);
 };
 
+typedef Shield *pShield;
 
 #endif //SUPERALFABROS_SHIELD_HPP

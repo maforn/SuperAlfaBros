@@ -70,7 +70,7 @@ MapFiles::MapFiles(const string& mapsFolder) {
 // return a random map file path from the dynamic list created from the directory specified initially
 string MapFiles::randomMapFile() {
     // random number to choose a random map
-    srand(time(nullptr));
+    //srand(time(nullptr));
     // select a random map files from the one we have
     int fileNumber = rand() % this->mapFilesLength;
     // create an iterator to reach the nth (fileNumber) node of the list

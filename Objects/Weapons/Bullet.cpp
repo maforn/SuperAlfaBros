@@ -5,15 +5,24 @@
 #include "Bullet.hpp"
 
 
-Bullet::Bullet(int x, int y, int level, char direction) : Weapon(x, y, level, level+3, L"-", 'w', L"-", L"-" ){
+Bullet::Bullet(int x, int y, int level, char direction) : Weapon(x, y, level, level+3, L"-", 'U', L"-", L"-" ){
     this->direction = direction;
 }
 
-void Bullet::move(WINDOW *win) {
+void Bullet::move(WINDOW *win, int x, int y) {
+    mvwaddwstr(win, this->y, this->x , L" ");
+    this->x=x;
+    this->y=y;
+    mvwaddwstr(win, this->y, this->x, this->drawing.c_str());
+}
+
+pCords Bullet::getNewPos() {
+    pCords cords = new Cords();
+    cords->y = this->y;
     if (direction == 'r') {
-        x++;
+        cords->x=this->x+1;
     } else if (direction == 'l') {
-        x--;
+        cords->x=this->x-1;
     }
-    this->draw(win);
+    return cords;
 }

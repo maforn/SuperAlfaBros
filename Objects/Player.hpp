@@ -17,7 +17,7 @@ protected:
     // how much damage the player deals
     int damage{};
 
-    Weapon *pWeapon;
+    pWeapon weapon;
 public:
     // Constructor of the class: will set the new vars and use the constructor of the superclass
     Player(int x, int y, int life);
@@ -31,12 +31,15 @@ public:
     // get the player life
     int getLife();
     // return the weapon of the player
-    Weapon*  getWeapon();
+    pWeapon  getWeapon();
     // set the weapon of the player
-    void setWeapon(Weapon *pWeapon);
+    void setWeapon(pWeapon newWeapon);
     void useWeaponRight(WINDOW *win);
     void useWeaponLeft(WINDOW *win);
     void movePlayer(WINDOW *win, int x, int y);
+
+    void removeWeapon();
+    pWeapon changeWeapon(pWeapon newWeapon);
 };
 
 // set a name for the pointer to the class Player

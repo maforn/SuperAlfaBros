@@ -12,6 +12,10 @@ struct DynamicLevelList::levelStruct {
     levelStruct *prev;
 };
 
+void detectCollisionWeapon(WINDOW *win);
+
+void detectCollisionWeapon();
+
 // initialize a new map and pass it to the list by reference
 void DynamicLevelList::initialize(levelList &l) {
     // create the temporary pointer to the new level that will be linked later
@@ -137,9 +141,31 @@ void DynamicLevelList::movePlayer(WINDOW* win, int x, int y) {
             // it's a teleporter, se we teleport to destination:
             ((pTeleporter)pObj)->teleportObject(this->player);
             break;
+        case 'R':
+            // it's a patrol, we do nothing but receive damage:
+            this->player->receiveDamage(((pPatrol)pObj)->damage);
+            this->levels->map->removeObject(pObj);
+            this->player->movePlayer(win, x, y);
+            break;
+        case 'U':
+            // it's a bullet, we do nothing but the bullet disappears:
+            this->levels->map->removeObject(pObj);
+            this->player->movePlayer(win, x, y);
+            break;
         case ' ':
             // blank space: we can move there
             this->player->movePlayer(win, x, y);
             break;
     }
 }
+/*
+bool DynamicLevelList::detectCollisionWeapon(int x, int y) {
+    pObject pApp = nullptr;
+    char collision = this->levels->map->detectCollision(x, y,pApp);
+    if (collision == ' '){
+        return false;
+    }else {
+        return true;
+    }
+}
+*/

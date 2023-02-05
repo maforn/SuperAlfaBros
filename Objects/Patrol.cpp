@@ -4,21 +4,34 @@
 
 #include "Patrol.hpp"
 
-Patrol::Patrol(int x, int y, int x1, int y1, int x2, int y2) : Object(x, y, L"🚨", 'R') {
-    this->x2 = x2;
-    this->y2 = y2;
-    this->x1 = x1;
-    this->y1 = y1;
+Patrol::Patrol(int x, int y, int toX, int toY, int damage) : Object(x, y, L"🚨", 'R') {
+    this->x2 = toX;
+    this->y2 = toY;
+    this->x1 = x;
+    this->y1 = y;
     this->direction = true;
+    this->damage = damage;
 }
 
 void Patrol::drawPatrol(WINDOW *win) {
+
     mvwaddwstr(win, this->y, this->x, this->drawing.c_str());
 }
 
 
- void Patrol::move(WINDOW *win) {
+ void Patrol::move(WINDOW *win, int x, int y) {
+     //printw("%ls",this->drawing.c_str());
      mvwaddwstr(win, this->y, this->x , L" ");
+    this->x=x;
+    this->y=y;
+     mvwaddwstr(win, y, x, this->drawing.c_str());
+}
+
+pCords Patrol::getNewPos() {
+
+    pCords cords = new Cords;
+    cords->x = this->x;
+    cords->y = this->y;
     if ((this->x == this->x1 && this->y == this->y1) || (this->x == this->x2 && this->y == this->y2) ){
         // cambia direzione
         this->direction = !this->direction;
@@ -26,28 +39,31 @@ void Patrol::drawPatrol(WINDOW *win) {
     if (this->direction){
         // vai verso x1,y1
         if (this->x < this->x1){
-            this->x++;
+            cords->x = this->x+1;
         } else if (this->x > this->x1){
-            this->x--;
+            cords->x = this->x-1;
         } else if (this->y < this->y1){
-            this->y++;
+            cords->y = this->y+1;
         } else if (this->y > this->y1){
-            this->y--;
+            cords->y = this->y-1;
         }
     } else {
         // vai verso x2,y2
         if (this->x < this->x2){
-            this->x++;
+            cords->x = this->x+1;
         } else if (this->x > this->x2){
-            this->x--;
+            cords->x = this->x-1;
         } else if (this->y < this->y2){
-            this->y++;
+            cords->y = this->y+1;
         } else if (this->y > this->y2){
-            this->y--;
+            cords->y = this->y-1;
         }
     }
-    this->drawPatrol(win);
+    return cords;
+}
 
+int Patrol::getDamage() {
+    return this->damage;
 }
 
 

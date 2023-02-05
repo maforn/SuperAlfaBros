@@ -29,6 +29,7 @@ Weapon::Weapon(int x, int y, int level, int damage, std::wstring drawing, char o
     this->drawingLeft = drawingLeft;
     this->isRight = true;
     covering = L" ";
+    canBeDrawn = true;
 }
 
 void Weapon::useRight(WINDOW *win) {

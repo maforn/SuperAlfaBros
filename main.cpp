@@ -2,21 +2,9 @@
 #include <chrono>
 #include <cmath>
 #include <unistd.h>
-#include <thread>
 #include "Objects/AllObjects.hpp"
 #include "Objects/Weapons/AllWeapons.hpp"
 
-static bool isRunning = true;
-
-void work(WINDOW*win, pDynamicLevelList levels){
-    using namespace std::literals::chrono_literals;
-    while (isRunning){
-        levels->currentMap()->moveObjects(win); // move all the objects
-        wrefresh(win);
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
-
-    }
-}
 
 inline double CurrentTime_milliseconds()
 {
@@ -28,6 +16,8 @@ void clearXY(WINDOW *win, int x, int y);
 
 
 int main() {
+    // seed the random number generator
+    srand(time(nullptr));
     // create a new player instance
     pPlayer player = new Player(1, 1, 100);
     string mapsFolder = "../maps/";
@@ -75,7 +65,6 @@ int main() {
     player->drawPlayer(win);
     // refresh the window with the new data drawn
     wrefresh(win);
-
     cbreak();
     noecho(); //don't print the keys pressed while playing
     nodelay(stdscr, TRUE); //make getch not wait for the input
@@ -87,11 +76,10 @@ int main() {
     int choice;
 
     auto start = CurrentTime_milliseconds();
-
     // DEBUG:: set a weapon to the player
-    player->setWeapon(new Knife(player->x+1,player->y,1));
+    player->setWeapon(new Gun(player->x+1,player->y,1));
 
-    thread th(work, win, levels);
+    double appTime = 0;
     do {
 
 
@@ -119,18 +107,23 @@ int main() {
             case 'e': // use weapon to right
                 player->useWeaponRight(win);
                 break;
-            /*case ' ': // jump where and if possible, maximum of 3
-                if(lasty > 1) levels->movePlayer(player->x, player->y-1);   // if within bounds
-                if(player->y==lasty-1 && lasty > 2) levels->movePlayer(player->x, player->y-1); // if previous successful and within bounds
-                if(player->y==lasty-2 && lasty > 3) levels->movePlayer(player->x, player->y-1); // if previous successful and within bounds
+            case ' ': // jump where and if possible, maximum of 3
+                if(lasty > 1) levels->movePlayer(win,player->x, player->y-1);   // if within bounds
+                if(player->y==lasty-1 && lasty > 2) levels->movePlayer(win,player->x, player->y-1); // if previous successful and within bounds
+                if(player->y==lasty-2 && lasty > 3) levels->movePlayer(win,player->x, player->y-1); // if previous successful and within bounds
                 delay = TEMPO;
-                break;*/
+                break;
+            default:
+                break;
         }
 
-        /*
+
+
+
+
          if ((CurrentTime_milliseconds() - start)>delay) // gravity, acts based on time passed
         {
-            levels->movePlayer(player->x, player->y + 1); // fall
+            levels->movePlayer(win,player->x, player->y + 1); // fall
             start = CurrentTime_milliseconds();
             if (lasty!=player->y)
             {
@@ -138,8 +131,18 @@ int main() {
             }
             else delay = TEMPO; // reset delay if not falling, no speed
         }
-         */
 
+
+         // move the objects every second
+        if ((CurrentTime_milliseconds() - appTime )> 1000) // every second
+        {
+
+            appTime = CurrentTime_milliseconds();
+
+            levels->currentMap()->moveObjects(win); // move all the objects
+            wrefresh(win);
+
+        }
 
         if (lastx!=player->x || lasty!=player->y || levels->currentMap()!=lastMap) { // if something changes
             if (levels->currentMap()!=lastMap) // if map changes
@@ -156,9 +159,14 @@ int main() {
             wrefresh(win);
         }
 
+        // DEBUG:: print life of the player
+        char buffer[50];
+        sprintf( buffer, "%d", player->getLife() );
+        mvaddstr(0, 0, strcat(buffer,"  "));
+
+
+        wrefresh(win);
     } while (choice != 27 && player->getLife()>0); // 27 is the escape key
-    isRunning = false;
-    th.join();
     nodelay(stdscr, FALSE);
     wclear(win);
     wrefresh(win);

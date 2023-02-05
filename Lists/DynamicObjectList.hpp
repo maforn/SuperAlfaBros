@@ -6,18 +6,22 @@
 #define SUPERALFABROS_DYNAMICOBJECTLIST_HPP
 
 #include "../Objects/Object.hpp"
+#include "../Objects/AllObjects.hpp"
 #include <ncurses.h>
+
+struct listObject {
+    Object *obj;
+    listObject *next;
+};
+
+typedef listObject *listObjects;
 
 // create a class for the dynamic object list that will manage all the objects of a level
 class DynamicObjectList {
 private:
-    // create a struct for the dynamic list of objects
-    struct listObject;
-    // define the pointer to the struct
-    typedef listObject *listObjects;
-    // create a pointer to the list of objects
-    listObjects objects;
 public:
+
+    listObjects objects;
     // Constructor of the class: set object to null
     DynamicObjectList();
 
@@ -33,9 +37,6 @@ public:
 
     // if it exists, get the object in x, y and return the type while setting the pointer
     char getObjectInPos(int x, int y, pObject &pObj);
-
-    // move all the objects
-    void moveObjects(WINDOW *win);
 
     // Destructor of the class: delete free pointers
     ~DynamicObjectList();

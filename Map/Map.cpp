@@ -155,16 +155,12 @@ void Map::objectParser(wstring line) {
             y2 = stoi(line.substr(0, line.find(',')));
 
             // add to the dynamic object list the new object as an object of type Patrol
-            Patrol* patrol = new Patrol(x1, y1, x1, y1, x2, y2);
-
-
-            this->objectList->addTail(patrol);
+            this->objectList->addTail(new Patrol(x1, y1, x2, y2,this->player->calculateDamage() * 2));
 
             break;
-        /*
+
          default: // none of the previous cases were matched
             wcout << "Invalid encoding: " << line << endl;
-            */
     }
 }
 
@@ -212,5 +208,90 @@ void Map::setFirstMap() {
 }
 
 void Map::moveObjects(WINDOW *win) {
-    this->objectList->moveObjects(win);
+    listObjects tmp = this->objectList->objects;
+
+    pCords cords = nullptr;
+    pObject pObj = nullptr;
+    char collision;
+    bool removeThis = false;
+
+    while (tmp != nullptr) {
+        removeThis = false;
+        switch (tmp->obj->objectType) {
+            case 'R': // case Patrol
+
+                cords = ((pPatrol) tmp->obj)->getNewPos();
+                //printw("[%d,%d](%d,%d)",tmp->obj->x,tmp->obj->y,cords->x,cords->y);
+
+                collision = this->detectCollision(cords->x,cords->y,pObj);
+                //printw("%c",collision);
+                if(collision == ' ' && player->x == cords->x && player->y == cords->y) {
+                    collision = 'P';
+                } else if (collision == ' ' && player->getWeapon()!= nullptr ) {
+                    if (player->getWeapon()->x == cords->x && player->getWeapon()->y == cords->y)collision = player->getWeapon()->objectType;
+                }
+                switch (collision) {
+                    case 'U':
+                        // it's a bullet
+                        removeThis = true;
+                        break;
+                    case 'P':
+                        printw("Player hit by patrol");
+                        // it's the player
+                        player->receiveDamage(((pPatrol) tmp->obj)->getDamage());
+                        removeThis = true;
+                        break;
+                    case 'D':
+                        // it's a shield
+                        (pShield (player->getWeapon()))->receiveDamage(((pPatrol) tmp->obj)->getDamage());
+                        if ((pShield (player->getWeapon()))->getLife()<0){
+                            player->receiveDamage((pShield (player->getWeapon()))->getLife());
+                            player->removeWeapon();
+                        }
+                        break;
+                    case 'K':
+                        // it's a knife
+                        removeThis = true;
+                        break;
+                    case 'G':
+                        // it's a gun
+                        player->removeWeapon();
+                        break;
+                    case ' ':
+                        // blank space
+                        ((pPatrol) tmp->obj)->move(win,cords->x,cords->y);
+                        break;
+                    default:
+                        // it's an object, we do nothing
+                        break;
+                }
+
+                delete cords;
+                break;
+            case 'U': // case Bullet
+                cords = ((pBullet) tmp->obj)->getNewPos();
+                collision = this->detectCollision(cords->x,cords->y,pObj);
+                if(collision == ' ' && player->x == cords->x && player->y == cords->y) {
+                    collision = 'P';
+                } else if (collision == ' ' && player->getWeapon()!= nullptr) {
+                    if (player->getWeapon()->x == cords->x && player->getWeapon()->y == cords->y)collision = player->getWeapon()->objectType;
+                }
+                if (collision== ' ') ((pBullet) tmp->obj)->move(win,cords->x,cords->y);
+                else if ( collision == 'S' || collision == 'B' || collision == 'R') {
+                    removeObject(pObj);
+                    removeThis = true;
+                } else removeThis = true;
+
+                delete cords;
+                break;
+        }
+        if(removeThis) {
+            pObject app = tmp->obj;
+            tmp = tmp->next;
+            this->removeObject(app);
+        }else{
+            tmp = tmp->next;
+        }
+
+    }
 }

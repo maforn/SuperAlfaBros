@@ -8,7 +8,7 @@
 // as object type
 Player::Player(int x, int y, int life): Object(x,y, L"0", 'P') {
     this->life = life;
-    pWeapon = nullptr;
+    weapon = nullptr;
 }
 
 // calculate damage scaled on the level TODO: use a decent equation
@@ -19,8 +19,8 @@ int Player::calculateDamage() {
 // draw the player on a screen
 void Player::drawPlayer(WINDOW *win) {
     mvwaddwstr(win, this->y, this->x, this->drawing.c_str());
-    if (this->pWeapon != nullptr) {
-        this->pWeapon->draw(win);
+    if (this->weapon != nullptr) {
+        this->weapon->draw(win);
     }
 }
 
@@ -33,40 +33,51 @@ int Player::getLife() {
     return this->life;
 }
 
-Weapon *Player::getWeapon() {
-    return this->pWeapon;
+pWeapon Player::getWeapon() {
+    return this->weapon;
 }
 
-void Player::setWeapon(Weapon *pWeapon) {
-    this->pWeapon = pWeapon;
+void Player::setWeapon(Weapon *newWeapon) {
+    this->weapon = newWeapon;
 }
 
 void Player::useWeaponRight(WINDOW *win) {
-    if (pWeapon != nullptr) {
-        pWeapon->useRight(win);
+    if (weapon != nullptr) {
+        weapon->useRight(win);
     }
 }
 
 void Player::useWeaponLeft(WINDOW *win) {
-    if (pWeapon != nullptr) {
-        pWeapon->useLeft(win);
+    if (weapon != nullptr) {
+        weapon->useLeft(win);
     }
 }
 
 void Player::movePlayer(WINDOW *win, int x, int y) {
     mvwaddwstr(win, this->y, this->x, L" ");
-    if (this->pWeapon != nullptr) {
+    if (this->weapon != nullptr) {
         if (this->x < x) {
-            this->pWeapon->pointRight();
+            this->weapon->pointRight();
         } else if (this->x > x) {
-            this->pWeapon->pointLeft();
+            this->weapon->pointLeft();
         }
 
-        this->pWeapon->moveWeapon(win, this->pWeapon->isRight ? x + 1 : x - 1, y);
+        this->weapon->moveWeapon(win, this->weapon->isRight ? x + 1 : x - 1, y);
 
     }
     this->x = x;
     this->y = y;
 
     this->drawPlayer(win);
+}
+
+void Player::removeWeapon() {
+    delete this->weapon;
+    this->weapon = nullptr;
+}
+
+pWeapon Player::changeWeapon(pWeapon newWeapon) {
+    pWeapon oldWeapon = this->weapon;
+    this->weapon = newWeapon;
+    return oldWeapon;
 }

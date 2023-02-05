@@ -5,14 +5,7 @@
 #include "DynamicObjectList.hpp"
 
 // the struct must contain a superclass object, type that will help get the subclass and the next and previous objects
-struct DynamicObjectList::listObject {
-    Object *obj;
-    listObject *next;
-};
 
-void moveAllObjects();
-
-void moveObjects();
 
 // initiate the pointer to null
 DynamicObjectList::DynamicObjectList() {
@@ -105,12 +98,4 @@ char DynamicObjectList::getObjectInPos(int x, int y, pObject &pObj) {
     }
     // if no collision was found the player can move there
     return ' ';
-}
-
-void DynamicObjectList::moveObjects(WINDOW *win) {
-    listObjects iterator = this->objects;
-    while (iterator != nullptr) {
-        iterator->obj->move(win);
-        iterator = iterator->next;
-    }
 }
