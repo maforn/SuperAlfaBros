@@ -2,6 +2,7 @@
 #include "Market/MarketManager.hpp"
 #include "Progress/ProgressManager.hpp"
 #include <chrono>
+#include "Movement.hpp"
 #include <cmath>
 #include <unistd.h>
 #include "Objects/AllObjects.hpp"
@@ -11,8 +12,10 @@
 #include <string>
 using namespace std;
 
-inline double CurrentTime_milliseconds()
-{
+#define TEMPO 500
+#define MINTEMPO 40.0
+
+inline double CurrentTime_milliseconds() {
     return chrono::duration_cast<std::chrono::milliseconds>
             (chrono::high_resolution_clock::now().time_since_epoch()).count();
 }
@@ -57,6 +60,7 @@ int main() {
     // set locale so that special chars will be recognized
     setlocale(LC_ALL, "");
 
+
     // parameters for window
     int height, width, start_y, start_x;
     height = 30;
@@ -66,6 +70,7 @@ int main() {
 
     const double TEMPO = 500;
     const double MINTEMPO = 40.0;
+    
     double delay = TEMPO;  //delay as gravity
 
     // hide the blinking cursor
@@ -82,6 +87,7 @@ int main() {
     refresh();
     getch();
     clear();
+
 
     //creating the window
     WINDOW *win = newwin(height + vertical_shift, width, start_y, start_x);
@@ -112,9 +118,8 @@ int main() {
 
     // refresh the window with the new data drawn
     wrefresh(win);
-    
-    cbreak();
     noecho(); //don't print the keys pressed while playing
+    nodelay(win, TRUE); //make getch not wait for the input
 
     getch();
 
@@ -129,22 +134,34 @@ int main() {
     nodelay(win, TRUE); //make getch not wait for the input
 
     int lastx, lasty;
+    bool hasLanded = false;
     pMap lastMap;
     // detect player moves
     int choice;
+    /*int maxh = height;
+    //int dx = 0;
+    //int dy = 1;*/
 
-    auto start = CurrentTime_milliseconds();
-    // DEBUG:: set a weapon to the player
-    player->setWeapon(new Gun(player->x+1,player->y,1));
+    auto frame = CurrentTime_milliseconds();
+    auto start = frame;
 
-    double appTime = 0;
+    //int choice_old = 's';
     do {
-
-
+        //if (CurrentTime_milliseconds() - frame > 20) {
         lastx = player->x;
         lasty = player->y;
         lastMap = levels->currentMap();
+
         // get choice from keyboard
+        
+        choice = wgetch(win);
+        move(player, choice, levels, hasLanded);
+
+        if ((CurrentTime_milliseconds() - start) > delay) // gravity, acts based on time passed
+        {
+            levels->movePlayer(player->x, player->y + 1); // fall
+            hasLanded = lasty == player->y;
+/*
         choice = getch();
         switch (choice) {
             case 'w': // move player forward
@@ -184,16 +201,19 @@ int main() {
 
          if ((CurrentTime_milliseconds() - start)>delay) // gravity, acts based on time passed
         {
-            levels->movePlayer(win,player->x, player->y + 1); // fall
+            levels->movePlayer(win,player->x, player->y + 1); // fall */
+            
             start = CurrentTime_milliseconds();
-            if (lasty!=player->y)
-            {
-                delay = max(delay*0.75,MINTEMPO);  // fall faster next time, delay is lower delay/(delay+10.0);
-            }
-            else delay = TEMPO; // reset delay if not falling, no speed
+            if (lasty != player->y) {
+                delay = max(delay * 0.75, MINTEMPO);  // fall faster next time, delay is lower delay/(delay+10.0);
+            } else delay = TEMPO; // reset delay if not falling, no speed
         }
 
 
+        if (lastx != player->x || lasty != player->y || levels->currentMap() != lastMap) { // if something changes
+
+            if (levels->currentMap() != lastMap) // if map changes
+  /*
          // move the objects every second
         if ((CurrentTime_milliseconds() - appTime )> 1000) // every second
         {
@@ -206,7 +226,8 @@ int main() {
         }
 
         if (lastx!=player->x || lasty!=player->y || levels->currentMap()!=lastMap) { // if something changes
-            if (levels->currentMap()!=lastMap) // if map changes
+            if (levels->currentMap()!=lastMap) // if map changes */
+            
             {
                 // clear the window and draw Map and Objects
                 wclear(win);
@@ -220,16 +241,8 @@ int main() {
             // refresh the window
             wrefresh(win);
         }
-
-        // DEBUG:: print life of the player
-        char buffer[50];
-        sprintf( buffer, "%d", player->getLife() );
-        mvaddstr(0, 0, strcat(buffer,"  "));
-
-
-        wrefresh(win);
-    } while (choice != 27 && player->getLife()>0); // 27 is the escape key
-    nodelay(stdscr, FALSE);
+    } while (choice != '27' && player->getLife()> 0);
+    nodelay(stdscr,FALSE);
 
     wclear(win);
     wrefresh(win);
@@ -243,8 +256,10 @@ int main() {
             "   ███    ███   ███    ███  ███   ███   ███   ███    ███      ███    ███ ███    ███   ███    ███   ███    ███ \n"
             "   ████████▀    ███    █▀    ▀█   ███   █▀    ██████████       ▀██████▀   ▀██████▀    ██████████   ███    ███ \n"
             "                                                                                                   ███    ███ \n");
+
     refresh();
     getch();
+
     endwin();
     return 0;
 }
