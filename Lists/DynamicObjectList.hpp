@@ -26,7 +26,7 @@ public:
     DynamicObjectList();
 
     // draw all the objects
-    void drawAllObjects(WINDOW *win);
+    void drawAllObjects(WINDOW *win, int verticalShift);
 
     // add an element to the list
     void addTail(pObject pObj);

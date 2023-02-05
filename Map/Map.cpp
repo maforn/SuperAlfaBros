@@ -170,15 +170,15 @@ void Map::objectParser(wstring line) {
 }
 
 // draw the skeleton of the map that was read from the file
-void Map::drawBaseMap(WINDOW *win) {
+void Map::drawBaseMap(WINDOW *win, int verticalShift) {
     for (int i = 0; i < OBJECT_TABLE_LENGTH; ++i) {
-        waddwstr(win, objectTable[i].c_str());
+        mvwaddwstr(win, i + verticalShift, 0, objectTable[i].c_str());
     }
 }
 
 // draw the objects contained in the object list
-void Map::drawObjects(WINDOW *win) {
-    this->objectList->drawAllObjects(win);
+void Map::drawObjects(WINDOW *win, int verticalShift) {
+    this->objectList->drawAllObjects(win, verticalShift);
 }
 
 // Destructor of the class: delete all pointers

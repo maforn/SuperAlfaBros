@@ -1,10 +1,15 @@
 #include "Lists/DynamicLevelList.hpp"
+#include "Market/MarketManager.hpp"
+#include "Progress/ProgressManager.hpp"
 #include <chrono>
 #include <cmath>
 #include <unistd.h>
 #include "Objects/AllObjects.hpp"
 #include "Objects/Weapons/AllWeapons.hpp"
+#include "Utilities/StringUtilities.h"
 
+#include <string>
+using namespace std;
 
 inline double CurrentTime_milliseconds()
 {
@@ -18,20 +23,44 @@ void clearXY(WINDOW *win, int x, int y);
 int main() {
     // seed the random number generator
     srand(time(nullptr));
+    
+    // create progress manager instance and load saved data
+    ProgressManager* progressManager = new ProgressManager("PlayerData.txt", "WeaponData.txt", "SkinData.txt");
+    progressManager->loadSavedData();
+    progressManager->incrementMoney(800);
+
     // create a new player instance
-    pPlayer player = new Player(1, 1, 100);
+    pPlayer player = new Player(1, 1, 20);
+
+    // create market manager instance and unlock purchased items
+    MarketManager* marketManager = new MarketManager(player, progressManager);
+    marketManager->addUnlockedSkins(progressManager->getUnlockedSkinsString());
+    marketManager->addUnlockedWeapons(progressManager->getUnlockedWeaponsString());
+
+    // load player saved armour, skin and weapon
+    int savedArmour = progressManager->getSavedArmour();
+    player->incrementArmour(savedArmour);
+    char skinCode = progressManager->getCurrentSkinCode();
+    player->changeSkin(marketManager->getSkin(skinCode));
+    char weaponCode = progressManager->getCurrentWeaponCode();
+    player->changeDamage(marketManager->getWeaponDamage(weaponCode));
+
     string mapsFolder = "../maps/";
     // create the levels dynamic lists
     pDynamicLevelList levels = new DynamicLevelList(player, mapsFolder);
 
     // initiate screen with ncurses
     initscr();
+    cbreak();
+    noecho(); //don't print the keys pressed while playing
     // set locale so that special chars will be recognized
     setlocale(LC_ALL, "");
+
     // parameters for window
-    int height, width, start_y, start_x;
+    int height, width, vertical_shift, start_y, start_x;
     height = 30;
     width = 90;
+    vertical_shift = 4;
     start_y = 0;
     start_x = 0;
 
@@ -41,6 +70,7 @@ int main() {
 
     // hide the blinking cursor
     curs_set(0);
+
     addwstr(L"\n\n"
             " ███████╗██╗   ██╗██████╗ ███████╗██████╗      █████╗ ██╗     ███████╗ █████╗     ██████╗ ██████╗  ██████╗ ███████╗\n"
             " ██╔════╝██║   ██║██╔══██╗██╔════╝██╔══██╗    ██╔══██╗██║     ██╔════╝██╔══██╗    ██╔══██╗██╔══██╗██╔═══██╗██╔════╝\n"
@@ -54,19 +84,47 @@ int main() {
     clear();
 
     //creating the window
-    WINDOW *win = newwin(height, width, start_y, start_x);
+    WINDOW *win = newwin(height + vertical_shift, width, start_y, start_x);
     refresh();
+
+    // enable function keys
+    keypad(win, true);
 
     // clear the window
     wclear(win);
     // draw the base map, then all the objects and then the player
-    levels->currentMap()->drawBaseMap(win);
-    levels->currentMap()->drawObjects(win);
-    player->drawPlayer(win);
+    levels->currentMap()->drawBaseMap(win, vertical_shift);
+    levels->currentMap()->drawObjects(win, vertical_shift);
+    player->drawPlayer(win, vertical_shift);
+
+    // format and print LIFE and ARMOUR strings
+    wstring lifeStr = playerStatusFormatter(L"LIFE   > ", 13, player->getLife(), 10);
+    wstring armourStr = playerStatusFormatter(L"ARMOUR > ", 13, player->getArmour(), 5);
+    mvwaddwstr(win, start_y + 1, start_x + 1, lifeStr.c_str());
+    mvwaddwstr(win, start_y + 2, start_x + 1, armourStr.c_str());
+
+    // format and print MONEY and POINTS strings
+    wstring money = L"MONEY  > ";
+    wstring points = L"POINTS > ";
+    progressFormatter(money, points, progressManager->getMoney(), progressManager->getPoints());
+    mvwaddwstr(win, start_y + 1, width - 1 - money.length(), money.c_str());
+    mvwaddwstr(win, start_y + 2, width - 1 - points.length(), points.c_str());
+
     // refresh the window with the new data drawn
     wrefresh(win);
+    
     cbreak();
     noecho(); //don't print the keys pressed while playing
+
+    getch();
+
+    // display market
+    wclear(win);
+    marketManager->openMarket(win, 5, 5);
+    bool quitGame = marketManager->waitForMarketClosure();
+    wclear(win);
+    wrefresh(win);
+
     nodelay(stdscr, TRUE); //make getch not wait for the input
     nodelay(win, TRUE); //make getch not wait for the input
 
@@ -152,12 +210,13 @@ int main() {
             {
                 // clear the window and draw Map and Objects
                 wclear(win);
-                levels->currentMap()->drawBaseMap(win);
-                levels->currentMap()->drawObjects(win);
+                levels->currentMap()->drawBaseMap(win,vertical_shift);
+                levels->currentMap()->drawObjects(win,vertical_shift);
             }
 
             clearXY(win, lastx, lasty); // clear previous coordinate where player was
-            player->drawPlayer(win);
+            player->drawPlayer(win,vertical_shift);
+            
             // refresh the window
             wrefresh(win);
         }
@@ -171,6 +230,7 @@ int main() {
         wrefresh(win);
     } while (choice != 27 && player->getLife()>0); // 27 is the escape key
     nodelay(stdscr, FALSE);
+
     wclear(win);
     wrefresh(win);
     addwstr(L"\n\n"
@@ -186,7 +246,6 @@ int main() {
     refresh();
     getch();
     endwin();
-
     return 0;
 }
 
