@@ -29,7 +29,7 @@ public:
     Object(int x, int y, std::wstring drawing, char objectType);
     //virtual void getNewPos(int &x, int &y);
     //virtual void move(WINDOW *win, int x, int y);
-    void draw(WINDOW *win);
+    void draw(WINDOW *win, int verticalShift);
 };
 
 // set a name for the pointer to the class Object

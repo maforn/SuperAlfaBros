@@ -37,7 +37,7 @@ int Player::calculateDamage() {
 void Player::drawPlayer(WINDOW *win, int verticalShift) {
     mvwaddwstr(win, this->y + verticalShift, this->x, this->drawing.c_str());
     if (this->weapon != nullptr) {
-        this->weapon->draw(win);
+        this->weapon->draw(win, verticalShift);
     }
 }
 

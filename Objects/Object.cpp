@@ -12,9 +12,9 @@ Object::Object(int x, int y, std::wstring drawing, char objectType) {
     this->drawing = drawing;
     this->objectType = objectType;
 }
-void Object::draw(WINDOW *win) {
+void Object::draw(WINDOW *win, int verticalShift) {
     // draw the object on the screen
-    mvwaddwstr(win, y, x, drawing.c_str());
+    mvwaddwstr(win, y + verticalShift, x, drawing.c_str());
 }
 
 /*

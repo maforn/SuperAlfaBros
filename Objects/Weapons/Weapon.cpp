@@ -38,7 +38,6 @@ void Weapon::useRight(WINDOW *win) {
         x=x+2;
     }
     pointRight();
-    this->draw(win);
 }
 
 void Weapon::useLeft(WINDOW *win) {
@@ -48,7 +47,6 @@ void Weapon::useLeft(WINDOW *win) {
         x=x-2;
     }
     pointLeft();
-    this->draw(win);
 }
 
 void Weapon::moveWeapon(WINDOW *win, int x, int y) {
@@ -56,10 +54,4 @@ void Weapon::moveWeapon(WINDOW *win, int x, int y) {
 
     this->x = x;
     this->y = y;
-    draw(win);  // draw the weapon on the new position
-}
-
-void Weapon::spown() {
-    // increment
-
 }

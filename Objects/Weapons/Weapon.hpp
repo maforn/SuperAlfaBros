@@ -26,7 +26,6 @@ public:
     void pointRight();
     void pointLeft();
     void moveWeapon(WINDOW *win, int x, int y);
-    void spown();
 };
 
 typedef Weapon *pWeapon;
