@@ -133,7 +133,7 @@ void DynamicLevelList::movePlayer(WINDOW* win, int x, int y) {
         case 'B':
             // it's a bomb: it explodes (so we remove it) and we receive damage:
             this->player->receiveDamage(((pBomb)pObj)->damage);
-            this->levels->map->removeObject(pObj);
+            this->levels->map->removeObject(win,pObj);
             // move the player to the position after the explosion
             this->player->movePlayer(win, x, y);
             break;
@@ -144,12 +144,12 @@ void DynamicLevelList::movePlayer(WINDOW* win, int x, int y) {
         case 'R':
             // it's a patrol, we do nothing but receive damage:
             this->player->receiveDamage(((pPatrol)pObj)->damage);
-            this->levels->map->removeObject(pObj);
+            this->levels->map->removeObject(win,pObj);
             this->player->movePlayer(win, x, y);
             break;
         case 'U':
             // it's a bullet, we do nothing but the bullet disappears:
-            this->levels->map->removeObject(pObj);
+            this->levels->map->removeObject(win,pObj);
             this->player->movePlayer(win, x, y);
             break;
         case ' ':
@@ -158,7 +158,7 @@ void DynamicLevelList::movePlayer(WINDOW* win, int x, int y) {
             break;
     }
 }
-/*
+
 bool DynamicLevelList::detectCollisionWeapon(int x, int y) {
     pObject pApp = nullptr;
     char collision = this->levels->map->detectCollision(x, y,pApp);
@@ -168,4 +168,4 @@ bool DynamicLevelList::detectCollisionWeapon(int x, int y) {
         return true;
     }
 }
-*/
+

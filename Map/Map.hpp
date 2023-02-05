@@ -52,11 +52,13 @@ public:
     // detect player collision with objects
     char detectCollision(int x, int y, pObject &pObj);
     // remove and object from the objectList
-    void removeObject(pObject pObj);
+    void removeObject(WINDOW *win,pObject pObj);
     // Destructor of the class: delete free pointers
     ~Map();
-
+    // move all the objects in the map
     void moveObjects(WINDOW *win);
+    // shoot a bullet from the player
+    void shootBullet(WINDOW *win, int x, int y, char direction);
 };
 
 // set a name for the pointer to the class Map

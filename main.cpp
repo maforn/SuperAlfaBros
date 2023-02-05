@@ -103,9 +103,12 @@ int main() {
                 break;
             case 'q': // use weapon to left
                 player->useWeaponLeft(win);
+                levels->currentMap()->shootBullet(win, player->getWeapon()->x - 1, player->getWeapon()->y, 'l');
+
                 break;
             case 'e': // use weapon to right
                 player->useWeaponRight(win);
+                levels->currentMap()->shootBullet(win, player->getWeapon()->x + 1, player->getWeapon()->y, 'r');
                 break;
             case ' ': // jump where and if possible, maximum of 3
                 if(lasty > 1) levels->movePlayer(win,player->x, player->y-1);   // if within bounds

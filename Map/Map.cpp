@@ -53,6 +53,11 @@ Map::Map(const string &fileName, pPlayer player) {
 void Map::spawnPlayer() {
     this->player->x = this->lastX;
     this->player->y = this->lastY;
+    if (this->player->getWeapon() != nullptr){
+        this->player->getWeapon()->x = this->lastX+1;
+        this->player->getWeapon()->y = this->lastY;
+    }
+
 }
 
 // save the player coord to lastX and lastY
@@ -196,7 +201,8 @@ char Map::detectCollision(int x, int y, pObject &pObj) {
 }
 
 // remove and object from the objectList
-void Map::removeObject(pObject pObj) {
+void Map::removeObject(WINDOW *win,pObject pObj) {
+    mvwaddwstr(win, pObj->y, pObj->x, L" ");
     this->objectList->removeElement(pObj);
 }
 
@@ -234,9 +240,10 @@ void Map::moveObjects(WINDOW *win) {
                     case 'U':
                         // it's a bullet
                         removeThis = true;
+                        removeObject(win,pObj);
                         break;
                     case 'P':
-                        printw("Player hit by patrol");
+
                         // it's the player
                         player->receiveDamage(((pPatrol) tmp->obj)->getDamage());
                         removeThis = true;
@@ -276,9 +283,10 @@ void Map::moveObjects(WINDOW *win) {
                 } else if (collision == ' ' && player->getWeapon()!= nullptr) {
                     if (player->getWeapon()->x == cords->x && player->getWeapon()->y == cords->y)collision = player->getWeapon()->objectType;
                 }
+
                 if (collision== ' ') ((pBullet) tmp->obj)->move(win,cords->x,cords->y);
                 else if ( collision == 'S' || collision == 'B' || collision == 'R') {
-                    removeObject(pObj);
+                    removeObject(win,pObj);
                     removeThis = true;
                 } else removeThis = true;
 
@@ -288,10 +296,27 @@ void Map::moveObjects(WINDOW *win) {
         if(removeThis) {
             pObject app = tmp->obj;
             tmp = tmp->next;
-            this->removeObject(app);
+            this->removeObject(win,app);
         }else{
             tmp = tmp->next;
         }
 
+    }
+}
+
+void Map::shootBullet(WINDOW *win, int x, int y, char direction) {
+    pObject pObj = nullptr;
+
+    char collision = detectCollision(x,y,pObj);
+    collision = this->detectCollision(x,y,pObj);
+    if(collision == ' ' && player->x == x && player->y == y) {
+        collision = 'P';
+    } else if (collision == ' ' && player->getWeapon()!= nullptr) {
+        if (player->getWeapon()->x == x && player->getWeapon()->y == y)collision = player->getWeapon()->objectType;
+    }
+
+    if (collision == ' ') this->objectList->addTail(new Bullet(x,y,player->calculateDamage(),direction));
+    else if ( collision == 'S' || collision == 'B' || collision == 'R') {
+        removeObject(win,pObj);
     }
 }
