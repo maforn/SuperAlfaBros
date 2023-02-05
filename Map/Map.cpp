@@ -5,6 +5,7 @@
 #include "Map.hpp"
 
 #include <codecvt>
+#include <thread>
 
 // Constructor of the class: will set the player pointer, read the file and create the dynamic object list from
 // there, as well as spawning the Player
@@ -24,7 +25,6 @@ Map::Map(const string &fileName, pPlayer player) {
         perror("Error open");
         exit(EXIT_FAILURE);
     }
-
     // all the lines starting with a letter will contain the information about where the player should spawn or about
     // which object the map contains, as well as their coordinates and characteristic stored as type,x,y,...
     wstring line;
@@ -53,6 +53,11 @@ Map::Map(const string &fileName, pPlayer player) {
 void Map::spawnPlayer() {
     this->player->x = this->lastX;
     this->player->y = this->lastY;
+    if (this->player->getWeapon() != nullptr){
+        this->player->getWeapon()->x = this->lastX+1;
+        this->player->getWeapon()->y = this->lastY;
+    }
+
 }
 
 // save the player coord to lastX and lastY
@@ -133,7 +138,33 @@ void Map::objectParser(wstring line) {
 
             break;
 
-        default: // none of the previous cases were matched
+        case 'R': // case Patrol
+            // remove the first two useless chars
+            line.erase(0, 2); // remove the first two useless chars ("R,")
+            // create params that will be passed to the patrol constructor
+            int x1, y1, x2, y2;
+
+            // set x to the first number before ','
+            x1 = stoi(line.substr(0, line.find(',')));
+            // remove the x,
+            line.erase(0, line.find(',') + 1);
+            // set y to the new first number before ','
+            y1 = stoi(line.substr(0, line.find(',')));
+            // remove the y,
+            line.erase(0, line.find(',') + 1);
+            // set toX to the new first number before ','
+            x2 = stoi(line.substr(0, line.find(',')));
+            // remove the toX,
+            line.erase(0, line.find(',') + 1);
+            // set toY to the remaining number
+            y2 = stoi(line.substr(0, line.find(',')));
+
+            // add to the dynamic object list the new object as an object of type Patrol
+            this->objectList->addTail(new Patrol(x1, y1, x2, y2,this->player->calculateDamage() * 2));
+
+            break;
+
+         default: // none of the previous cases were matched
             wcout << "Invalid encoding: " << line << endl;
     }
 }
@@ -170,7 +201,8 @@ char Map::detectCollision(int x, int y, pObject &pObj) {
 }
 
 // remove and object from the objectList
-void Map::removeObject(pObject pObj) {
+void Map::removeObject(WINDOW *win,pObject pObj) {
+    mvwaddwstr(win, pObj->y, pObj->x, L" ");
     this->objectList->removeElement(pObj);
 }
 
@@ -178,5 +210,113 @@ void Map::removeObject(pObject pObj) {
 void Map::setFirstMap() {
     for (int i = 1; i < OBJECT_TABLE_LENGTH - 1; ++i) {
         this->objectTable[i][0] = L'║';
+    }
+}
+
+void Map::moveObjects(WINDOW *win) {
+    listObjects tmp = this->objectList->objects;
+
+    pCords cords = nullptr;
+    pObject pObj = nullptr;
+    char collision;
+    bool removeThis = false;
+
+    while (tmp != nullptr) {
+        removeThis = false;
+        switch (tmp->obj->objectType) {
+            case 'R': // case Patrol
+
+                cords = ((pPatrol) tmp->obj)->getNewPos();
+                //printw("[%d,%d](%d,%d)",tmp->obj->x,tmp->obj->y,cords->x,cords->y);
+
+                collision = this->detectCollision(cords->x,cords->y,pObj);
+                //printw("%c",collision);
+                if(collision == ' ' && player->x == cords->x && player->y == cords->y) {
+                    collision = 'P';
+                } else if (collision == ' ' && player->getWeapon()!= nullptr ) {
+                    if (player->getWeapon()->x == cords->x && player->getWeapon()->y == cords->y)collision = player->getWeapon()->objectType;
+                }
+                switch (collision) {
+                    case 'U':
+                        // it's a bullet
+                        removeThis = true;
+                        removeObject(win,pObj);
+                        break;
+                    case 'P':
+
+                        // it's the player
+                        player->receiveDamage(((pPatrol) tmp->obj)->getDamage());
+                        removeThis = true;
+                        break;
+                    case 'D':
+                        // it's a shield
+                        (pShield (player->getWeapon()))->receiveDamage(((pPatrol) tmp->obj)->getDamage());
+                        if ((pShield (player->getWeapon()))->getLife()<0){
+                            player->receiveDamage((pShield (player->getWeapon()))->getLife());
+                            player->removeWeapon();
+                        }
+                        break;
+                    case 'K':
+                        // it's a knife
+                        removeThis = true;
+                        break;
+                    case 'G':
+                        // it's a gun
+                        player->removeWeapon();
+                        break;
+                    case ' ':
+                        // blank space
+                        ((pPatrol) tmp->obj)->move(win,cords->x,cords->y);
+                        break;
+                    default:
+                        // it's an object, we do nothing
+                        break;
+                }
+
+                delete cords;
+                break;
+            case 'U': // case Bullet
+                cords = ((pBullet) tmp->obj)->getNewPos();
+                collision = this->detectCollision(cords->x,cords->y,pObj);
+                if(collision == ' ' && player->x == cords->x && player->y == cords->y) {
+                    collision = 'P';
+                } else if (collision == ' ' && player->getWeapon()!= nullptr) {
+                    if (player->getWeapon()->x == cords->x && player->getWeapon()->y == cords->y)collision = player->getWeapon()->objectType;
+                }
+
+                if (collision== ' ') ((pBullet) tmp->obj)->move(win,cords->x,cords->y);
+                else if ( collision == 'S' || collision == 'B' || collision == 'R') {
+                    removeObject(win,pObj);
+                    removeThis = true;
+                } else removeThis = true;
+
+                delete cords;
+                break;
+        }
+        if(removeThis) {
+            pObject app = tmp->obj;
+            tmp = tmp->next;
+            this->removeObject(win,app);
+        }else{
+            tmp = tmp->next;
+        }
+
+    }
+}
+
+void Map::shootBullet(WINDOW *win, int x, int y, char direction) {
+    pObject pObj = nullptr;
+
+    char collision = detectCollision(x,y,pObj);
+    collision = this->detectCollision(x,y,pObj);
+    if(collision == ' ' && player->x == x && player->y == y) {
+        collision = 'P';
+    } else if (collision == ' ' && player->getWeapon()!= nullptr) {
+        if (player->getWeapon()->x == x && player->getWeapon()->y == y)collision = player->getWeapon()->objectType;
+    }
+
+    if (collision == ' ') this->objectList->addTail(new Bullet(x,y,player->calculateDamage(),direction));
+    else if ( collision == 'S' || collision == 'B' || collision == 'R') {
+        removeObject(win,pObj);
     }
 }

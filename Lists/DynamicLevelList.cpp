@@ -12,6 +12,10 @@ struct DynamicLevelList::levelStruct {
     levelStruct *prev;
 };
 
+void detectCollisionWeapon(WINDOW *win);
+
+void detectCollisionWeapon();
+
 // initialize a new map and pass it to the list by reference
 void DynamicLevelList::initialize(levelList &l) {
     // create the temporary pointer to the new level that will be linked later
@@ -107,7 +111,7 @@ DynamicLevelList::~DynamicLevelList() {
 }
 
 // move player to x y checking collisions
-void DynamicLevelList::movePlayer(int x, int y) {
+void DynamicLevelList::movePlayer(WINDOW* win, int x, int y) {
     // helper pointer used to access the other object that is colliding
     pObject pObj = nullptr;
     // switch decision based on what it is colliding with
@@ -129,19 +133,39 @@ void DynamicLevelList::movePlayer(int x, int y) {
         case 'B':
             // it's a bomb: it explodes (so we remove it) and we receive damage:
             this->player->receiveDamage(((pBomb)pObj)->damage);
-            this->levels->map->removeObject(pObj);
+            this->levels->map->removeObject(win,pObj);
             // move the player to the position after the explosion
-            this->player->x = x;
-            this->player->y = y;
+            this->player->movePlayer(win, x, y);
             break;
         case 'T':
             // it's a teleporter, se we teleport to destination:
             ((pTeleporter)pObj)->teleportObject(this->player);
             break;
+        case 'R':
+            // it's a patrol, we do nothing but receive damage:
+            this->player->receiveDamage(((pPatrol)pObj)->damage);
+            this->levels->map->removeObject(win,pObj);
+            this->player->movePlayer(win, x, y);
+            break;
+        case 'U':
+            // it's a bullet, we do nothing but the bullet disappears:
+            this->levels->map->removeObject(win,pObj);
+            this->player->movePlayer(win, x, y);
+            break;
         case ' ':
             // blank space: we can move there
-            this->player->x = x;
-            this->player->y = y;
+            this->player->movePlayer(win, x, y);
             break;
     }
 }
+
+bool DynamicLevelList::detectCollisionWeapon(int x, int y) {
+    pObject pApp = nullptr;
+    char collision = this->levels->map->detectCollision(x, y,pApp);
+    if (collision == ' '){
+        return false;
+    }else {
+        return true;
+    }
+}
+

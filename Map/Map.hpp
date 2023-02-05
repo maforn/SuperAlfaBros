@@ -9,7 +9,7 @@
 #include <fstream>
 #include <iostream>
 #include "../Objects/Player.hpp"
-#include "../Objects/AllObjects.hpp"
+//#include "../Objects/AllObjects.hpp"
 #include "../Lists/DynamicObjectList.hpp"
 
 using namespace std;
@@ -34,6 +34,7 @@ protected:
     // array containing line by line what will be drawn
     wstring objectTable[OBJECT_TABLE_LENGTH];
 public:
+
     // Constructor of the class: will set the player pointer, read the file and create the dynamic object list from
     // there, as well as spawning the Player
     Map(const string& fileName, pPlayer player);
@@ -51,10 +52,13 @@ public:
     // detect player collision with objects
     char detectCollision(int x, int y, pObject &pObj);
     // remove and object from the objectList
-    void removeObject(pObject pObj);
-
+    void removeObject(WINDOW *win,pObject pObj);
     // Destructor of the class: delete free pointers
     ~Map();
+    // move all the objects in the map
+    void moveObjects(WINDOW *win);
+    // shoot a bullet from the player
+    void shootBullet(WINDOW *win, int x, int y, char direction);
 };
 
 // set a name for the pointer to the class Map

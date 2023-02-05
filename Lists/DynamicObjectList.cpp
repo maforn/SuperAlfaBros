@@ -5,10 +5,7 @@
 #include "DynamicObjectList.hpp"
 
 // the struct must contain a superclass object, type that will help get the subclass and the next and previous objects
-struct DynamicObjectList::listObject {
-    Object *obj;
-    listObject *next;
-};
+
 
 // initiate the pointer to null
 DynamicObjectList::DynamicObjectList() {
@@ -16,7 +13,7 @@ DynamicObjectList::DynamicObjectList() {
 }
 
 // add element to the tail of the list
-void DynamicObjectList::addTail(pObject pObj) {
+void DynamicObjectList:: addTail(pObject pObj) {
     listObjects tmp = new listObject;
     tmp->next = nullptr;
     tmp->obj = pObj;

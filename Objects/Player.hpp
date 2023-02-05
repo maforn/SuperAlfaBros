@@ -6,6 +6,7 @@
 #define SUPERALFABROS_PLAYER_HPP
 
 #include "Object.hpp"
+#include "Weapons/Weapon.hpp"
 #include <ncurses.h>
 
 #define MAX_LIFE 100 // max value for player life
@@ -20,6 +21,8 @@ protected:
     int armour;
     // how much damage the player deals
     int damage{};
+
+    pWeapon weapon;
     // how far the player can hit targets from
     int range;
 
@@ -39,6 +42,17 @@ public:
 
     // get the player life
     int getLife();
+    // return the weapon of the player
+    pWeapon  getWeapon();
+    // set the weapon of the player
+    void setWeapon(pWeapon newWeapon);
+    void useWeaponRight(WINDOW *win);
+    void useWeaponLeft(WINDOW *win);
+    void movePlayer(WINDOW *win, int x, int y);
+
+    void removeWeapon();
+    pWeapon changeWeapon(pWeapon newWeapon);
+    
     // get the player armour
     int getArmour();
     // get the player damage
