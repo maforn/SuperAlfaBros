@@ -29,8 +29,9 @@ int main() {
     progressManager->loadSavedData();
     progressManager->incrementMoney(800);
 
+    int vertical_shift = 4;
     // create a new player instance
-    pPlayer player = new Player(1, 1, 20);
+    pPlayer player = new Player(1, 1, 20, vertical_shift);
 
     // create market manager instance and unlock purchased items
     MarketManager* marketManager = new MarketManager(player, progressManager);
@@ -57,10 +58,9 @@ int main() {
     setlocale(LC_ALL, "");
 
     // parameters for window
-    int height, width, vertical_shift, start_y, start_x;
+    int height, width, start_y, start_x;
     height = 30;
     width = 90;
-    vertical_shift = 4;
     start_y = 0;
     start_x = 0;
 

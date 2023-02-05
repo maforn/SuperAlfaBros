@@ -20,11 +20,12 @@ bool Player::incrementField(int& field, int incr, const int maxVal){
 
 // Constructor of the class: will set the new vars and use the constructor of the superclass with '0' as drawing and 'P'
 // as object type
-Player::Player(int x, int y, int life): Object(x,y, L"0", 'P') {
+Player::Player(int x, int y, int life, int vertical_shift): Object(x,y, L"0", 'P') {
     this->life = life;
     weapon = nullptr;
     this->armour = armour;
     this->damage = 0;
+    this->vertical_shift = vertical_shift;
 }
 
 // calculate damage scaled on the level TODO: use a decent equation
@@ -94,7 +95,7 @@ void Player::movePlayer(WINDOW *win, int x, int y) {
     this->x = x;
     this->y = y;
 
-    this->drawPlayer(win);
+    this->drawPlayer(win, this->vertical_shift);
 }
 
 void Player::removeWeapon() {

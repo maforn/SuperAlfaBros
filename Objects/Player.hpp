@@ -22,6 +22,8 @@ protected:
     // how much damage the player deals
     int damage{};
 
+    int vertical_shift;
+
     pWeapon weapon;
     // how far the player can hit targets from
     int range;
@@ -31,7 +33,7 @@ protected:
 
 public:
     // Constructor of the class: will set the new vars and use the constructor of the superclass
-    Player(int x, int y, int life);
+    Player(int x, int y, int life, int vertical_shift);
 
     // calculate damage scaled on the level TODO: use a decent equation
     int calculateDamage ();
