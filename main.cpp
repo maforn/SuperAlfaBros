@@ -22,15 +22,8 @@ int main() {
     initscr();
     // set locale so that special chars will be recognized
     setlocale(LC_ALL, "");
-    // parameters for window
-    /*int height, width, start_y, start_x;
-    height = 30;
-    width = 90;
-    start_y = 0;
-    start_x = 0;*/
 
-    /*const double TEMPO = 500;
-    const double MINTEMPO = 40.0;*/
+
     double delay = TEMPO;  //delay as gravity
 
     // hide the blinking cursor
@@ -61,7 +54,6 @@ int main() {
     // refresh the window with the new data drawn
     wrefresh(win);
 
-    //cbreak();
     noecho(); //don't print the keys pressed while playing
     nodelay(win, TRUE); //make getch not wait for the input
 
@@ -97,7 +89,6 @@ int main() {
             start = CurrentTime_milliseconds();
             if (lasty != player->y) {
                 delay = max(delay * 0.75, MINTEMPO);  // fall faster next time, delay is lower delay/(delay+10.0);
-                //maxh = height;
             } else delay = TEMPO; // reset delay if not falling, no speed
         }
 
@@ -116,7 +107,6 @@ int main() {
             // refresh the window
             wrefresh(win);
         }
-        //}
     } while (choice != 'q' && player->getLife()> 0);
     nodelay(stdscr,FALSE);
 

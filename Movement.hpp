@@ -5,6 +5,7 @@
 #ifndef SUPERALFABROS_MOVEMENT_HPP
 #define SUPERALFABROS_MOVEMENT_HPP
 #include "Lists/DynamicLevelList.hpp"
+// parameters for window
 #define height 30
 #define width 90
 #define start_x 0

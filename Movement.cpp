@@ -62,17 +62,6 @@ public:
                 this->maxh = player->y - 4;
                 levels->movePlayer(player->x + dx, player->y - 1);
                 levels->movePlayer(player->x + dx, player->y - 1);
-                /*//dy=-1;
-                // if within bounds
-                //if (choice_old == 'd') dx = 1;
-                //else if (choice_old == 'a') dx = -1;
-                if (player->y == lasty - 1 && lasty > 2)
-                    levels->movePlayer(player->x, player->y -
-                                                  1); // if previous successful and within bounds
-                if (player->y == lasty - 2 && lasty > 3)
-                    levels->movePlayer(player->x, player->y -
-                                                  1); // if previous successful and within bounds
-                //start = CurrentTime_milliseconds();*/
             } else if (player->y > maxh && this->nJumps < MAX_JUMPS) {
                 levels->movePlayer(player->x + dx, player->y - 1);
                 nJumps++;
@@ -119,11 +108,8 @@ void move(pPlayer player, char choice, pDynamicLevelList levels, bool hasLanded)
             break;
         case 'a': // move player leftward
             levels->movePlayer(player->x - 1, player->y);
-            //choice_old = 'a';
             jumper.update_dx(-1);
             ncicli = 0;
-            //dx = -1;
-            //wcout<<"AAAAAAAAAAAAAA"<<endl;
             break;
         case 'd': // move player rightward
             levels->movePlayer(player->x + 1, player->y);
@@ -132,11 +118,8 @@ void move(pPlayer player, char choice, pDynamicLevelList levels, bool hasLanded)
             break;
         case -1:
             if (ncicli > 1000000 && !jumper.is_onJump()) {
-                //wcout << "c" << endl;
                 jumper.update_dx(0);
                 ncicli = 0;
             }
     }
 }
-
-//void update_window()
