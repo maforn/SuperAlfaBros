@@ -213,7 +213,7 @@ void Map::setFirstMap() {
     }
 }
 
-void Map::moveObjects(WINDOW *win) {
+void Map::moveObjects(WINDOW *win, int vertical_shift) {
     listObjects tmp = this->objectList->objects;
 
     pCords cords = nullptr;

@@ -56,7 +56,7 @@ public:
     // Destructor of the class: delete free pointers
     ~Map();
     // move all the objects in the map
-    void moveObjects(WINDOW *win);
+    void moveObjects(WINDOW *win, int vertical_shift);
     // shoot a bullet from the player
     void shootBullet(WINDOW *win, int x, int y, char direction);
 };

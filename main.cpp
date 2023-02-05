@@ -2,7 +2,7 @@
 #include "Market/MarketManager.hpp"
 #include "Progress/ProgressManager.hpp"
 #include <chrono>
-#include "Movement.hpp"
+#include "Utilities/Movement.hpp"
 #include <cmath>
 #include <unistd.h>
 #include "Objects/AllObjects.hpp"
@@ -10,6 +10,7 @@
 #include "Utilities/StringUtilities.h"
 
 #include <string>
+
 using namespace std;
 
 #define TEMPO 500
@@ -22,13 +23,68 @@ inline double CurrentTime_milliseconds() {
 
 void clearXY(WINDOW *win, int x, int y);
 
+void move(pPlayer player, char choice, pDynamicLevelList levels, bool hasLanded, WINDOW* win) {
+    pMap Map = levels->currentMap();
+    static unsigned long long ncicli = 0;
+    static Movement jumper = Movement(player);
+    if (hasLanded) {
+        jumper.set_endJump();
+        ++ncicli;
+    }
+    switch (choice) {
+        case 'w': // jump where and if possible, maximum of 4
+            jumper.jump(win, Map, levels);
+            break;
+        case 's': // move player backward
+            jumper.update_dx(0);
+            break;
+        case 'a': // move player leftward
+            levels->movePlayer(win, player->x - 1, player->y);
+            jumper.update_dx(-1);
+            ncicli = 0;
+            break;
+        case 'd': // move player rightward
+            levels->movePlayer(win, player->x + 1, player->y);
+            jumper.update_dx(1);
+            ncicli = 0;
+            break;
+        case 'q': // use weapon to left
+            player->useWeaponLeft(win);
+            levels->currentMap()->shootBullet(win, player->getWeapon()->x - 1, player->getWeapon()->y, 'l');
+            break;
+        case 'e': // use weapon to right
+            player->useWeaponRight(win);
+            levels->currentMap()->shootBullet(win, player->getWeapon()->x + 1, player->getWeapon()->y, 'r');
+            break;
+        case -1:
+            if (ncicli > 1000000 && !jumper.is_onJump()) {
+                jumper.update_dx(0);
+                ncicli = 0;
+            }
+    }
+}
+
+void drawHeader(WINDOW* win, ProgressManager* progressManager, pPlayer player) {
+    // format and print LIFE and ARMOUR strings
+    wstring lifeStr = playerStatusFormatter(L"LIFE   > ", 13, player->getLife(), 10);
+    wstring armourStr = playerStatusFormatter(L"ARMOUR > ", 13, player->getArmour(), 5);
+    mvwaddwstr(win, start_y + 1, start_x + 1, lifeStr.c_str());
+    mvwaddwstr(win, start_y + 2, start_x + 1, armourStr.c_str());
+
+    // format and print MONEY and POINTS strings
+    wstring money = L"MONEY  > ";
+    wstring points = L"POINTS > ";
+    progressFormatter(money, points, progressManager->getMoney(), progressManager->getPoints());
+    mvwaddwstr(win, start_y + 1, width - 1 - money.length(), money.c_str());
+    mvwaddwstr(win, start_y + 2, width - 1 - points.length(), points.c_str());
+}
 
 int main() {
     // seed the random number generator
     srand(time(nullptr));
-    
+
     // create progress manager instance and load saved data
-    ProgressManager* progressManager = new ProgressManager("PlayerData.txt", "WeaponData.txt", "SkinData.txt");
+    ProgressManager *progressManager = new ProgressManager("PlayerData.txt", "WeaponData.txt", "SkinData.txt");
     progressManager->loadSavedData();
     progressManager->incrementMoney(800);
 
@@ -37,7 +93,7 @@ int main() {
     pPlayer player = new Player(1, 1, 20, vertical_shift);
 
     // create market manager instance and unlock purchased items
-    MarketManager* marketManager = new MarketManager(player, progressManager);
+    MarketManager *marketManager = new MarketManager(player, progressManager);
     marketManager->addUnlockedSkins(progressManager->getUnlockedSkinsString());
     marketManager->addUnlockedWeapons(progressManager->getUnlockedWeaponsString());
 
@@ -61,16 +117,6 @@ int main() {
     setlocale(LC_ALL, "");
 
 
-    // parameters for window
-    int height, width, start_y, start_x;
-    height = 30;
-    width = 90;
-    start_y = 0;
-    start_x = 0;
-
-    const double TEMPO = 500;
-    const double MINTEMPO = 40.0;
-    
     double delay = TEMPO;  //delay as gravity
 
     // hide the blinking cursor
@@ -103,18 +149,7 @@ int main() {
     levels->currentMap()->drawObjects(win, vertical_shift);
     player->drawPlayer(win, vertical_shift);
 
-    // format and print LIFE and ARMOUR strings
-    wstring lifeStr = playerStatusFormatter(L"LIFE   > ", 13, player->getLife(), 10);
-    wstring armourStr = playerStatusFormatter(L"ARMOUR > ", 13, player->getArmour(), 5);
-    mvwaddwstr(win, start_y + 1, start_x + 1, lifeStr.c_str());
-    mvwaddwstr(win, start_y + 2, start_x + 1, armourStr.c_str());
-
-    // format and print MONEY and POINTS strings
-    wstring money = L"MONEY  > ";
-    wstring points = L"POINTS > ";
-    progressFormatter(money, points, progressManager->getMoney(), progressManager->getPoints());
-    mvwaddwstr(win, start_y + 1, width - 1 - money.length(), money.c_str());
-    mvwaddwstr(win, start_y + 2, width - 1 - points.length(), points.c_str());
+    drawHeader(win, progressManager, player);
 
     // refresh the window with the new data drawn
     wrefresh(win);
@@ -124,11 +159,11 @@ int main() {
     getch();
 
     // display market
-    wclear(win);
+    /*wclear(win);
     marketManager->openMarket(win, 5, 5);
     bool quitGame = marketManager->waitForMarketClosure();
     wclear(win);
-    wrefresh(win);
+    wrefresh(win);*/
 
     nodelay(stdscr, TRUE); //make getch not wait for the input
     nodelay(win, TRUE); //make getch not wait for the input
@@ -153,13 +188,13 @@ int main() {
         lastMap = levels->currentMap();
 
         // get choice from keyboard
-        
+
         choice = wgetch(win);
-        move(player, choice, levels, hasLanded);
+        move(player, choice, levels, hasLanded, win);
 
         if ((CurrentTime_milliseconds() - start) > delay) // gravity, acts based on time passed
         {
-            levels->movePlayer(player->x, player->y + 1); // fall
+            levels->movePlayer(win, player->x, player->y + 1); // fall
             hasLanded = lasty == player->y;
 /*
         choice = getch();
@@ -202,7 +237,7 @@ int main() {
          if ((CurrentTime_milliseconds() - start)>delay) // gravity, acts based on time passed
         {
             levels->movePlayer(win,player->x, player->y + 1); // fall */
-            
+
             start = CurrentTime_milliseconds();
             if (lasty != player->y) {
                 delay = max(delay * 0.75, MINTEMPO);  // fall faster next time, delay is lower delay/(delay+10.0);
@@ -213,36 +248,36 @@ int main() {
         if (lastx != player->x || lasty != player->y || levels->currentMap() != lastMap) { // if something changes
 
             if (levels->currentMap() != lastMap) // if map changes
-  /*
-         // move the objects every second
-        if ((CurrentTime_milliseconds() - appTime )> 1000) // every second
-        {
+                /*
+                       // move the objects every second
+                      if ((CurrentTime_milliseconds() - appTime )> 1000) // every second
+                      {
 
-            appTime = CurrentTime_milliseconds();
+                          appTime = CurrentTime_milliseconds();
 
-            levels->currentMap()->moveObjects(win); // move all the objects
-            wrefresh(win);
+                          levels->currentMap()->moveObjects(win); // move all the objects
+                          wrefresh(win);
 
-        }
+                      }
 
-        if (lastx!=player->x || lasty!=player->y || levels->currentMap()!=lastMap) { // if something changes
-            if (levels->currentMap()!=lastMap) // if map changes */
-            
-            {
-                // clear the window and draw Map and Objects
-                wclear(win);
-                levels->currentMap()->drawBaseMap(win,vertical_shift);
-                levels->currentMap()->drawObjects(win,vertical_shift);
-            }
+                      if (lastx!=player->x || lasty!=player->y || levels->currentMap()!=lastMap) { // if something changes
+                          if (levels->currentMap()!=lastMap) // if map changes */
 
-            clearXY(win, lastx, lasty); // clear previous coordinate where player was
-            player->drawPlayer(win,vertical_shift);
-            
+
+            // clear the window and draw Map and Objects
+            wclear(win);
+            drawHeader(win, progressManager, player);
+            levels->currentMap()->drawBaseMap(win, vertical_shift);
+            levels->currentMap()->drawObjects(win, vertical_shift);
+
+            //clearXY(win, lastx, lasty); // clear previous coordinate where player was
+            player->drawPlayer(win, vertical_shift);
+
             // refresh the window
             wrefresh(win);
         }
-    } while (choice != '27' && player->getLife()> 0);
-    nodelay(stdscr,FALSE);
+    } while (choice != 27 && player->getLife() > 0);
+    nodelay(stdscr, FALSE);
 
     wclear(win);
     wrefresh(win);

@@ -21,10 +21,10 @@ void Patrol::drawPatrol(WINDOW *win) {
 
  void Patrol::move(WINDOW *win, int x, int y) {
      //printw("%ls",this->drawing.c_str());
-     mvwaddwstr(win, this->y, this->x , L" ");
+     //mvwaddwstr(win, this->y, this->x , L" ");
     this->x=x;
     this->y=y;
-     mvwaddwstr(win, y, x, this->drawing.c_str());
+     //mvwaddwstr(win, y, x, this->drawing.c_str());
 }
 
 pCords Patrol::getNewPos() {
