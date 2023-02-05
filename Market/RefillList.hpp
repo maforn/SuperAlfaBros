@@ -33,7 +33,10 @@ public:
     RefillList();
 
     // adds a refill with the specified attributes at the end of the list
-    void addRefill(char code, wstring name, int amount, int price);
+    void addRefill(char code, wstring name, int amount, int startingPrice);
+
+    // set the actual price of each refill to its starting price * multiplier
+    void multiplyPrices(double multiplier);
 
     // returns the number of refills in the list
     int getCount();

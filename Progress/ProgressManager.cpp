@@ -47,11 +47,13 @@ void ProgressManager::saveCodeData(CodeData source, string fileName){
 }
 
 void ProgressManager::calculateDifficulty(){
-    this -> difficulty = 1;
+    const double INCR_PER_100_POINTS = 0.1;
+    double pointsIncr = INCR_PER_100_POINTS * (this->points / 100);
 
-    double incr = 0.2;
+    const double INCR_PER_WEAPON = 0.3;
+    double weaponIncr = INCR_PER_WEAPON * getUnlockedWeaponsString().length();
 
-    this -> difficulty += incr;
+    this->difficulty = 2 + pointsIncr + weaponIncr;
 }
 
 //public
@@ -71,6 +73,8 @@ void ProgressManager::loadSavedData(){
     loadPlayerData();
     loadCodeData(this->weaponData, this->weaponFileName, 'A');
     loadCodeData(this->skinData, this->skinFileName, 'A');
+
+    calculateDifficulty();
 }
 
 int ProgressManager::getSavedArmour(){
