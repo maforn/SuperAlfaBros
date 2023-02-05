@@ -9,7 +9,8 @@ struct RefillList::refill{
     char code;
     wstring name;
     int amount;
-    int price;
+    int startingPrice;
+    int actualPrice;
     refill* next;
 };
 
@@ -41,26 +42,35 @@ RefillList::p_refill RefillList::tailInsert(p_refill head, p_refill element){
 //PUBLIC
 
 RefillList::RefillList(){
-    this -> head = NULL;
+    this->head = NULL;
 }
 
-void RefillList::addRefill(char code, wstring name, int amount, int price){
+void RefillList::addRefill(char code, wstring name, int amount, int startingPrice){
     p_refill newRefill = new refill;
-    newRefill -> price = price;
-    newRefill -> amount = amount;
-    newRefill -> code = code;
-    newRefill -> name = name;
-    newRefill -> next = NULL;
+    newRefill->startingPrice = startingPrice;
+    newRefill->actualPrice = startingPrice;
+    newRefill->amount = amount;
+    newRefill->code = code;
+    newRefill->name = name;
+    newRefill->next = NULL;
 
-    this -> head = tailInsert(this -> head, newRefill);
+    this->head = tailInsert(this->head, newRefill);
+}
+
+void RefillList::multiplyPrices(double multiplier){
+    p_refill iterator = this->head;
+    while(iterator != NULL){
+        iterator->actualPrice = multiplier * iterator->startingPrice;
+        iterator = iterator->next;
+    }
 }
 
 int RefillList::getCount() {
     int count = 0;
-    p_refill iterator = this -> head;
+    p_refill iterator = this->head;
     while(iterator != NULL){
         count += 1;
-        iterator = iterator -> next;
+        iterator = iterator->next;
     }
     return count;
 }
@@ -78,7 +88,7 @@ int RefillList::getPrice(char code){
     if(desiredRefill == NULL)
         return(-1);
     else
-        return(desiredRefill -> price);
+        return(desiredRefill->actualPrice);
 }
 
 int RefillList::getAmount(char code){
@@ -86,14 +96,14 @@ int RefillList::getAmount(char code){
     if(desiredRefill == NULL)
         return(-1);
     else
-        return(desiredRefill -> amount);
+        return(desiredRefill->amount);
 }
 
 void RefillList::getRefillInfoStrings(wstring dest[], int count) {
     int index = 0;
     p_refill iterator = this->head;
     while(iterator != NULL && index < count){
-        dest[index] = iterator->name + L"\t\t" + to_wstring(iterator->amount) + L"\t\t" + to_wstring(iterator->price);
+        dest[index] = iterator->name + L"\t\t" + to_wstring(iterator->amount) + L"\t\t" + to_wstring(iterator->actualPrice);
         iterator = iterator->next;
         index += 1;
     }

@@ -9,7 +9,8 @@ struct WeaponList::weapon{
     wstring name;
     int range;
     int damage;
-    int price;
+    int startingPrice;
+    int actualPrice;
     weapon* next;
 };
 
@@ -61,13 +62,14 @@ WeaponList::WeaponList(){
     this -> head = NULL;
 }
 
-void WeaponList::addWeapon(char code, wstring name, int range, int damage, int price){
+void WeaponList::addWeapon(char code, wstring name, int range, int damage, int startingPrice){
     p_weapon newHead = new weapon;
     newHead->code = code;
     newHead->name = name;
     newHead->range = range;
     newHead->damage = damage;
-    newHead->price = price;
+    newHead->startingPrice = startingPrice;
+    newHead->actualPrice = startingPrice;
     newHead->next = NULL;
 
     this -> head = tailInsert(this -> head, newHead);
@@ -96,7 +98,7 @@ int WeaponList::getPrice(char code){
     if(desiredWeapon == NULL)
         return(-1);
     else
-        return(desiredWeapon -> price);
+        return(desiredWeapon->actualPrice);
 }
 
 int WeaponList::getDamage(char code) {
@@ -104,13 +106,21 @@ int WeaponList::getDamage(char code) {
     if(desiredWeapon == NULL)
         return(-1);
     else
-        return(desiredWeapon -> damage);
+        return(desiredWeapon->damage);
 }
 
 void WeaponList::removePrice(char code){
     p_weapon desiredWeapon = findWeapon(code);
     if(desiredWeapon != NULL)
-        desiredWeapon -> price = 0;
+        desiredWeapon->actualPrice = 0;
+}
+
+void WeaponList::multiplyPrices(double multiplier){
+    p_weapon iterator = this->head;
+    while(iterator != NULL){
+        iterator->actualPrice = multiplier * iterator->startingPrice;
+        iterator = iterator->next;
+    }
 }
 
 void WeaponList::moveToFirst(char code) {
@@ -128,7 +138,7 @@ void WeaponList::sortWeapons(){
         iterator = iterator -> next;
         current -> next = NULL;
 
-        if(current -> price == 0)
+        if(current->actualPrice == 0)
             unlocked = tailInsert(unlocked, current);
         else
             locked = tailInsert(locked, current);
@@ -143,14 +153,14 @@ void WeaponList::getWeaponInfoString(wstring dest[], int count, char selectedCod
     while(iterator != NULL && index < count){
         wstring info = iterator->name + L"\t\t" + to_wstring(iterator->range) + L"\t\t" + to_wstring(iterator->damage) + L"\t\t";
 
-        if(iterator->price == 0){
+        if(iterator->actualPrice == 0){
             if(iterator->code == selectedCode)
                 info += L"Selected";
             else
                 info += L"Available";
         }
         else
-            info += to_wstring(iterator->price);
+            info += to_wstring(iterator->actualPrice);
 
         dest[index] = info;
         iterator = iterator->next;

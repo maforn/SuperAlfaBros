@@ -25,7 +25,8 @@ protected:
     CodeData skinData; // list of the codes of the skins that have been unlocked
     CodeData weaponData; // list of the codes of the weapons that have been unlocked
 
-    //
+    // difficulty is a multiplier derived from the current points and the number of unlocked weapons
+    // all game objects requiring incremental difficulty should have their values multiplied by difficulty
     double difficulty;
 
     // loads the saved data regarding player status, ie armour
@@ -42,6 +43,7 @@ protected:
 
     // calculates the game difficulty based on unlocked weapons and money
     void calculateDifficulty();
+
 public:
 
     // constructor: initializes file names

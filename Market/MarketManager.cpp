@@ -193,6 +193,12 @@ void MarketManager::addUnlockedSkins(string codeStr){
 
 void MarketManager::openMarket(WINDOW* win, int start_y, int start_x){
     nodelay(stdscr, FALSE);
+
+    //update items' prices to match difficulty level
+    double difficulty = progressManager->getDifficulty();
+    refills.multiplyPrices(difficulty);
+    weapons.multiplyPrices(difficulty);
+
     displayer.changePage(0); //open first page
     displayer.initMenuWindow(win, start_y, start_x); //setup menu top left corner
 }

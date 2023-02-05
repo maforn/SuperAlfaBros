@@ -39,7 +39,7 @@ public:
     WeaponList();
 
     // adds a weapon with the specified attributes at the end of the list
-    void addWeapon(char code, wstring name, int range, int damage, int price);
+    void addWeapon(char code, wstring name, int range, int damage, int startingPrice);
 
     // returns the number of weapons in the list
     int getCount();
@@ -55,6 +55,9 @@ public:
 
     // sets the price of the weapon with the specified code to zero
     void removePrice(char code);
+
+    // set the actual price of each weapon to its starting price * multiplier
+    void multiplyPrices(double multiplier);
 
     // moves the weapon with the specified code at the beginning of the list
     void moveToFirst(char code);
