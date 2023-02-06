@@ -5,8 +5,10 @@
 #include "Bullet.hpp"
 
 
-Bullet::Bullet(int x, int y, int level, char direction) : Weapon(x, y, level, level+3, L"-", 'U', L"-", L"-" ){
+Bullet::Bullet(int x, int y, int damage, char direction, int range) : Object(x, y, L"-" , 'U' ){
     this->direction = direction;
+    this->damage = damage;
+    this->range = range;
 }
 
 void Bullet::move(WINDOW *win, int x, int y) {

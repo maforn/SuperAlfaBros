@@ -21,7 +21,6 @@ inline double CurrentTime_milliseconds() {
             (chrono::high_resolution_clock::now().time_since_epoch()).count();
 }
 
-void clearXY(WINDOW *win, int x, int y);
 
 void move(pPlayer player, char choice, pDynamicLevelList levels, bool hasLanded, WINDOW* win) {
     pMap Map = levels->currentMap();
@@ -50,11 +49,11 @@ void move(pPlayer player, char choice, pDynamicLevelList levels, bool hasLanded,
             break;
         case 'q': // use weapon to left
             player->useWeaponLeft(win);
-            levels->currentMap()->shootBullet(win, player->getWeapon()->x - 1, player->getWeapon()->y, 'l');
+            levels->currentMap()->shootBullet(win, player->getWeapon()->x-1, player->getWeapon()->y, 'l');
             break;
         case 'e': // use weapon to right
             player->useWeaponRight(win);
-            levels->currentMap()->shootBullet(win, player->getWeapon()->x + 1, player->getWeapon()->y, 'r');
+            levels->currentMap()->shootBullet(win, player->getWeapon()->x+1, player->getWeapon()->y, 'r');
             break;
         case -1:
             if (ncicli > 1000000 && !jumper.is_onJump()) {
@@ -181,7 +180,7 @@ int main() {
     auto start = frame;
     double appTime = 0;
     //int choice_old = 's';
-    //player->setWeapon(new Gun(player->x,player->y,1));
+    player->setWeapon(new Gun(player->x,player->y,1));
     do {
         //if (CurrentTime_milliseconds() - frame > 20) {
         lastx = player->x;
@@ -252,14 +251,12 @@ int main() {
             appTime = CurrentTime_milliseconds();
 
             levels->currentMap()->moveObjects(win, 0); // move all the objects
-
             wclear(win);
             drawHeader(win, progressManager, player);
             levels->currentMap()->drawBaseMap(win, vertical_shift);
             levels->currentMap()->drawObjects(win, vertical_shift);
             player->drawPlayer(win, vertical_shift);
             wrefresh(win);
-
         }
 
 
@@ -272,20 +269,6 @@ int main() {
                 nodelay(stdscr, TRUE);
             }
 
-                /*
-                       // move the objects every second
-                      if ((CurrentTime_milliseconds() - appTime )> 1000) // every second
-                      {
-
-                          appTime = CurrentTime_milliseconds();
-
-                          levels->currentMap()->moveObjects(win); // move all the objects
-                          wrefresh(win);
-
-                      }
-
-                      if (lastx!=player->x || lasty!=player->y || levels->currentMap()!=lastMap) { // if something changes
-                          if (levels->currentMap()!=lastMap) // if map changes */
 
 
             // clear the window and draw Map and Objects
@@ -324,8 +307,4 @@ int main() {
 
     endwin();
     return 0;
-}
-
-void clearXY(WINDOW *win, int x, int y) {
-    mvwaddwstr(win, y, x, L" ");
 }

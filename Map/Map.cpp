@@ -248,14 +248,6 @@ void Map::moveObjects(WINDOW *win, int vertical_shift) {
                         player->receiveDamage(((pPatrol) tmp->obj)->getDamage());
                         removeThis = true;
                         break;
-                    case 'D':
-                        // it's a shield
-                        (pShield (player->getWeapon()))->receiveDamage(((pPatrol) tmp->obj)->getDamage());
-                        if ((pShield (player->getWeapon()))->getLife()<0){
-                            player->receiveDamage((pShield (player->getWeapon()))->getLife());
-                            player->removeWeapon();
-                        }
-                        break;
                     case 'K':
                         // it's a knife
                         removeThis = true;
@@ -276,21 +268,25 @@ void Map::moveObjects(WINDOW *win, int vertical_shift) {
                 delete cords;
                 break;
             case 'U': // case Bullet
-                cords = ((pBullet) tmp->obj)->getNewPos();
-                collision = this->detectCollision(cords->x,cords->y,pObj);
-                if(collision == ' ' && player->x == cords->x && player->y == cords->y) {
-                    collision = 'P';
-                } else if (collision == ' ' && player->getWeapon()!= nullptr) {
-                    if (player->getWeapon()->x == cords->x && player->getWeapon()->y == cords->y)collision = player->getWeapon()->objectType;
-                }
-
-                if (collision== ' ') ((pBullet) tmp->obj)->move(win,cords->x,cords->y);
-                else if ( collision == 'S' || collision == 'B' || collision == 'R') {
-                    removeObject(win,pObj);
+                if (((pBullet) tmp->obj)->range <= 0) {
                     removeThis = true;
-                } else removeThis = true;
+                }else {
+                    ((pBullet) tmp->obj)->range--;
+                    cords = ((pBullet) tmp->obj)->getNewPos();
+                    collision = this->detectCollision(cords->x,cords->y,pObj);
+                    if(collision == ' ' && player->x == cords->x && player->y == cords->y) {
+                        collision = 'P';
+                    } else if (collision == ' ' && player->getWeapon()!= nullptr) {
+                        if (player->getWeapon()->x == cords->x && player->getWeapon()->y == cords->y)collision = player->getWeapon()->objectType;
+                    }
 
-                delete cords;
+                    if (collision== ' ') ((pBullet) tmp->obj)->move(win,cords->x,cords->y);
+                    else if ( collision == 'S' || collision == 'B' || collision == 'R') {
+                        removeObject(win,pObj);
+                        removeThis = true;
+                    } else removeThis = true;
+                    delete cords;
+                }
                 break;
         }
         if(removeThis) {
@@ -315,7 +311,7 @@ void Map::shootBullet(WINDOW *win, int x, int y, char direction) {
         if (player->getWeapon()->x == x && player->getWeapon()->y == y)collision = player->getWeapon()->objectType;
     }
 
-    if (collision == ' ') this->objectList->addTail(new Bullet(x,y,player->calculateDamage(),direction));
+    if (collision == ' ') this->objectList->addTail(new Bullet(x, y, player->calculateDamage(), direction, 5));
     else if ( collision == 'S' || collision == 'B' || collision == 'R') {
         removeObject(win,pObj);
     }

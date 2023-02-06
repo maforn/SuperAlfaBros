@@ -5,16 +5,18 @@
 #ifndef SUPERALFABROS_BULLET_HPP
 #define SUPERALFABROS_BULLET_HPP
 
-#include "../Object.hpp"
-#include "Weapon.hpp"
+#include "Object.hpp"
 
 #include <ncurses.h>
 
-class Bullet : public Weapon{
+class Bullet : public Object{
 protected:
     char direction;
+    int damage;
+
 public:
-    Bullet(int x, int y, int level, char direction);
+    int range;
+    Bullet(int x, int y, int damage, char direction, int range);
     void move(WINDOW *win, int x, int y);
     pCords getNewPos();
 };
