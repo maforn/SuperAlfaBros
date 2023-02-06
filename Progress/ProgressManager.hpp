@@ -85,6 +85,8 @@ public:
     int getPoints();
     // increments the current points by incr
     void incrementPoints(int incr);
+
+    void saveProgress();
 };
 
 #endif //SUPERALFABROS_PROGRESSMANAGER_HPP
