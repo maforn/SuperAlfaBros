@@ -153,17 +153,6 @@ int main() {
     // refresh the window with the new data drawn
     wrefresh(win);
     noecho(); //don't print the keys pressed while playing
-    nodelay(win, TRUE); //make getch not wait for the input
-
-    getch();
-
-    // display market
-    /*wclear(win);
-    marketManager->openMarket(win, 5, 5);
-    bool quitGame = marketManager->waitForMarketClosure();
-    wclear(win);
-    wrefresh(win);*/
-
     nodelay(stdscr, TRUE); //make getch not wait for the input
     nodelay(win, TRUE); //make getch not wait for the input
 
@@ -172,17 +161,12 @@ int main() {
     pMap lastMap;
     // detect player moves
     int choice;
-    /*int maxh = height;
-    //int dx = 0;
-    //int dy = 1;*/
 
     auto frame = CurrentTime_milliseconds();
     auto start = frame;
     double appTime = 0;
-    //int choice_old = 's';
-    player->setWeapon(new Gun(player->x,player->y,1));
+    player->setWeapon(new Gun(player->x+1,player->y,1));
     do {
-        //if (CurrentTime_milliseconds() - frame > 20) {
         lastx = player->x;
         lasty = player->y;
         lastMap = levels->currentMap();
@@ -240,7 +224,7 @@ int main() {
 
             start = CurrentTime_milliseconds();
             if (lasty != player->y) {
-                delay = max(delay * 0.75, MINTEMPO);  // fall faster next time, delay is lower delay/(delay+10.0);
+                delay = max(delay * 0.75, MINTEMPO);  // fall faster next time, delay is lower
             } else delay = TEMPO; // reset delay if not falling, no speed
         }
 
