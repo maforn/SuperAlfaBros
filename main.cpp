@@ -179,8 +179,9 @@ int main() {
 
     auto frame = CurrentTime_milliseconds();
     auto start = frame;
-
+    double appTime = 0;
     //int choice_old = 's';
+    //player->setWeapon(new Gun(player->x,player->y,1));
     do {
         //if (CurrentTime_milliseconds() - frame > 20) {
         lastx = player->x;
@@ -242,6 +243,23 @@ int main() {
             if (lasty != player->y) {
                 delay = max(delay * 0.75, MINTEMPO);  // fall faster next time, delay is lower delay/(delay+10.0);
             } else delay = TEMPO; // reset delay if not falling, no speed
+        }
+
+        // move the objects every second
+        if ((CurrentTime_milliseconds() - appTime )> 1000) // every second
+        {
+
+            appTime = CurrentTime_milliseconds();
+
+            levels->currentMap()->moveObjects(win, 0); // move all the objects
+
+            wclear(win);
+            drawHeader(win, progressManager, player);
+            levels->currentMap()->drawBaseMap(win, vertical_shift);
+            levels->currentMap()->drawObjects(win, vertical_shift);
+            player->drawPlayer(win, vertical_shift);
+            wrefresh(win);
+
         }
 
 
