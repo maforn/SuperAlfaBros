@@ -7,7 +7,7 @@
 
 #include "Weapon.hpp"
 #include "Gun.hpp"
-#include "Knife.hpp"
+#include "Shotgun.hpp"
 #include "Gun.hpp"
 #include "../Bullet.hpp"
 

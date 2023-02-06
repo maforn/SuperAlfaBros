@@ -301,18 +301,22 @@ void Map::moveObjects(WINDOW *win, int vertical_shift) {
 }
 
 void Map::shootBullet(WINDOW *win, int x, int y, char direction) {
-    pObject pObj = nullptr;
+    if (player->getWeapon() != nullptr) {
+        pObject pObj = nullptr;
 
-    char collision = detectCollision(x,y,pObj);
-    collision = this->detectCollision(x,y,pObj);
-    if(collision == ' ' && player->x == x && player->y == y) {
-        collision = 'P';
-    } else if (collision == ' ' && player->getWeapon()!= nullptr) {
-        if (player->getWeapon()->x == x && player->getWeapon()->y == y)collision = player->getWeapon()->objectType;
-    }
+        char collision = detectCollision(x, y, pObj);
+        collision = this->detectCollision(x, y, pObj);
+        if (collision == ' ' && player->x == x && player->y == y) {
+            collision = 'P';
+        } else if (collision == ' ' && player->getWeapon() != nullptr) {
+            if (player->getWeapon()->x == x && player->getWeapon()->y == y)collision = player->getWeapon()->objectType;
+        }
 
-    if (collision == ' ') this->objectList->addTail(new Bullet(x, y, player->calculateDamage(), direction, 5));
-    else if ( collision == 'S' || collision == 'B' || collision == 'R') {
-        removeObject(win,pObj);
+        if (collision == ' '){
+            this->objectList->addTail(new Bullet(x, y, player->getWeapon()->getDamage(), direction, player->getWeapon()->getRange()));
+        }
+        else if (collision == 'S' || collision == 'B' || collision == 'R') {
+            removeObject(win, pObj);
+        }
     }
 }

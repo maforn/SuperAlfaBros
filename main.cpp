@@ -49,11 +49,11 @@ void move(pPlayer player, char choice, pDynamicLevelList levels, bool hasLanded,
             break;
         case 'q': // use weapon to left
             player->useWeaponLeft(win);
-            levels->currentMap()->shootBullet(win, player->getWeapon()->x-1, player->getWeapon()->y, 'l');
+            levels->currentMap()->shootBullet(win, player->getWeapon()->x - 1, player->getWeapon()->y, 'l');
             break;
         case 'e': // use weapon to right
             player->useWeaponRight(win);
-            levels->currentMap()->shootBullet(win, player->getWeapon()->x+1, player->getWeapon()->y, 'r');
+            levels->currentMap()->shootBullet(win, player->getWeapon()->x + 1, player->getWeapon()->y, 'r');
             break;
         case -1:
             if (ncicli > 1000000 && !jumper.is_onJump()) {

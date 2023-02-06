@@ -16,10 +16,14 @@ protected:
     std::wstring drawingRight;
     std::wstring drawingLeft;
     const wchar_t *covering;
+    std::wstring name;
+    int range;
 public:
-    bool canBeDrawn;
+    std::wstring getName();
+    int getRange() const;
     bool isRight;
-    Weapon(int x, int y, int level, int damage, std::wstring drawing, char objectType, std::wstring drawingRight, std::wstring drawingLeft);
+    Weapon(int x, int y, char objectType, std::wstring name, int damage, int range, int level,
+           std::wstring drawingLeft, std::wstring drawingRight, std::wstring drawing);
     int getDamage();
     virtual void useRight(WINDOW *win);
     virtual void useLeft(WINDOW *win);

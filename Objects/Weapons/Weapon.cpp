@@ -22,14 +22,17 @@ int Weapon::getDamage(){
     return level*damage;
 }
 
-Weapon::Weapon(int x, int y, int level, int damage, std::wstring drawing, char objectType, std::wstring drawingRight, std::wstring drawingLeft) : Object(x, y, drawing, objectType) {
+Weapon::Weapon(int x, int y, char objectType, std::wstring name, int damage, int range, int level,
+               std::wstring drawingLeft, std::wstring drawingRight, std::wstring drawing) : Object(x, y, drawing, objectType) {
     this->level = level;
     this->damage = damage;
     this->drawingRight = drawingRight;
     this->drawingLeft = drawingLeft;
     this->isRight = true;
     covering = L" ";
-    canBeDrawn = true;
+    this->name = name;
+    this->range = range;
+
 }
 
 void Weapon::useRight(WINDOW *win) {
@@ -54,4 +57,12 @@ void Weapon::moveWeapon(WINDOW *win, int x, int y) {
 
     this->x = x;
     this->y = y;
+}
+
+int Weapon::getRange() const {
+    return this->range;
+}
+
+std::wstring Weapon::getName() {
+    return this->name;
 }
