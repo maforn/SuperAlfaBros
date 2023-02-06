@@ -69,7 +69,7 @@ void Map::savePlayerCoord() {
 // parse object from string stored into the map file
 void Map::objectParser(wstring line) {
     // DEBUG
-    wcout << line << endl;
+    //wcout << line << endl;
     // get the first char of the string structured as type,x,y,...
     switch (line[0]) {
         case 'P': // case Player
