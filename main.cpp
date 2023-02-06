@@ -102,7 +102,7 @@ int main() {
     char skinCode = progressManager->getCurrentSkinCode();
     player->changeSkin(marketManager->getSkin(skinCode));
     char weaponCode = progressManager->getCurrentWeaponCode();
-    player->changeDamage(marketManager->getWeaponDamage(weaponCode));
+    player->setWeapon(marketManager->getWeapon(weaponCode));
 
     string mapsFolder = "../maps/";
     // create the levels dynamic lists

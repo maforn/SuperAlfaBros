@@ -57,22 +57,20 @@ protected:
     void back();
 
     // returns true if the user chose to exit market
-    bool isExitChosed(int choice);
+    bool isExitChosen(int choice);
 
     // returns true if the user chose to quit game
-    bool isQuitChosed(int choice);
+    bool isQuitChosen(int choice);
 
 public:
 
     //Constructor: initializes the market items and the pointer to the Player and ProgressManager objects
     MarketManager(Player* player, ProgressManager* progressManager);
 
-    // returns the damage of the weapon of the specified code
-    int getWeaponDamage(char code);
-    // returns the range of the weapon of the specified code
-    int getWeaponRange(char code);
     // returns the drawing of the skin of the specified code
     wstring getSkin(char code);
+
+    pWeapon getWeapon(char code);
 
     // unlock all weapons whose codes appear in codeStr
     void addUnlockedWeapons(string codeStr);

@@ -11,20 +11,16 @@ void MarketManager::initializeRefills(){
 }
 
 void MarketManager::initializeWeapons() {
-    weapons.addWeapon('A', L"Rifle", 10, 10, 10);
-    weapons.addWeapon('B', L"Shotgun", 30, 30, 30);
-    weapons.addWeapon('C', L"Rifle", 10, 10, 10);
-    weapons.addWeapon('D', L"Pistol", 20, 20, 20);
-    weapons.addWeapon('E', L"Rifle", 10, 10, 10);
-    weapons.addWeapon('F', L"Rifle", 10, 10, 10);
+    weapons.addWeapon(new Gun(0, 0, 1), 100);
+    weapons.addWeapon(new Shotgun(0, 0, 1), 100);
 }
 
 void MarketManager::initializeSkins() {
-    skins.addSkin('A', L"0", L"AAAAAA", 10);
-    skins.addSkin('B', L"B", L"BBBBBBB", 20);
-    skins.addSkin('C', L"C", L"CCCCCCC", 30);
-    skins.addSkin('D', L"D", L"DDDDDD", 40);
-    skins.addSkin('E', L"E", L"EEEEEEE", 50);
+    skins.addSkin('A', L"0", L"Default", 10);
+    skins.addSkin('B', L"1", L"Noob", 20);
+    skins.addSkin('C', L"2", L"Mid", 30);
+    skins.addSkin('D', L"3", L"Expert", 40);
+    skins.addSkin('E', L"4", L"Pro", 50);
 }
 
 void MarketManager::initializeDisplayer() {
@@ -72,7 +68,8 @@ void MarketManager::purchaseWeapon(char code) {
 }
 void MarketManager::activateWeapon(char code) {
     progressManager->changeCurrentWeapon(code);
-    player->changeDamage(weapons.getDamage(code));
+    pWeapon selectedWeapon = weapons.getWeapon(code);
+    player->setWeapon(selectedWeapon);
 }
 void MarketManager::unlockWeapon(char code, int price) {
     weapons.removePrice(code);
@@ -152,11 +149,11 @@ void MarketManager::back() {
     displayer.changePage(0);
 }
 
-bool MarketManager::isExitChosed(int choice) {
+bool MarketManager::isExitChosen(int choice) {
     return(displayer.getPage() == 0 && choice == NUMBER_OF_PAGES - 1);
 }
 
-bool MarketManager::isQuitChosed(int choice){
+bool MarketManager::isQuitChosen(int choice){
     return(displayer.getPage() == 0 && choice == NUMBER_OF_PAGES);
 }
 
@@ -171,14 +168,12 @@ MarketManager::MarketManager(Player* player, ProgressManager* progressManager){
     initializeDisplayer();
 }
 
-int MarketManager::getWeaponDamage(char code) {
-    return weapons.getDamage(code);
-}
-int MarketManager::getWeaponRange(char code) {
-    return weapons.getDamage(code); //change to get range
-}
 wstring MarketManager::getSkin(char code) {
     return skins.getDrawing(code);
+}
+
+pWeapon MarketManager::getWeapon(char code){
+    return weapons.getWeapon(code);
 }
 
 void MarketManager::addUnlockedWeapons(string codeStr){
@@ -208,9 +203,9 @@ bool MarketManager::waitForMarketClosure() {
         displayer.display(); //display menu structure (not options)
         int currentChoice = displayer.getChoice(); //get choice from menu
 
-        if(isExitChosed(currentChoice))
+        if(isExitChosen(currentChoice))
             closeMenu = true;
-        else if(isQuitChosed(currentChoice))
+        else if(isQuitChosen(currentChoice))
             quitGame = true;
         else
             executeChoice(currentChoice);

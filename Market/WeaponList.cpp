@@ -4,25 +4,22 @@
 
 #include "WeaponList.hpp"
 
-struct WeaponList::weapon{
-    char code;
-    wstring name;
-    int range;
-    int damage;
+struct WeaponList::weaponItem{
     int startingPrice;
     int actualPrice;
-    weapon* next;
+    pWeapon weapon;
+    weaponItem* next;
 };
 
-WeaponList::p_weapon WeaponList::findWeapon(char code){
-    p_weapon iterator = this -> head;
-    while(iterator != NULL && iterator -> code != code)
+WeaponList::p_weaponItem WeaponList::findWeapon(char code){
+    p_weaponItem iterator = this -> head;
+    while(iterator != NULL && iterator->weapon->objectType != code)
         iterator = iterator -> next;
     return iterator;
 }
 
-WeaponList::p_weapon WeaponList::findWeaponByIndex(int index){
-    p_weapon iterator = this -> head;
+WeaponList::p_weaponItem WeaponList::findWeaponByIndex(int index){
+    p_weaponItem iterator = this -> head;
     while(iterator != NULL && index > 0){
         iterator = iterator -> next;
         index -= 1;
@@ -30,7 +27,7 @@ WeaponList::p_weapon WeaponList::findWeaponByIndex(int index){
     return iterator;
 }
 
-WeaponList::p_weapon WeaponList::tailInsert(p_weapon head, p_weapon element){
+WeaponList::p_weaponItem WeaponList::tailInsert(p_weaponItem head, p_weaponItem element){
     if(head == NULL)
         return element;
     else{
@@ -39,15 +36,15 @@ WeaponList::p_weapon WeaponList::tailInsert(p_weapon head, p_weapon element){
     }
 }
 
-WeaponList::p_weapon WeaponList::headInsert(p_weapon head, p_weapon element){
+WeaponList::p_weaponItem WeaponList::headInsert(p_weaponItem head, p_weaponItem element){
     element -> next = head;
 	return element;
 }
 
-WeaponList::p_weapon WeaponList::skipWeapon(p_weapon head, char code){
+WeaponList::p_weaponItem WeaponList::skipWeapon(p_weaponItem head, char code){
     if(head == NULL)
         return NULL;
-    else if(head->code == code)
+    else if(head->weapon->objectType == code)
         return head->next;
     else{
         head->next = skipWeapon(head->next, code);
@@ -62,12 +59,9 @@ WeaponList::WeaponList(){
     this -> head = NULL;
 }
 
-void WeaponList::addWeapon(char code, wstring name, int range, int damage, int startingPrice){
-    p_weapon newHead = new weapon;
-    newHead->code = code;
-    newHead->name = name;
-    newHead->range = range;
-    newHead->damage = damage;
+void WeaponList::addWeapon(pWeapon weapon,int startingPrice){
+    p_weaponItem newHead = new weaponItem;
+    newHead->weapon = weapon;
     newHead->startingPrice = startingPrice;
     newHead->actualPrice = startingPrice;
     newHead->next = NULL;
@@ -77,7 +71,7 @@ void WeaponList::addWeapon(char code, wstring name, int range, int damage, int s
 
 int WeaponList::getCount() {
     int count = 0;
-    p_weapon iterator = this->head;
+    p_weaponItem iterator = this->head;
     while(iterator != NULL){
         count += 1;
         iterator = iterator -> next;
@@ -86,45 +80,48 @@ int WeaponList::getCount() {
 }
 
 char WeaponList::getCodeByIndex(int index) {
-    p_weapon desiredWeapon = findWeaponByIndex(index);
+    p_weaponItem desiredWeapon = findWeaponByIndex(index);
     if(desiredWeapon == NULL)
         return('/');
     else
-        return(desiredWeapon->code);
+        return(desiredWeapon->weapon->objectType);
+}
+
+pWeapon WeaponList::getWeapon(char code){
+    p_weaponItem desiredWeapon = findWeapon(code);
+    if(desiredWeapon != NULL)
+        return desiredWeapon->weapon;
+    else
+        return NULL;
 }
 
 int WeaponList::getPrice(char code){
-    p_weapon desiredWeapon = findWeapon(code);
+    p_weaponItem desiredWeapon = findWeapon(code);
     if(desiredWeapon == NULL)
         return(-1);
     else
         return(desiredWeapon->actualPrice);
 }
 
-int WeaponList::getDamage(char code) {
-    p_weapon desiredWeapon = findWeapon(code);
-    if(desiredWeapon == NULL)
-        return(-1);
-    else
-        return(desiredWeapon->damage);
-}
-
 void WeaponList::removePrice(char code){
-    p_weapon desiredWeapon = findWeapon(code);
-    if(desiredWeapon != NULL)
+    p_weaponItem desiredWeapon = findWeapon(code);
+    if(desiredWeapon != NULL){
+        desiredWeapon->startingPrice = 0;
         desiredWeapon->actualPrice = 0;
+    }
 }
 
 void WeaponList::multiplyPrices(double multiplier){
-    p_weapon iterator = this->head;
+    p_weaponItem iterator = this->head;
     while(iterator != NULL){
         iterator->actualPrice = multiplier * iterator->startingPrice;
         iterator = iterator->next;
     }
 }
 
+/*
 void WeaponList::moveToFirst(char code) {
-    p_weapon desiredWeapon = findWeapon(code);
+    p_weaponItem desiredWeapon = findWeapon(code);
     this->head = skipWeapon(head, code);
     this->head = headInsert(this->head, desiredWeapon);
 }
@@ -145,16 +142,19 @@ void WeaponList::sortWeapons(){
     }
     this -> head = tailInsert(unlocked, locked);
 }
-
+*/
 
 void WeaponList::getWeaponInfoString(wstring dest[], int count, char selectedCode) {
     int index = 0;
-    p_weapon iterator = this->head;
+    p_weaponItem iterator = this->head;
     while(iterator != NULL && index < count){
-        wstring info = iterator->name + L"\t\t" + to_wstring(iterator->range) + L"\t\t" + to_wstring(iterator->damage) + L"\t\t";
+
+        wstring info = iterator->weapon->getName() + L"\t\t";
+        info += to_wstring(iterator->weapon->getRange()) + L"\t\t";
+        info += to_wstring(iterator->weapon->getDamage()) + L"\t\t";
 
         if(iterator->actualPrice == 0){
-            if(iterator->code == selectedCode)
+            if(iterator->weapon->objectType == selectedCode)
                 info += L"Selected";
             else
                 info += L"Available";

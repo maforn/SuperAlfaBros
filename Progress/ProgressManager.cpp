@@ -71,7 +71,7 @@ ProgressManager::ProgressManager(const string playerFileName, const string weapo
 
 void ProgressManager::loadSavedData(){
     loadPlayerData();
-    loadCodeData(this->weaponData, this->weaponFileName, 'A');
+    loadCodeData(this->weaponData, this->weaponFileName, 'G');
     loadCodeData(this->skinData, this->skinFileName, 'A');
 
     calculateDifficulty();
