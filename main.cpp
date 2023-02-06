@@ -90,7 +90,7 @@ int main() {
 
     int vertical_shift = 4;
     // create a new player instance
-    pPlayer player = new Player(1, 1, 20, vertical_shift);
+    pPlayer player = new Player(1, 1, 100, vertical_shift);
 
     // create market manager instance and unlock purchased items
     MarketManager *marketManager = new MarketManager(player, progressManager);
@@ -247,7 +247,13 @@ int main() {
 
         if (lastx != player->x || lasty != player->y || levels->currentMap() != lastMap) { // if something changes
 
-            if (levels->currentMap() != lastMap) // if map changes
+            if (levels->currentMap() != lastMap){ // if map changes, display market
+                nodelay(stdscr, FALSE);
+                marketManager->openMarket(win, 5, 5);
+                bool quitGame = marketManager->waitForMarketClosure();
+                nodelay(stdscr, TRUE);
+            }
+
                 /*
                        // move the objects every second
                       if ((CurrentTime_milliseconds() - appTime )> 1000) // every second
@@ -278,6 +284,9 @@ int main() {
         }
     } while (choice != 27 && player->getLife() > 0);
     nodelay(stdscr, FALSE);
+
+    progressManager->updateArmour(player->getArmour());
+    progressManager->saveProgress();
 
     wclear(win);
     wrefresh(win);

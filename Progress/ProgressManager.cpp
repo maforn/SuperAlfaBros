@@ -51,9 +51,9 @@ void ProgressManager::calculateDifficulty(){
     double pointsIncr = INCR_PER_100_POINTS * (this->points / 100);
 
     const double INCR_PER_WEAPON = 0.3;
-    double weaponIncr = INCR_PER_WEAPON * getUnlockedWeaponsString().length();
+    double weaponIncr = INCR_PER_WEAPON * (getUnlockedWeaponsString().length() - 1);
 
-    this->difficulty = 2 + pointsIncr + weaponIncr;
+    this->difficulty = 1 + pointsIncr + weaponIncr;
 }
 
 //public
@@ -138,4 +138,10 @@ int ProgressManager::getPoints(){
 }
 void ProgressManager::incrementPoints(int incr){
     this->points += incr;
+}
+
+void ProgressManager::saveProgress() {
+    savePlayerData();
+    saveCodeData(weaponData, this->weaponFileName);
+    saveCodeData(skinData, this->skinFileName);
 }
