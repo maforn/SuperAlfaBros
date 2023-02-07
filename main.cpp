@@ -253,7 +253,7 @@ int main() {
                 marketAction nextAction = DISPLAY;
                 while(nextAction == DISPLAY){
                     marketManager->displayer.initializeDisplay(); //pass data to menu
-                    marketManager->displayer.display(); //display menu structure (not options)
+                    marketManager->displayer.display(); //display menu
                     choice = wgetch(win);
                     nextAction = marketManager->executeInput(choice);
                 }
