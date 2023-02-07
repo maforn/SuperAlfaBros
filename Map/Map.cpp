@@ -326,12 +326,7 @@ void Map::shootBullet(WINDOW *win, int x, int y, char direction) {
 
         if (collision == ' '){
             this->objectList->addTail(new Bullet(x, y, player->getWeapon()->getDamage(), direction, player->getWeapon()->getRange()));
-        }
-        else if (collision == 'B' || collision == 'R') {
-            removeObject(win, pObj);
-        }
-
-        else if ( collision == 'B') {
+        }else if ( collision == 'B') {
             ((pBomb) pObj)->life -= player->getWeapon()->getDamage();
             if (((pBomb) pObj)->life <= 0) {
                 removeObject(win,pObj);
