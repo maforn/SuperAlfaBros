@@ -11,8 +11,9 @@
 class Bomb: public Object{
 protected:
 public:
+    int life;
     // Constructor of the class: will set the new vars and use the constructor of the superclass
-    Bomb(int x, int y, int damage);
+    Bomb(int x, int y, int life, int damage);
 
     // the damage that this will deal
     int damage;

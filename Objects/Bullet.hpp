@@ -19,6 +19,7 @@ public:
     Bullet(int x, int y, int damage, char direction, int range);
     void move(WINDOW *win, int x, int y);
     pCords getNewPos();
+    int getDamage();
 };
 
 typedef Bullet *pBullet;

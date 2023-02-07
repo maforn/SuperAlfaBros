@@ -134,7 +134,7 @@ void Map::objectParser(wstring line) {
             // set y to the remaining number
             y = stoi(line.substr(0, line.find(',')));
 
-            this->objectList->addTail(new Bomb(x, y, this->player->calculateDamage() * 2));
+            this->objectList->addTail(new Bomb(x, y, 50, this->player->calculateDamage() * 2)); // TODO:: fare in modo che la vita sia calcolata in base alla difficoltà
 
             break;
 
@@ -160,7 +160,7 @@ void Map::objectParser(wstring line) {
             y2 = stoi(line.substr(0, line.find(',')));
 
             // add to the dynamic object list the new object as an object of type Patrol
-            this->objectList->addTail(new Patrol(x1, y1, x2, y2,this->player->calculateDamage() * 2));
+            this->objectList->addTail(new Patrol(x1, y1, x2, y2, 50, this->player->calculateDamage() * 2)); // TODO:: fare in modo che la vita sia calcolata in base alla difficoltà
 
             break;
 
@@ -239,7 +239,10 @@ void Map::moveObjects(WINDOW *win, int vertical_shift) {
                 switch (collision) {
                     case 'U':
                         // it's a bullet
-                        removeThis = true;
+                        ((pPatrol)tmp->obj)->life -= ((pBullet) pObj)->getDamage();
+                        if (((pPatrol)tmp->obj)->life <= 0) {
+                            removeThis = true;
+                        }
                         removeObject(win,pObj);
                         break;
                     case 'P':
@@ -248,13 +251,13 @@ void Map::moveObjects(WINDOW *win, int vertical_shift) {
                         player->receiveDamage(((pPatrol) tmp->obj)->getDamage());
                         removeThis = true;
                         break;
-                    case 'K':
-                        // it's a knife
-                        removeThis = true;
+                    case 'F':
+                        // it's a shootgun
+                        ((pPatrol) tmp->obj)->move(win,cords->x,cords->y);
                         break;
                     case 'G':
                         // it's a gun
-                        player->removeWeapon();
+                        ((pPatrol) tmp->obj)->move(win,cords->x,cords->y);
                         break;
                     case ' ':
                         // blank space
@@ -281,10 +284,19 @@ void Map::moveObjects(WINDOW *win, int vertical_shift) {
                     }
 
                     if (collision== ' ') ((pBullet) tmp->obj)->move(win,cords->x,cords->y);
-                    else if ( collision == 'S' || collision == 'B' || collision == 'R') {
-                        removeObject(win,pObj);
+                    else if ( collision == 'B') {
+                        ((pBomb) pObj)->life -= ((pBullet) tmp->obj)->getDamage();
+                        if (((pBomb) pObj)->life <= 0) {
+                            removeObject(win,pObj);
+                        }
                         removeThis = true;
-                    } else removeThis = true;
+                    } else if (collision == 'R'){
+                        ((pPatrol) pObj)->life -= ((pBullet) tmp->obj)->getDamage();
+                        if (((pPatrol) pObj)->life <= 0) {
+                            removeObject(win,pObj);
+                        }
+                        removeThis = true;
+                    }else removeThis = true;
                     delete cords;
                 }
                 break;
@@ -315,8 +327,22 @@ void Map::shootBullet(WINDOW *win, int x, int y, char direction) {
         if (collision == ' '){
             this->objectList->addTail(new Bullet(x, y, player->getWeapon()->getDamage(), direction, player->getWeapon()->getRange()));
         }
-        else if (collision == 'S' || collision == 'B' || collision == 'R') {
+        else if (collision == 'B' || collision == 'R') {
             removeObject(win, pObj);
+        }
+
+        else if ( collision == 'B') {
+            ((pBomb) pObj)->life -= player->getWeapon()->getDamage();
+            if (((pBomb) pObj)->life <= 0) {
+                removeObject(win,pObj);
+            }
+
+        } else if (collision == 'R'){
+            ((pPatrol) pObj)->life -= player->getWeapon()->getDamage();
+            if (((pPatrol) pObj)->life <= 0) {
+                removeObject(win,pObj);
+            }
+
         }
     }
 }

@@ -15,7 +15,8 @@ protected:
     bool direction; // true = x1,y1 -> x2,y2, false = x2,y2 -> x1,y1
 public:
     int damage;
-    Patrol(int x, int y, int toX, int toY, int damage);
+    int life;
+    Patrol(int x, int y, int toX, int toY, int life, int damage);
     void drawPatrol(WINDOW *win);
     void move(WINDOW *win, int x, int y);
     pCords getNewPos();

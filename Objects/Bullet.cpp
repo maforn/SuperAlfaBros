@@ -28,3 +28,7 @@ pCords Bullet::getNewPos() {
     }
     return cords;
 }
+
+int Bullet::getDamage() {
+    return this->damage;
+}

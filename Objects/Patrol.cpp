@@ -4,13 +4,14 @@
 
 #include "Patrol.hpp"
 
-Patrol::Patrol(int x, int y, int toX, int toY, int damage) : Object(x, y, L"🚨", 'R') {
+Patrol::Patrol(int x, int y, int toX, int toY, int life, int damage) : Object(x, y, L"🚨", 'R') {
     this->x2 = toX;
     this->y2 = toY;
     this->x1 = x;
     this->y1 = y;
     this->direction = true;
     this->damage = damage;
+    this->life = life;
 }
 
 void Patrol::drawPatrol(WINDOW *win) {
