@@ -9,11 +9,10 @@
 
 #define NUMBER_OF_PAGES 4
 
+enum marketAction {DISPLAY, CLOSE_MARKET, QUIT_GAME};
+
 class MarketManager{
 protected:
-
-    // displayer for the market
-    MarketDisplayer displayer;
 
     // lists of market items
     RefillList refills;
@@ -46,7 +45,7 @@ protected:
     void activateWeapon(char code); //called by purchaseWeapon if weapon is already unlocked
     void unlockWeapon(char code, int price); // called by purchaseWeapon to unlock a new weapon
 
-    // functions to execute the user choice, depending on the page the choice was made in
+    // functions to execute the user choice (when user presses ENTER), depending on the page the choice was made in
     void executeChoice(int choice);
     void executeMainPageChoice(int choice);
     void executeRefillPageChoice(int choice);
@@ -67,9 +66,13 @@ public:
     //Constructor: initializes the market items and the pointer to the Player and ProgressManager objects
     MarketManager(Player* player, ProgressManager* progressManager);
 
+    // displayer for the market
+    MarketDisplayer displayer;
+
     // returns the drawing of the skin of the specified code
     wstring getSkin(char code);
 
+    // returns the weapon associated to the specified code
     pWeapon getWeapon(char code);
 
     // unlock all weapons whose codes appear in codeStr
@@ -84,6 +87,9 @@ public:
     // the function returns only when the user chooses to exit the market or quit the game.
     // the function returns false if the user decides to quit the game.
     bool waitForMarketClosure();
+
+    // execute a generic input choice (change selection option, select option, ...)
+    marketAction executeInput(int choice);
 };
 
 #endif //SUPERALFABROS_MARKETMANAGER_HPP

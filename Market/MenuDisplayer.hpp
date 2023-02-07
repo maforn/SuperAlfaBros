@@ -78,6 +78,8 @@ public:
 
     // returns the index of the option selected by the user
     int getChoice();
+
+    void changeOptions(int choice);
 };
 
 #endif //SUPERALFABROS_MENUDISPLAYER_HPP

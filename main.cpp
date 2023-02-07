@@ -247,12 +247,21 @@ int main() {
 
             if (levels->currentMap() != lastMap){ // if map changes, display market
                 nodelay(stdscr, FALSE);
+                nodelay(win, FALSE);
                 marketManager->openMarket(win, 5, 5);
-                keepPlaying = marketManager->waitForMarketClosure();
+
+                marketAction nextAction = DISPLAY;
+                while(nextAction == DISPLAY){
+                    marketManager->displayer.initializeDisplay(); //pass data to menu
+                    marketManager->displayer.display(); //display menu structure (not options)
+                    choice = wgetch(win);
+                    nextAction = marketManager->executeInput(choice);
+                }
+
                 nodelay(stdscr, TRUE);
+                nodelay(win, TRUE);
+                keepPlaying = nextAction != QUIT_GAME;
             }
-
-
 
             // clear the window and draw Map and Objects
             wclear(win);

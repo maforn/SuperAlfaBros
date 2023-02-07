@@ -212,3 +212,19 @@ bool MarketManager::waitForMarketClosure() {
     }
     return (!quitGame);
 }
+
+marketAction MarketManager::executeInput(int input) {
+    marketAction nextAction = DISPLAY;
+    if(input != 10)
+        displayer.changeOptions(input);
+    else{
+        int choice = displayer.getChoice();
+        if(isExitChosen(choice))
+            nextAction = CLOSE_MARKET;
+        else if(isQuitChosen(choice))
+            nextAction = QUIT_GAME;
+        else
+            executeChoice(choice);
+    }
+    return nextAction;
+}

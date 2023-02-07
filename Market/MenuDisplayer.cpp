@@ -103,6 +103,7 @@ void MenuDisplayer::display() {
 }
 
 int MenuDisplayer::getChoice() {
+    /*
     int choice;
     bool choiceMade = false;
 
@@ -115,5 +116,10 @@ int MenuDisplayer::getChoice() {
             drawAllOptions();
         }
     }
+     */
     return(this->highlight);
+}
+
+void MenuDisplayer::changeOptions(int choice) {
+    calculateNewHighlight(choice);
 }

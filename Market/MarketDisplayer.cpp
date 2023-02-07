@@ -111,13 +111,21 @@ void MarketDisplayer::initMarketContent(RefillList* refills, WeaponList* weapons
 }
 
 void MarketDisplayer::initializeDisplay(){
-
     switch(this->openPage){
-        case 0: initializeMainPage(); break;
-        case 1: initializeRefillPage(); break;
-        case 2: initializeWeaponPage(); break;
-        case 3: initializeSkinPage(); break;
-        default: break;
+        case 0:
+            initializeMainPage();
+            break;
+        case 1:
+            initializeRefillPage();
+            break;
+        case 2:
+            initializeWeaponPage();
+            break;
+        case 3:
+            initializeSkinPage();
+            break;
+        default:
+            break;
     }
 }
 
