@@ -47,7 +47,7 @@ void ProgressManager::saveCodeData(CodeData source, string fileName){
 }
 
 void ProgressManager::calculateDifficulty(){
-    const double INCR_PER_100_POINTS = 0.1;
+    const double INCR_PER_100_POINTS = 0.2;
     double pointsIncr = INCR_PER_100_POINTS * (this->points / 100);
 
     const double INCR_PER_WEAPON = 0.3;
@@ -123,6 +123,7 @@ char ProgressManager::getCurrentSkinCode() {
 }
 
 double ProgressManager::getDifficulty(){
+    calculateDifficulty();
     return (this->difficulty);
 }
 

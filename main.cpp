@@ -163,7 +163,8 @@ int main() {
     auto frame = CurrentTime_milliseconds();
     auto start = frame;
     double appTime = 0;
-    //player->setWeapon(new Gun(player->x+1,player->y,1));
+
+    bool keepPlaying = true; // set to false if user decides to quit in the market menu
     do {
         lastx = player->x;
         lasty = player->y;
@@ -247,7 +248,7 @@ int main() {
             if (levels->currentMap() != lastMap){ // if map changes, display market
                 nodelay(stdscr, FALSE);
                 marketManager->openMarket(win, 5, 5);
-                bool quitGame = marketManager->waitForMarketClosure();
+                keepPlaying = marketManager->waitForMarketClosure();
                 nodelay(stdscr, TRUE);
             }
 
@@ -265,7 +266,7 @@ int main() {
             // refresh the window
             wrefresh(win);
         }
-    } while (choice != 27 && player->getLife() > 0);
+    } while (choice != 27 && player->getLife() > 0 && keepPlaying);
     nodelay(stdscr, FALSE);
 
     progressManager->updateArmour(player->getArmour());
