@@ -11,6 +11,7 @@
 #include "../Objects/Player.hpp"
 //#include "../Objects/AllObjects.hpp"
 #include "../Lists/DynamicObjectList.hpp"
+#include "../Progress/ProgressManager.hpp"
 
 using namespace std;
 
@@ -23,6 +24,8 @@ protected:
     string fileName;
     // instance ot the dynamic object list containing various objects such as enemies, teleporters and so on
     pDynamicObjectList objectList;
+    // pointer to the progress manager instance
+    pProgressManager progressManager;
     // pointer to the player instance
     pPlayer player;
     // last x position of the player to save the progress
@@ -37,7 +40,7 @@ public:
 
     // Constructor of the class: will set the player pointer, read the file and create the dynamic object list from
     // there, as well as spawning the Player
-    Map(const string& fileName, pPlayer player);
+    Map(const string& fileName, pPlayer player, pProgressManager progressManager);
 
     // set the map as the first one: remove the left exit
     void setFirstMap();

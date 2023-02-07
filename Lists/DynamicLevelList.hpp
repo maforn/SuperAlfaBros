@@ -23,6 +23,8 @@ private:
     pPlayer player;
     // pointer to the class containing all the locations of the map files
     pMapFiles mapFiles;
+    // pointer to the progress manager instance
+    pProgressManager progressManager;
 
     // initialize a new map and pass it to the list by reference
     void initialize(levelList &l);
@@ -37,7 +39,7 @@ private:
 public:
     // Constructor of the class: will set the pointer to the player so that the new maps will have enemies of proportional strength
     // will also initialize and create the first map and set it to the internal pointer;
-    DynamicLevelList(pPlayer player, const string& mapsFolder);
+    DynamicLevelList(pProgressManager progressManager, pPlayer player, const string& mapsFolder);
 
     // returns the pointer of the current map
     pMap currentMap();

@@ -89,4 +89,6 @@ public:
     void saveProgress();
 };
 
+typedef ProgressManager* pProgressManager;
+
 #endif //SUPERALFABROS_PROGRESSMANAGER_HPP

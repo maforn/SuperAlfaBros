@@ -1,6 +1,5 @@
 #include "Lists/DynamicLevelList.hpp"
 #include "Market/MarketManager.hpp"
-#include "Progress/ProgressManager.hpp"
 #include <chrono>
 #include "Utilities/Movement.hpp"
 #include <cmath>
@@ -83,9 +82,8 @@ int main() {
     srand(time(nullptr));
 
     // create progress manager instance and load saved data
-    ProgressManager *progressManager = new ProgressManager("PlayerData.txt", "WeaponData.txt", "SkinData.txt");
+    pProgressManager progressManager = new ProgressManager("PlayerData.txt", "WeaponData.txt", "SkinData.txt");
     progressManager->loadSavedData();
-    progressManager->incrementMoney(800);
 
     int vertical_shift = 4;
     // create a new player instance
@@ -106,7 +104,7 @@ int main() {
 
     string mapsFolder = "../maps/";
     // create the levels dynamic lists
-    pDynamicLevelList levels = new DynamicLevelList(player, mapsFolder);
+    pDynamicLevelList levels = new DynamicLevelList(progressManager, player, mapsFolder);
 
     // initiate screen with ncurses
     initscr();
@@ -165,7 +163,7 @@ int main() {
     auto frame = CurrentTime_milliseconds();
     auto start = frame;
     double appTime = 0;
-    player->setWeapon(new Gun(player->x+1,player->y,1));
+    //player->setWeapon(new Gun(player->x+1,player->y,1));
     do {
         lastx = player->x;
         lasty = player->y;

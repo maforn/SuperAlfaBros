@@ -9,7 +9,8 @@
 
 // Constructor of the class: will set the player pointer, read the file and create the dynamic object list from
 // there, as well as spawning the Player
-Map::Map(const string &fileName, pPlayer player) {
+Map::Map(const string &fileName, pPlayer player, pProgressManager progressManager) {
+    this->progressManager = progressManager;
     // store the filename
     this->fileName = fileName;
     // store the pointer to the player
@@ -70,6 +71,10 @@ void Map::savePlayerCoord() {
 void Map::objectParser(wstring line) {
     // DEBUG
     //wcout << line << endl;
+
+    // difficulty to apply to parsed object
+    double difficulty = progressManager->getDifficulty();
+
     // get the first char of the string structured as type,x,y,...
     switch (line[0]) {
         case 'P': // case Player
@@ -134,7 +139,7 @@ void Map::objectParser(wstring line) {
             // set y to the remaining number
             y = stoi(line.substr(0, line.find(',')));
 
-            this->objectList->addTail(new Bomb(x, y, 50, this->player->calculateDamage() * 2)); // TODO:: fare in modo che la vita sia calcolata in base alla difficoltà
+            this->objectList->addTail(new Bomb(x, y, 50*difficulty, 20*difficulty));
 
             break;
 
@@ -160,7 +165,7 @@ void Map::objectParser(wstring line) {
             y2 = stoi(line.substr(0, line.find(',')));
 
             // add to the dynamic object list the new object as an object of type Patrol
-            this->objectList->addTail(new Patrol(x1, y1, x2, y2, 50, this->player->calculateDamage() * 2)); // TODO:: fare in modo che la vita sia calcolata in base alla difficoltà
+            this->objectList->addTail(new Patrol(x1, y1, x2, y2, 50*difficulty, 20*difficulty));
 
             break;
 
@@ -242,6 +247,8 @@ void Map::moveObjects(WINDOW *win, int vertical_shift) {
                         ((pPatrol)tmp->obj)->life -= ((pBullet) pObj)->getDamage();
                         if (((pPatrol)tmp->obj)->life <= 0) {
                             removeThis = true;
+                            progressManager->incrementMoney(50);
+                            progressManager->incrementPoints(50);
                         }
                         removeObject(win,pObj);
                         break;
@@ -288,12 +295,16 @@ void Map::moveObjects(WINDOW *win, int vertical_shift) {
                         ((pBomb) pObj)->life -= ((pBullet) tmp->obj)->getDamage();
                         if (((pBomb) pObj)->life <= 0) {
                             removeObject(win,pObj);
+                            progressManager->incrementMoney(20);
+                            progressManager->incrementPoints(20);
                         }
                         removeThis = true;
                     } else if (collision == 'R'){
                         ((pPatrol) pObj)->life -= ((pBullet) tmp->obj)->getDamage();
                         if (((pPatrol) pObj)->life <= 0) {
                             removeObject(win,pObj);
+                            progressManager->incrementMoney(50);
+                            progressManager->incrementPoints(50);
                         }
                         removeThis = true;
                     }else removeThis = true;
@@ -330,12 +341,16 @@ void Map::shootBullet(WINDOW *win, int x, int y, char direction) {
             ((pBomb) pObj)->life -= player->getWeapon()->getDamage();
             if (((pBomb) pObj)->life <= 0) {
                 removeObject(win,pObj);
+                progressManager->incrementMoney(20);
+                progressManager->incrementPoints(20);
             }
 
         } else if (collision == 'R'){
             ((pPatrol) pObj)->life -= player->getWeapon()->getDamage();
             if (((pPatrol) pObj)->life <= 0) {
                 removeObject(win,pObj);
+                progressManager->incrementMoney(50);
+                progressManager->incrementPoints(50);
             }
 
         }

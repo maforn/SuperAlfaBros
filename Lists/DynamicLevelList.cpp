@@ -21,7 +21,7 @@ void DynamicLevelList::initialize(levelList &l) {
     // create the temporary pointer to the new level that will be linked later
     levelList tmp = new levelStruct;
     // generate a new random map from the list given (with the player pointer the enemies will also be strong enough)
-    tmp->map = new Map(this->mapFiles->randomMapFile(), this->player);
+    tmp->map = new Map(this->mapFiles->randomMapFile(), this->player, this->progressManager);
     // set the next and prev pointer to null
     tmp->next = nullptr;
     tmp->prev = nullptr;
@@ -58,8 +58,10 @@ void DynamicLevelList::addHead() {
 void DynamicLevelList::nextLevel() {
     //save player coord
     this->levels->map->savePlayerCoord();
-    // add a new level if there is none
+    // add a new level if there is none, increment money and score
     if (this->levels->next == nullptr) {
+        progressManager->incrementPoints(100);
+        progressManager->incrementMoney(100);
         this->addTail();
     }
     // set the current level to the next level
@@ -86,7 +88,8 @@ void DynamicLevelList::prevLevel() {
 
 // Constructor of the class: will set the pointer to the player so that the new maps will have enemies of proportional strength
 // will also initialize and create the first map and set it to the internal pointer;
-DynamicLevelList::DynamicLevelList(pPlayer player, const string &mapsFolder) {
+DynamicLevelList::DynamicLevelList(pProgressManager progressManager, pPlayer player, const string &mapsFolder) {
+    this->progressManager = progressManager;
     // create the dynamic list of the maps contained in the specified folder
     this->mapFiles = new MapFiles(mapsFolder);
     this->player = player;
