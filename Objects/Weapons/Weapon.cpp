@@ -51,8 +51,6 @@ void Weapon::useLeft(WINDOW *win) {
 }
 
 void Weapon::moveWeapon(WINDOW *win, int x, int y) {
-    mvwaddwstr(win, this->y, this->x, covering);  // erase the weapon from the screen
-
     this->x = x;
     this->y = y;
 }
