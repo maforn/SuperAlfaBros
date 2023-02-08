@@ -11,7 +11,7 @@
 class Shotgun : public Weapon{
 protected:
 public:
-    Shotgun(int x, int y, int level);
+    Shotgun(int x = 0, int y = 0);
 };
 
 typedef Shotgun *pKnife;
