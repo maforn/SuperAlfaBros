@@ -2,6 +2,12 @@
 // Created by vboxuser on 23.01.23.
 //
 
+/*
+ * This class implements a list of skins for the market.
+ * Each skin is associated to a code, through which the skin can be found and accessed in the list.
+ * Given an index i, it's also possible to retrieve the code associated to the skin in position i in the list (if existing).
+ */
+
 #ifndef SUPERALFABROS_SKINLIST_HPP
 #define SUPERALFABROS_SKINLIST_HPP
 
@@ -62,9 +68,10 @@ public:
     // moves the skin with the specified code at the beginning of the list
     void moveToFirst(char code);
 
-    // generates strings containing the skins values and inserts them into dest
+    // generates strings containing the skins values (drawing, name, price) and inserts them into dest
     // count indicates the maximum number of strings to insert into dest
-    // selectedCode indicates the code of the skin whose string must contain the label "Selected"
+    // skins whose price has been set to zero will be marked as "Available"
+    // selectedCode indicates the code of the available skin that will be marked as "Selected"
     void getSkinInfoStrings(wstring dest[], int count, char selectedCode);
 };
 

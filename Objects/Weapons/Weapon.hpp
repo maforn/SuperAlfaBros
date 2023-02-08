@@ -11,7 +11,6 @@
 
 class Weapon : public Object{
 protected:
-    int level;
     int damage;
     std::wstring drawingRight;
     std::wstring drawingLeft;
@@ -22,7 +21,7 @@ public:
     std::wstring getName();
     int getRange() const;
     bool isRight;
-    Weapon(int x, int y, char objectType, std::wstring name, int damage, int range, int level,
+    Weapon(int x, int y, char objectType, std::wstring name, int damage, int range,
            std::wstring drawingLeft, std::wstring drawingRight, std::wstring drawing);
     int getDamage();
     virtual void useRight(WINDOW *win);

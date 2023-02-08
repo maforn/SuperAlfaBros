@@ -2,6 +2,20 @@
 // Created by vboxuser on 24.01.23.
 //
 
+/*
+ * This class implements the display of a generic menu composed of a single page.
+ *
+ * The menu is composed of four parts: title, top rows, options and closing options.
+ * Distinction between the parts allows for organization within the display and a better user experience.
+ * Title and top rows are non-interactive and are used to display information regarding the menu.
+ * Options and closing options are interactive and can be selected using the UP and DOWN arrows. The currently
+ * selected choice is highlighted.
+ *
+ * The content of the menu must be passed to MenuDisplayer using initTopPart() and initOptions() before calling display().
+ *
+ * The MenuDisplayer cannot process user choices itself, but only return the number of the selected choice.
+ */
+
 #ifndef SUPERALFABROS_MENUDISPLAYER_HPP
 #define SUPERALFABROS_MENUDISPLAYER_HPP
 
@@ -23,7 +37,7 @@ protected:
     // coordinates of window sarting point (ie window top-left corner)
     int menuStartY, menuStartX;
 
-    // title string
+    // title of the menu
     wstring title;
 
     // strings that will be printed at the top of the menu, right below the title
@@ -78,6 +92,8 @@ public:
 
     // returns the index of the option selected by the user
     int getChoice();
+
+    void changeOptions(int choice);
 };
 
 #endif //SUPERALFABROS_MENUDISPLAYER_HPP

@@ -6,26 +6,41 @@
 #include "MarketManager.hpp"
 
 void MarketManager::initializeRefills(){
-    refills.addRefill('L', L"Life", 10, 10);
+    refills.addRefill('L', L"Life", 10, 5);
     refills.addRefill('A', L"Armour",5, 5);
 }
 
 void MarketManager::initializeWeapons() {
-    weapons.addWeapon(new Gun(0, 0, 1), 100);
-    weapons.addWeapon(new Shotgun(0, 0, 1), 100);
+    weapons.addWeapon(new Gun(), 10);
+    weapons.addWeapon(new Revolver(), 10);
+    weapons.addWeapon(new Shotgun(), 10);
+    weapons.addWeapon(new Rifle(), 10);
+    weapons.addWeapon(new Sniper(), 10);
 }
 
 void MarketManager::initializeSkins() {
     skins.addSkin('A', L"0", L"Default", 10);
-    skins.addSkin('B', L"1", L"Noob", 20);
-    skins.addSkin('C', L"2", L"Mid", 30);
-    skins.addSkin('D', L"3", L"Expert", 40);
-    skins.addSkin('E', L"4", L"Pro", 50);
+    skins.addSkin('B', L"1", L"Noob", 10);
+    skins.addSkin('C', L"2", L"Mid", 10);
+    skins.addSkin('D', L"3", L"Expert", 10);
+    skins.addSkin('E', L"4", L"Pro", 10);
 }
 
 void MarketManager::initializeDisplayer() {
     displayer.initGameReferences(this->player, this->progressManager);
     displayer.initMarketContent(&refills, &weapons, &skins);
+}
+
+void MarketManager::purchaseRefill(char code){
+    int price = refills.getPrice(code);
+    if(price != -1){
+        int money = progressManager -> getMoney();
+        if(price <= money){
+            bool purchased = awardRefill(code);
+            if(purchased)
+                progressManager -> incrementMoney(-price);
+        }
+    }
 }
 
 bool MarketManager::awardRefill(char code){
@@ -44,19 +59,6 @@ bool MarketManager::awardRefill(char code){
             break;
     }
     return(awarded);
-}
-
-
-void MarketManager::purchaseRefill(char code){
-    int price = refills.getPrice(code);
-    if(price != -1){
-        int money = progressManager -> getMoney();
-        if(price <= money){
-            bool purchased = awardRefill(code);
-            if(purchased)
-                progressManager -> incrementMoney(-price);
-        }
-    }
 }
 
 void MarketManager::purchaseWeapon(char code) {
@@ -196,19 +198,18 @@ void MarketManager::openMarket(WINDOW* win, int start_y, int start_x){
     displayer.initMenuWindow(win, start_y, start_x); //setup menu top left corner
 }
 
-bool MarketManager::waitForMarketClosure() {
-    bool closeMenu = false, quitGame = false;
-    while(!closeMenu && !quitGame){
-        displayer.initializeDisplay(); //pass data to menu
-        displayer.display(); //display menu structure (not options)
-        int currentChoice = displayer.getChoice(); //get choice from menu
-
-        if(isExitChosen(currentChoice))
-            closeMenu = true;
-        else if(isQuitChosen(currentChoice))
-            quitGame = true;
+marketAction MarketManager::executeInput(int input) {
+    marketAction nextAction = DISPLAY;
+    if(input != 10)
+        displayer.changeOptions(input);
+    else{
+        int choice = displayer.getChoice();
+        if(isExitChosen(choice))
+            nextAction = CLOSE_MARKET;
+        else if(isQuitChosen(choice))
+            nextAction = QUIT_GAME;
         else
-            executeChoice(currentChoice);
+            executeChoice(choice);
     }
-    return (!quitGame);
+    return nextAction;
 }

@@ -82,7 +82,6 @@ void MenuDisplayer::calculateNewHighlight(int choice) {
     this->highlight = (totalOptCount + this->highlight) % totalOptCount; //maintain highlight within option range
 }
 
-
 //PUBLIC
 
 void MenuDisplayer::initMenuWindow(WINDOW *win, int startY, int startX) {
@@ -103,17 +102,9 @@ void MenuDisplayer::display() {
 }
 
 int MenuDisplayer::getChoice() {
-    int choice;
-    bool choiceMade = false;
-
-    while(!choiceMade){
-        choice = wgetch(win);
-        if(choice == 10)
-            choiceMade = true;
-        else{
-            calculateNewHighlight(choice);
-            drawAllOptions();
-        }
-    }
     return(this->highlight);
+}
+
+void MenuDisplayer::changeOptions(int choice) {
+    calculateNewHighlight(choice);
 }

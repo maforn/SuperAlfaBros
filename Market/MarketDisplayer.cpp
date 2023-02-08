@@ -99,25 +99,34 @@ void MarketDisplayer::initializeSkinPage() {
 }
 
 //PUBLIC
+
 void MarketDisplayer::initGameReferences(Player* player, ProgressManager* progressManager){
     this->player = player;
     this->progressManager = progressManager;
 }
 
-void MarketDisplayer::initMarketContent(RefillList* refills, WeaponList* weapons, SkinList* skins){
+void MarketDisplayer::initMarketContent(RefillList* refills, WeaponItemList* weapons, SkinList* skins){
     this->refills = refills;
     this->weapons = weapons;
     this->skins = skins;
 }
 
 void MarketDisplayer::initializeDisplay(){
-
     switch(this->openPage){
-        case 0: initializeMainPage(); break;
-        case 1: initializeRefillPage(); break;
-        case 2: initializeWeaponPage(); break;
-        case 3: initializeSkinPage(); break;
-        default: break;
+        case 0:
+            initializeMainPage();
+            break;
+        case 1:
+            initializeRefillPage();
+            break;
+        case 2:
+            initializeWeaponPage();
+            break;
+        case 3:
+            initializeSkinPage();
+            break;
+        default:
+            break;
     }
 }
 

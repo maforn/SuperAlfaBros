@@ -12,7 +12,7 @@
 class Gun : public Weapon{
 protected:
 public:
-    Gun(int x, int y, int level);
+    Gun(int x = 0, int y = 0);
 };
 
 

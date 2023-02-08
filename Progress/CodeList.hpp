@@ -2,13 +2,17 @@
 // Created by vboxuser on 23.01.23.
 //
 
-#ifndef SUPERALFABROS_CODEDATA_HPP
-#define SUPERALFABROS_CODEDATA_HPP
+/*
+ * This class implements a list of codes (chars), where the selected code is stored as the first element.
+ */
+
+#ifndef SUPERALFABROS_CODELIST_HPP
+#define SUPERALFABROS_CODELIST_HPP
 
 #include <string>
 using namespace std;
 
-class CodeData{
+class CodeList{
 protected:
 
     // struct to hold char codes and the associated pointer type
@@ -18,22 +22,25 @@ protected:
     // pointer to the head of the list
     p_code head;
 
-    // insert code at the beginning of the list starting with head and returns the new head
+    // inserts code at the beginning of the list starting with head and returns the new head
     p_code headInsert(p_code head, char code);
 
-    // insert code at the end of the list starting with head and returns the new head
+    // inserts code at the end of the list starting with head and returns the new head
     p_code tailInsert(p_code head, char code);
 
-    // skip code in the list starting with head (NO DELETION) and returns the new head
-    p_code skipCode(p_code head, char code);
+    // removes code (WITH DELETION) from the list starting with head and returns the new head
+    p_code remove(p_code head, char code);
 
 public:
 
     // constructor: initializes an empty list
-    CodeData();
+    CodeList();
 
     // add new code at the end of the list
     void addCode(char code);
+
+    // removes the specified code from the list
+    void removeCode(char code);
 
     // moves the desired code at the beginning of the list
     void selectCode(char code);
@@ -46,4 +53,4 @@ public:
 };
 
 
-#endif //SUPERALFABROS_CODEDATA_HPP
+#endif //SUPERALFABROS_CODELIST_HPP

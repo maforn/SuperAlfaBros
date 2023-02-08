@@ -12,7 +12,6 @@ struct SkinList::skin{
     skin* next;
 };
 
-
 SkinList::p_skin SkinList::findSkin(char code){
     p_skin iterator = this -> head;
     while(iterator != NULL && iterator -> code != code)
@@ -28,7 +27,6 @@ SkinList::p_skin SkinList::findSkinByIndex(int index){
     }
     return iterator;
 }
-
 
 SkinList::p_skin SkinList::tailInsert(p_skin head, p_skin element){
     if(head == NULL)
@@ -54,7 +52,6 @@ SkinList::p_skin SkinList::skipSkin(p_skin head, char code) {
         return head;
     }
 }
-
 
 //PUBLIC
 
@@ -99,10 +96,10 @@ void SkinList::removePrice(char code){
 
 void SkinList::sortSkins(){
     p_skin locked = NULL, unlocked = NULL;
-    p_skin iterator = this -> head;
+    p_skin iterator = this->head, current = NULL;
 
     while(iterator != NULL){
-        p_skin current = iterator;
+        current = iterator;
         iterator = iterator -> next;
         current -> next = NULL;
 
@@ -111,9 +108,8 @@ void SkinList::sortSkins(){
         else
             locked = tailInsert(locked, current);
     }
-    this -> head = tailInsert(unlocked, locked);
+    this->head = tailInsert(unlocked, locked);
 }
-
 
 int SkinList::getPrice(char code){
     p_skin desiredSkin = findSkin(code);
@@ -154,15 +150,3 @@ void SkinList::getSkinInfoStrings(wstring dest[], int count, char selectedCode){
         index += 1;
     }
 }
-
-/*
-string SkinList::test(){
-    string res = "";
-    p_skin iterator = this -> head;
-    while(iterator != NULL){
-        res +=  " " + iterator -> name;
-        iterator = iterator -> next;
-    }
-    return res;
-}
- */
