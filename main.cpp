@@ -14,6 +14,7 @@ using namespace std;
 
 #define TEMPO 500
 #define MINTEMPO 40.0
+#define vertical_shift  4
 inline double CurrentTime_milliseconds() {
     return chrono::duration_cast<std::chrono::milliseconds>
             (chrono::high_resolution_clock::now().time_since_epoch()).count();
@@ -84,7 +85,7 @@ int main() {
     pProgressManager progressManager = new ProgressManager("PlayerData.txt", "WeaponData.txt", "SkinData.txt");
     progressManager->loadSavedData();
 
-    const int vertical_shift = 4;
+    //const int vertical_shift = 4;
     // create a new player instance
     pPlayer player = new Player(1, 1, 100, vertical_shift);
 
@@ -219,7 +220,8 @@ int main() {
                 nodelay(stdscr, TRUE);
                 nodelay(win, TRUE);
                 keepPlaying = nextAction != QUIT_GAME;
-
+                wclear(win);
+                drawHeader(win, progressManager, player);
             }
 
         // clear the window and draw Map and Objects
