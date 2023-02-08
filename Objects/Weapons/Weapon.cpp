@@ -5,26 +5,26 @@
 #include "Weapon.hpp"
 
 void Weapon::pointLeft() {
-    if (isRight) {
+    if(isRight){
         isRight = false;
         drawing = drawingLeft;
     }
 }
 
 void Weapon::pointRight() {
-    if (!isRight) {
+    if(!isRight){
         isRight = true;
         drawing = drawingRight;
     }
 }
 
-int Weapon::getDamage() {
-    return damage;
+int Weapon::getDamage(){
+    return level*damage;
 }
 
-Weapon::Weapon(int x, int y, char objectType, std::wstring name, int damage, int range,
-               std::wstring drawingLeft, std::wstring drawingRight, std::wstring drawing) : Object(x, y, drawing,
-                                                                                                   objectType) {
+Weapon::Weapon(int x, int y, char objectType, std::wstring name, int damage, int range, int level,
+               std::wstring drawingLeft, std::wstring drawingRight, std::wstring drawing) : Object(x, y, drawing, objectType) {
+    this->level = level;
     this->damage = damage;
     this->drawingRight = drawingRight;
     this->drawingLeft = drawingLeft;
@@ -37,7 +37,7 @@ Weapon::Weapon(int x, int y, char objectType, std::wstring name, int damage, int
 
 void Weapon::useRight(WINDOW *win) {
     if (!isRight) {
-        x = x + 2;
+        x=x+2;
     }
     pointRight();
 }
@@ -45,14 +45,12 @@ void Weapon::useRight(WINDOW *win) {
 void Weapon::useLeft(WINDOW *win) {
 
     if (isRight) {
-        x = x - 2;
+        x=x-2;
     }
     pointLeft();
 }
 
 void Weapon::moveWeapon(WINDOW *win, int x, int y) {
-    mvwaddwstr(win, this->y, this->x, covering);  // erase the weapon from the screen
-
     this->x = x;
     this->y = y;
 }
