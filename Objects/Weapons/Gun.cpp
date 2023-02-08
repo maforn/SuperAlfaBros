@@ -4,6 +4,6 @@
 
 #include "Gun.hpp"
 
-Gun::Gun(int x, int y, int level) : Weapon(x, y, 'G', L"Gun", 5, 10, level, L"=", L"=", L"=") {
+Gun::Gun(int x, int y) : Weapon(x, y, 'G', L"Gun", 5, 10, L"=", L"=", L"=") {
 
 }

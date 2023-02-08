@@ -6,21 +6,24 @@
 #include "MarketManager.hpp"
 
 void MarketManager::initializeRefills(){
-    refills.addRefill('L', L"Life", 10, 10);
+    refills.addRefill('L', L"Life", 10, 5);
     refills.addRefill('A', L"Armour",5, 5);
 }
 
 void MarketManager::initializeWeapons() {
-    weapons.addWeapon(new Gun(0, 0, 1), 100);
-    weapons.addWeapon(new Shotgun(0, 0, 1), 100);
+    weapons.addWeapon(new Gun(), 10);
+    weapons.addWeapon(new Revolver(), 10);
+    weapons.addWeapon(new Shotgun(), 10);
+    weapons.addWeapon(new Rifle(), 10);
+    weapons.addWeapon(new Sniper(), 10);
 }
 
 void MarketManager::initializeSkins() {
     skins.addSkin('A', L"0", L"Default", 10);
-    skins.addSkin('B', L"1", L"Noob", 20);
-    skins.addSkin('C', L"2", L"Mid", 30);
-    skins.addSkin('D', L"3", L"Expert", 40);
-    skins.addSkin('E', L"4", L"Pro", 50);
+    skins.addSkin('B', L"1", L"Noob", 10);
+    skins.addSkin('C', L"2", L"Mid", 10);
+    skins.addSkin('D', L"3", L"Expert", 10);
+    skins.addSkin('E', L"4", L"Pro", 10);
 }
 
 void MarketManager::initializeDisplayer() {
