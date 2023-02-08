@@ -81,7 +81,6 @@ void Player::useWeaponLeft(WINDOW *win) {
 }
 
 void Player::movePlayer(WINDOW *win, int x, int y) {
-    mvwaddwstr(win, this->y, this->x, L" ");
     if (this->weapon != nullptr) {
         if (this->x < x) {
             this->weapon->pointRight();

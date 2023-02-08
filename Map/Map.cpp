@@ -215,9 +215,8 @@ char Map::detectCollision(int x, int y, pObject &pObj) {
     return objectList->getObjectInPos(x, y, pObj);
 }
 
-// remove and object from the objectList
+// remove the object from the objectList
 void Map::removeObject(WINDOW *win, pObject pObj) {
-    mvwaddwstr(win, pObj->y, pObj->x, L" ");
     this->objectList->removeElement(pObj);
 }
 
