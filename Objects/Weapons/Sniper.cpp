@@ -4,6 +4,6 @@
 
 #include "Sniper.hpp"
 
-Sniper::Sniper(int x, int y) : Weapon(x, y, 'C', L"Sniper", 30, 30, L"←", L"→", L"→") {
+Sniper::Sniper(int x, int y) : Weapon(x, y, 'C', L"Sniper", 30, 30, L"¬", L"⌐", L"⌐") {
 
 }

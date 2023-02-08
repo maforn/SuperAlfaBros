@@ -19,12 +19,11 @@ void Weapon::pointRight() {
 }
 
 int Weapon::getDamage(){
-    return level*damage;
+    return damage;
 }
 
-Weapon::Weapon(int x, int y, char objectType, std::wstring name, int damage, int range, int level,
+Weapon::Weapon(int x, int y, char objectType, std::wstring name, int damage, int range,
                std::wstring drawingLeft, std::wstring drawingRight, std::wstring drawing) : Object(x, y, drawing, objectType) {
-    this->level = level;
     this->damage = damage;
     this->drawingRight = drawingRight;
     this->drawingLeft = drawingLeft;
