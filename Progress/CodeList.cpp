@@ -2,21 +2,21 @@
 // Created by vboxuser on 23.01.23.
 //
 
-#include "CodeData.hpp"
+#include "CodeList.hpp"
 
-struct CodeData::codeElement{
+struct CodeList::codeElement{
     char code;
     codeElement* next;
 };
 
-CodeData::p_code CodeData::headInsert(p_code head, char code){
+CodeList::p_code CodeList::headInsert(p_code head, char code){
     p_code newHead = new codeElement;
     newHead->code = code;
     newHead->next = head;
     return(newHead);
 }
 
-CodeData::p_code CodeData::tailInsert(p_code head, char code){
+CodeList::p_code CodeList::tailInsert(p_code head, char code){
     if(head == NULL)
         return(headInsert(head, code));
     else if(head->code == code)
@@ -27,40 +27,47 @@ CodeData::p_code CodeData::tailInsert(p_code head, char code){
     }
 }
 
-CodeData::p_code CodeData::skipCode(p_code head, char code){
+CodeList::p_code CodeList::remove(p_code head, char code) {
     if(head == NULL)
         return NULL;
-    else if(head->code == code)
-        return head->next;
+    else if(head->code == code){
+        p_code tmp = head->next;
+        delete(head);
+        return tmp;
+    }
     else{
-        head->next = skipCode(head->next, code);
+        head->next = remove(head->next, code);
         return head;
     }
 }
 
-//public
+//PUBLIC
 
-CodeData::CodeData(){
+CodeList::CodeList(){
     this->head = NULL;
 }
 
-void CodeData::addCode(char code){
+void CodeList::addCode(char code){
     this->head = tailInsert(this -> head, code);
 }
 
-void CodeData::selectCode(char code){
-    this->head = skipCode(this -> head, code);
+void CodeList::removeCode(char code) {
+    this->head = remove(this->head, code);
+}
+
+void CodeList::selectCode(char code){
+    removeCode(code);
     this->head = headInsert(this -> head, code);
 }
 
-char CodeData::getCurrentCode(){
+char CodeList::getCurrentCode(){
     if(head != NULL)
         return(this->head->code);
     else
         return('/');
 }
 
-string CodeData::getCodesString(){
+string CodeList::getCodesString(){
     string str = "";
     p_code iterator = head;
     while(iterator != NULL){

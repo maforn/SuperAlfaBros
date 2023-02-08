@@ -251,8 +251,8 @@ int main() {
                 marketManager->openMarket(win, 5, 5);
 
                 marketAction nextAction = DISPLAY;
-                while(nextAction == DISPLAY){
-                    marketManager->displayer.initializeDisplay(); //pass data to menu
+                while(nextAction == DISPLAY){ //remain in market until closing or quitting is selected
+                    marketManager->displayer.initializeDisplay(); //pass data to menu displayer
                     marketManager->displayer.display(); //display menu
                     choice = wgetch(win);
                     nextAction = marketManager->executeInput(choice);

@@ -18,8 +18,8 @@ void ProgressManager::loadPlayerData(){
         this->armour = 0;
 }
 
-void ProgressManager::loadCodeData(CodeData& dest, string fileName, char defaultCode){
-    dest = CodeData();
+void ProgressManager::loadCodeData(CodeList& dest, string fileName, char defaultCode){
+    dest = CodeList();
     ifstream inputFile;
     inputFile.open(fileName);
 
@@ -39,7 +39,7 @@ void ProgressManager::savePlayerData(){
     outputFile.close();
 }
 
-void ProgressManager::saveCodeData(CodeData source, string fileName){
+void ProgressManager::saveCodeData(CodeList source, string fileName){
     ofstream outputFile;
     outputFile.open(fileName);
     outputFile << source.getCodesString();
@@ -93,6 +93,7 @@ string ProgressManager::getUnlockedWeaponsString(){
 void ProgressManager::unlockNewWeapon(char code){
     (this->weaponData).addCode(code);
     saveCodeData(this->weaponData, this->weaponFileName);
+    calculateDifficulty();
 }
 
 void ProgressManager::changeCurrentWeapon(char code){
@@ -123,7 +124,6 @@ char ProgressManager::getCurrentSkinCode() {
 }
 
 double ProgressManager::getDifficulty(){
-    calculateDifficulty();
     return (this->difficulty);
 }
 
@@ -139,6 +139,7 @@ int ProgressManager::getPoints(){
 }
 void ProgressManager::incrementPoints(int incr){
     this->points += incr;
+    calculateDifficulty();
 }
 
 void ProgressManager::saveProgress() {

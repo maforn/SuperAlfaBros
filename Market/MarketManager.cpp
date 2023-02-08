@@ -28,6 +28,18 @@ void MarketManager::initializeDisplayer() {
     displayer.initMarketContent(&refills, &weapons, &skins);
 }
 
+void MarketManager::purchaseRefill(char code){
+    int price = refills.getPrice(code);
+    if(price != -1){
+        int money = progressManager -> getMoney();
+        if(price <= money){
+            bool purchased = awardRefill(code);
+            if(purchased)
+                progressManager -> incrementMoney(-price);
+        }
+    }
+}
+
 bool MarketManager::awardRefill(char code){
     int amount = refills.getAmount(code);
     bool awarded = false;
@@ -44,19 +56,6 @@ bool MarketManager::awardRefill(char code){
             break;
     }
     return(awarded);
-}
-
-
-void MarketManager::purchaseRefill(char code){
-    int price = refills.getPrice(code);
-    if(price != -1){
-        int money = progressManager -> getMoney();
-        if(price <= money){
-            bool purchased = awardRefill(code);
-            if(purchased)
-                progressManager -> incrementMoney(-price);
-        }
-    }
 }
 
 void MarketManager::purchaseWeapon(char code) {
@@ -194,23 +193,6 @@ void MarketManager::openMarket(WINDOW* win, int start_y, int start_x){
 
     displayer.changePage(0); //open first page
     displayer.initMenuWindow(win, start_y, start_x); //setup menu top left corner
-}
-
-bool MarketManager::waitForMarketClosure() {
-    bool closeMenu = false, quitGame = false;
-    while(!closeMenu && !quitGame){
-        displayer.initializeDisplay(); //pass data to menu
-        displayer.display(); //display menu structure (not options)
-        int currentChoice = displayer.getChoice(); //get choice from menu
-
-        if(isExitChosen(currentChoice))
-            closeMenu = true;
-        else if(isQuitChosen(currentChoice))
-            quitGame = true;
-        else
-            executeChoice(currentChoice);
-    }
-    return (!quitGame);
 }
 
 marketAction MarketManager::executeInput(int input) {

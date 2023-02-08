@@ -2,12 +2,20 @@
 // Created by vboxuser on 23.01.23.
 //
 
+/*
+ * This class handles progress in the current game as well as over all games played.
+ * Progress in the current game consists of money acquired, points scored and the level of difficulty reached.
+ * Progress over all played games consists of skins purchased, weapons purchased and the amount of armour
+ * remaining at the end of the previous game. This data is saved on .txt files. Armour is saved as an integer;
+ * whereas skins and weapons are saved as a string composed of the codes associated to the unlocked skins and weapons.
+ */
+
 #ifndef SUPERALFABROS_PROGRESSMANAGER_HPP
 #define SUPERALFABROS_PROGRESSMANAGER_HPP
 
 #include <string>
 #include <fstream>
-#include "CodeData.hpp"
+#include "CodeList.hpp"
 using namespace std;
 
 class ProgressManager{
@@ -20,26 +28,26 @@ protected:
     int money;
     int points;
 
-    // variables for overall player progress across all played games
-    int armour; // saved armour value
-    CodeData skinData; // list of the codes of the skins that have been unlocked
-    CodeData weaponData; // list of the codes of the weapons that have been unlocked
-
     // difficulty is a multiplier derived from the current points and the number of unlocked weapons
     // all game objects requiring incremental difficulty should have their values multiplied by difficulty
     double difficulty;
+
+    // variables for overall player progress across all played games
+    int armour; // saved armour value
+    CodeList skinData; // list of the codes of the skins that have been unlocked
+    CodeList weaponData; // list of the codes of the weapons that have been unlocked
 
     // loads the saved data regarding player status, ie armour
     void loadPlayerData();
 
     // adds to dest the defaultCode and the codes saved in the file fileName
-    void loadCodeData(CodeData& dest, string fileName, char defaultCode);
+    void loadCodeData(CodeList& dest, string fileName, char defaultCode);
 
     // saves data regarding player status
     void savePlayerData();
 
     // saves the codes in source into the file fileName
-    void saveCodeData(CodeData source, string fileName);
+    void saveCodeData(CodeList source, string fileName);
 
     // calculates the game difficulty based on unlocked weapons and money
     void calculateDifficulty();
@@ -86,6 +94,7 @@ public:
     // increments the current points by incr
     void incrementPoints(int incr);
 
+    // saves all progress made
     void saveProgress();
 };
 

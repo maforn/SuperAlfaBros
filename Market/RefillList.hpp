@@ -2,6 +2,15 @@
 // Created by vboxuser on 23.01.23.
 //
 
+/*
+ * This class implements a list of refills for the market.
+ * Each refill is associated to a code, through which the refill can be found and accessed in the list.
+ * Given an index i, it's also possible to retrieve the code associated to the refill in position i in the list (if existing).
+ *
+ * Each refill has a startingPrice, which is set when the refill is created, and an actualPrice, which can be calculated
+ * from the startingPrice using multiplyPrices().
+ */
+
 #ifndef SUPERALFABROS_REFILLLIST_HPP
 #define SUPERALFABROS_REFILLLIST_HPP
 
