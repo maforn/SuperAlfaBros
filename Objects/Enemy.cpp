@@ -4,7 +4,7 @@
 
 #include "Enemy.hpp"
 
-Enemy::Enemy(int x, int y, int life, int damage, int range, char direction) : Object(x, y, L"£", 'N'){
+Enemy::Enemy(int x, int y, int life, int damage, int range, char direction) : Object(x, y, L"⇔", 'N'){
     this->x = x;
     this->y = y;
     this->life = life;
