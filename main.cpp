@@ -14,14 +14,13 @@ using namespace std;
 
 #define TEMPO 500
 #define MINTEMPO 40.0
-
 inline double CurrentTime_milliseconds() {
     return chrono::duration_cast<std::chrono::milliseconds>
             (chrono::high_resolution_clock::now().time_since_epoch()).count();
 }
 
 
-void move(pPlayer player, char choice, pDynamicLevelList levels, bool hasLanded, WINDOW* win) {
+void move(pPlayer player, char choice, pDynamicLevelList levels, bool hasLanded, WINDOW *win) {
     pMap Map = levels->currentMap();
     static unsigned long long ncicli = 0;
     static Movement jumper = Movement(player);
@@ -62,7 +61,7 @@ void move(pPlayer player, char choice, pDynamicLevelList levels, bool hasLanded,
     }
 }
 
-void drawHeader(WINDOW* win, ProgressManager* progressManager, pPlayer player) {
+void drawHeader(WINDOW *win, ProgressManager *progressManager, pPlayer player) {
     // format and print LIFE and ARMOUR strings
     wstring lifeStr = playerStatusFormatter(L"LIFE   > ", 13, player->getLife(), 10);
     wstring armourStr = playerStatusFormatter(L"ARMOUR > ", 13, player->getArmour(), 5);
@@ -85,7 +84,7 @@ int main() {
     pProgressManager progressManager = new ProgressManager("PlayerData.txt", "WeaponData.txt", "SkinData.txt");
     progressManager->loadSavedData();
 
-    int vertical_shift = 4;
+    const int vertical_shift = 4;
     // create a new player instance
     pPlayer player = new Player(1, 1, 100, vertical_shift);
 
@@ -154,7 +153,7 @@ int main() {
     nodelay(stdscr, TRUE); //make getch not wait for the input
     nodelay(win, TRUE); //make getch not wait for the input
 
-    int lastx, lasty;
+    int lastx, lasty, lastlife, lastmoney, lastpoints;
     bool hasLanded = false;
     pMap lastMap;
     // detect player moves
@@ -166,6 +165,9 @@ int main() {
 
     bool keepPlaying = true; // set to false if user decides to quit in the market menu
     do {
+        lastlife = player->getLife();
+        lastmoney = progressManager->getMoney();
+        lastpoints = progressManager->getPoints();
         lastx = player->x;
         lasty = player->y;
         lastMap = levels->currentMap();
@@ -179,48 +181,6 @@ int main() {
         {
             levels->movePlayer(win, player->x, player->y + 1); // fall
             hasLanded = lasty == player->y;
-/*
-        choice = getch();
-        switch (choice) {
-            case 'w': // move player forward
-                levels->movePlayer(win, player->x, player->y - 1);
-                break;
-            case 's': // move player backward
-                levels->movePlayer(win, player->x, player->y + 1);
-                break;
-            case 'a': // move player leftward
-                levels->movePlayer(win, player->x - 1, player->y);
-                break;
-            case 'd': // move player rightward
-                levels->movePlayer(win, player->x + 1, player->y);
-                break;
-            case 'q': // use weapon to left
-                player->useWeaponLeft(win);
-                levels->currentMap()->shootBullet(win, player->getWeapon()->x - 1, player->getWeapon()->y, 'l');
-
-                break;
-            case 'e': // use weapon to right
-                player->useWeaponRight(win);
-                levels->currentMap()->shootBullet(win, player->getWeapon()->x + 1, player->getWeapon()->y, 'r');
-                break;
-            case ' ': // jump where and if possible, maximum of 3
-                if(lasty > 1) levels->movePlayer(win,player->x, player->y-1);   // if within bounds
-                if(player->y==lasty-1 && lasty > 2) levels->movePlayer(win,player->x, player->y-1); // if previous successful and within bounds
-                if(player->y==lasty-2 && lasty > 3) levels->movePlayer(win,player->x, player->y-1); // if previous successful and within bounds
-                delay = TEMPO;
-                break;
-            default:
-                break;
-        }
-
-
-
-
-
-         if ((CurrentTime_milliseconds() - start)>delay) // gravity, acts based on time passed
-        {
-            levels->movePlayer(win,player->x, player->y + 1); // fall */
-
             start = CurrentTime_milliseconds();
             if (lasty != player->y) {
                 delay = max(delay * 0.75, MINTEMPO);  // fall faster next time, delay is lower
@@ -228,30 +188,28 @@ int main() {
         }
 
         // move the objects every second
-        if ((CurrentTime_milliseconds() - appTime )> 1000) // every second
+        if ((CurrentTime_milliseconds() - appTime) > 1000) // every second
         {
-
             appTime = CurrentTime_milliseconds();
 
             levels->currentMap()->moveObjects(win, 0); // move all the objects
-            wclear(win);
+        }
+        if(lastlife!=player->getLife()||lastmoney!=progressManager->getMoney()||lastpoints!= progressManager->getPoints()){
+            wmove(win,start_y + 1, start_x + 1);
+            wclrtoeol(win);
+            wmove(win,start_y + 2, start_x + 1);
+            wclrtoeol(win);
             drawHeader(win, progressManager, player);
-            levels->currentMap()->drawBaseMap(win, vertical_shift);
-            levels->currentMap()->drawObjects(win, vertical_shift);
-            player->drawPlayer(win, vertical_shift);
-            wrefresh(win);
         }
 
 
-        if (lastx != player->x || lasty != player->y || levels->currentMap() != lastMap) { // if something changes
-
-            if (levels->currentMap() != lastMap){ // if map changes, display market
+        if (levels->currentMap() != lastMap) { // if map changes, display market
                 nodelay(stdscr, FALSE);
                 nodelay(win, FALSE);
                 marketManager->openMarket(win, 5, 5);
 
                 marketAction nextAction = DISPLAY;
-                while(nextAction == DISPLAY){ //remain in market until closing or quitting is selected
+                while (nextAction == DISPLAY) { //remain in market until closing or quitting is selected
                     marketManager->displayer.initializeDisplay(); //pass data to menu displayer
                     marketManager->displayer.display(); //display menu
                     choice = wgetch(win);
@@ -261,20 +219,17 @@ int main() {
                 nodelay(stdscr, TRUE);
                 nodelay(win, TRUE);
                 keepPlaying = nextAction != QUIT_GAME;
+
             }
 
-            // clear the window and draw Map and Objects
-            wclear(win);
-            drawHeader(win, progressManager, player);
-            levels->currentMap()->drawBaseMap(win, vertical_shift);
-            levels->currentMap()->drawObjects(win, vertical_shift);
-
-            //clearXY(win, lastx, lasty); // clear previous coordinate where player was
-            player->drawPlayer(win, vertical_shift);
-
-            // refresh the window
-            wrefresh(win);
-        }
+        // clear the window and draw Map and Objects
+        wmove(win,start_y + vertical_shift, start_x );
+        wclrtobot(win);
+        levels->currentMap()->drawBaseMap(win, vertical_shift);
+        levels->currentMap()->drawObjects(win, vertical_shift);
+        player->drawPlayer(win, vertical_shift);
+        // refresh the window
+        wrefresh(win);
     } while (choice != 27 && player->getLife() > 0 && keepPlaying);
     nodelay(stdscr, FALSE);
 
