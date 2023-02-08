@@ -22,7 +22,7 @@ void DynamicLevelList::initialize(levelList &l) {
     levelList tmp = new levelStruct;
     // generate a new random map from the list given (with the player pointer the enemies will also be strong enough)
     tmp->map = new Map(this->mapFiles->randomMapFile(), this->player, this->progressManager);
-    //tmp->map = new Map("../maps/map1.map", this->player, this->progressManager);
+    //tmp->map = new Map("../maps/map3.map", this->player, this->progressManager);
     // set the next and prev pointer to null
     tmp->next = nullptr;
     tmp->prev = nullptr;
