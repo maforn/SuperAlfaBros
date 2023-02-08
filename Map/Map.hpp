@@ -9,7 +9,6 @@
 #include <fstream>
 #include <iostream>
 #include "../Objects/Player.hpp"
-//#include "../Objects/AllObjects.hpp"
 #include "../Lists/DynamicObjectList.hpp"
 #include "../Progress/ProgressManager.hpp"
 

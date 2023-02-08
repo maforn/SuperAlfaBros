@@ -5,7 +5,7 @@
 #include "Bullet.hpp"
 
 
-Bullet::Bullet(int x, int y, int damage, char direction, int range) : Object(x, y, L"-" , 'U' ){
+Bullet::Bullet(int x, int y, int damage, char direction, int range, bool fromPlayer) : Object(x, y, fromPlayer ? L"-" : L"*" , fromPlayer ? 'U' : 'V' ){
     this->direction = direction;
     this->damage = damage;
     this->range = range;

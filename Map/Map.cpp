@@ -74,7 +74,7 @@ void Map::objectParser(wstring line) {
 
     // difficulty to apply to parsed object
     double difficulty = progressManager->getDifficulty();
-
+    int d, x1, y1, x2, y2;
     // get the first char of the string structured as type,x,y,...
     switch (line[0]) {
         case 'P': // case Player
@@ -146,8 +146,7 @@ void Map::objectParser(wstring line) {
         case 'R': // case Patrol
             // remove the first two useless chars
             line.erase(0, 2); // remove the first two useless chars ("R,")
-            // create params that will be passed to the patrol constructor
-            int x1, y1, x2, y2;
+
 
             // set x to the first number before ','
             x1 = stoi(line.substr(0, line.find(',')));
@@ -169,7 +168,18 @@ void Map::objectParser(wstring line) {
 
             break;
 
-         default: // none of the previous cases were matched
+        case 'N':
+            line.erase(0, 2); // remove the first two useless chars ("N,")
+            x = stoi(line.substr(0, line.find(',')));
+            line.erase(0, line.find(',') + 1);
+            y = stoi(line.substr(0, line.find(',')));
+            line.erase(0, line.find(',') + 1);
+            d = stoi(line.substr(0, line.find(',')));
+            this->objectList->addTail(new Enemy(x,y,20*difficulty,5*difficulty,10*difficulty,d==0?'r':'l'));
+
+            break;
+
+        default: // none of the previous cases were matched
             wcout << "Invalid encoding: " << line << endl;
     }
 }
@@ -270,6 +280,11 @@ void Map::moveObjects(WINDOW *win, int vertical_shift) {
                         // blank space
                         ((pPatrol) tmp->obj)->move(win,cords->x,cords->y);
                         break;
+                    case 'V':
+                        // it's an enemy bullet
+                        removeObject(win,pObj);
+                        ((pPatrol) tmp->obj)->move(win,cords->x,cords->y);
+                        break;
                     default:
                         // it's an object, we do nothing
                         break;
@@ -277,7 +292,7 @@ void Map::moveObjects(WINDOW *win, int vertical_shift) {
 
                 delete cords;
                 break;
-            case 'U': // case Bullet
+            case 'U': // case Player Bullet
                 if (((pBullet) tmp->obj)->range <= 0) {
                     removeThis = true;
                 }else {
@@ -307,7 +322,46 @@ void Map::moveObjects(WINDOW *win, int vertical_shift) {
                             progressManager->incrementPoints(50);
                         }
                         removeThis = true;
+                    }else if (collision == 'N'){
+                        ((pEnemy) pObj)->life -= ((pBullet) tmp->obj)->getDamage();
+                        if (((pEnemy) pObj)->life <= 0) {
+                            removeObject(win,pObj);
+                            progressManager->incrementMoney(70);
+                            progressManager->incrementPoints(70);
+                        }
+                        removeThis = true;
+
+                    }else if (collision == 'V'){
+                        removeObject(win,pObj);
+                        removeThis = true;
                     }else removeThis = true;
+                    delete cords;
+                }
+                break;
+
+            case 'N': // case Enemy
+                if (rand()%10 == 0){
+                    //shoot an enemy bullet
+                    this->objectList->addTail(new Bullet((pEnemy (tmp->obj))->x, (pEnemy (tmp->obj))->y, (pEnemy (tmp->obj))->getDamage(), (pEnemy (tmp->obj))->getDirection(), (pEnemy (tmp->obj))->getRange(), false));
+                }
+                break;
+
+            case 'V': // case Enemy bullet
+                if (((pBullet) tmp->obj)->range <= 0) {
+                    removeThis = true;
+                }else {
+                    ((pBullet) tmp->obj)->range--;
+                    cords = ((pBullet) tmp->obj)->getNewPos();
+                    collision = this->detectCollision(cords->x,cords->y,pObj);
+                    if(collision == ' ' && player->x == cords->x && player->y == cords->y) {
+                        collision = 'P';
+                    }
+
+                    if (collision== ' ') ((pBullet) tmp->obj)->move(win,cords->x,cords->y);
+                    else if ( collision == 'P') {
+                        player->receiveDamage(((pBullet) tmp->obj)->getDamage());
+                        removeThis = true;
+                    } else removeThis = true;
                     delete cords;
                 }
                 break;
@@ -336,7 +390,8 @@ void Map::shootBullet(WINDOW *win, int x, int y, char direction) {
         }
 
         if (collision == ' '){
-            this->objectList->addTail(new Bullet(x, y, player->getWeapon()->getDamage(), direction, player->getWeapon()->getRange()));
+            this->objectList->addTail(new Bullet(x, y, player->getWeapon()->getDamage(), direction,
+                                                 player->getWeapon()->getRange(), true));
         }else if ( collision == 'B') {
             ((pBomb) pObj)->life -= player->getWeapon()->getDamage();
             if (((pBomb) pObj)->life <= 0) {
@@ -352,7 +407,15 @@ void Map::shootBullet(WINDOW *win, int x, int y, char direction) {
                 progressManager->incrementMoney(50);
                 progressManager->incrementPoints(50);
             }
-
+        }else if (collision == 'N'){
+            ((pEnemy) pObj)->life -= player->getWeapon()->getDamage();
+            if (((pEnemy) pObj)->life <= 0) {
+                removeObject(win,pObj);
+                progressManager->incrementMoney(70);
+                progressManager->incrementPoints(70);
+            }
+        }else if (collision == 'V'){
+            removeObject(win,pObj);
         }
     }
 }

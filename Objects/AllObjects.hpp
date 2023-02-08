@@ -9,6 +9,8 @@
 #include "../Objects/Spikes.hpp"
 #include "../Objects/Bomb.hpp"
 #include "../Objects/Patrol.hpp"
+#include "../Objects/Bullet.hpp"
+#include "../Objects/Enemy.hpp"
 #include "Weapons/AllWeapons.hpp"
 
 
