@@ -44,7 +44,9 @@ void Player::drawPlayer(WINDOW *win, int verticalShift) {
 // damage the player of a certain amount
 void Player::receiveDamage(int dmg) {
     if(this->armour > 0){
-        double reducedByArmour = (int)((double)(this->armour) / 100 * dmg);
+        int reducedByArmour = (int)((double)(this->armour) / 100 * dmg);
+        if(reducedByArmour <= 1)
+            reducedByArmour = 1;
         dmg -= reducedByArmour;
 
         if(this->armour >= reducedByArmour)

@@ -11,19 +11,19 @@ void MarketManager::initializeRefills(){
 }
 
 void MarketManager::initializeWeapons() {
-    weapons.addWeapon(new Gun(), 100);
-    weapons.addWeapon(new Revolver(), 100);
-    weapons.addWeapon(new Shotgun(), 150);
-    weapons.addWeapon(new Rifle(), 200);
-    weapons.addWeapon(new Sniper(), 300);
+    weapons.addWeapon(new Gun(), 50);
+    weapons.addWeapon(new Revolver(), 50);
+    weapons.addWeapon(new Shotgun(), 100);
+    weapons.addWeapon(new Rifle(), 150);
+    weapons.addWeapon(new Sniper(), 200);
 }
 
 void MarketManager::initializeSkins() {
-    skins.addSkin('A', L"0", L"Default", 100);
-    skins.addSkin('B', L"1", L"Noob", 100);
-    skins.addSkin('C', L"2", L"Mid", 200);
-    skins.addSkin('D', L"3", L"Expert", 300);
-    skins.addSkin('E', L"4", L"Pro", 400);
+    skins.addSkin('A', L"0", L"Default", 50);
+    skins.addSkin('B', L"1", L"Noob", 50);
+    skins.addSkin('C', L"2", L"Mid", 100);
+    skins.addSkin('D', L"3", L"Expert", 150);
+    skins.addSkin('E', L"4", L"Pro", 200);
 }
 
 void MarketManager::initializeDisplayer() {
