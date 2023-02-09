@@ -20,12 +20,9 @@ void Patrol::drawPatrol(WINDOW *win) {
 }
 
 
- void Patrol::move(WINDOW *win, int x, int y) {
-     //printw("%ls",this->drawing.c_str());
-     //mvwaddwstr(win, this->y, this->x , L" ");
+ void Patrol::move(int x, int y) {
     this->x=x;
     this->y=y;
-     //mvwaddwstr(win, y, x, this->drawing.c_str());
 }
 
 pCords Patrol::getNewPos() {
@@ -34,11 +31,11 @@ pCords Patrol::getNewPos() {
     cords->x = this->x;
     cords->y = this->y;
     if ((this->x == this->x1 && this->y == this->y1) || (this->x == this->x2 && this->y == this->y2) ){
-        // cambia direzione
+        // change direction
         this->direction = !this->direction;
     }
     if (this->direction){
-        // vai verso x1,y1
+        // go to x1,y1
         if (this->x < this->x1){
             cords->x = this->x+1;
         } else if (this->x > this->x1){
@@ -49,7 +46,7 @@ pCords Patrol::getNewPos() {
             cords->y = this->y-1;
         }
     } else {
-        // vai verso x2,y2
+        // go to x2,y2
         if (this->x < this->x2){
             cords->x = this->x+1;
         } else if (this->x > this->x2){

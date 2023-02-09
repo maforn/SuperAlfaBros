@@ -24,9 +24,6 @@ protected:
     int nJumps;
 public:
     Movement(pPlayer player);
-    void show_title();
-    void show_endscreen(WINDOW *win);
-    void move(pPlayer player, char choice, pDynamicLevelList levels, bool hasLanded, WINDOW* win);
 
     void update_dx(int ndx);
     bool is_onJump();

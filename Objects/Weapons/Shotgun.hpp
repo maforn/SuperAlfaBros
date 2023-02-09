@@ -14,5 +14,4 @@ public:
     Shotgun(int x = 0, int y = 0);
 };
 
-typedef Shotgun *pKnife;
 #endif //SUPERALFABROS_SHOTGUN_HPP

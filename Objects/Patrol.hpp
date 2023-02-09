@@ -18,7 +18,7 @@ public:
     int life;
     Patrol(int x, int y, int toX, int toY, int life, int damage);
     void drawPatrol(WINDOW *win);
-    void move(WINDOW *win, int x, int y);
+    void move(int x, int y);
     pCords getNewPos();
     int getDamage();
 

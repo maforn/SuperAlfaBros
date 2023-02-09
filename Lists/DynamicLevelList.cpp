@@ -171,13 +171,3 @@ void DynamicLevelList::movePlayer(WINDOW *win, int x, int y) {
     }
 }
 
-bool DynamicLevelList::detectCollisionWeapon(int x, int y) {
-    pObject pApp = nullptr;
-    char collision = this->levels->map->detectCollision(x, y, pApp);
-    if (collision == ' ') {
-        return false;
-    } else {
-        return true;
-    }
-}
-

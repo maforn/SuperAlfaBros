@@ -35,8 +35,6 @@ public:
     // Constructor of the class: will set the new vars and use the constructor of the superclass
     Player(int x, int y, int life, int vertical_shift);
 
-    // calculate damage scaled on the level TODO: use a decent equation
-    int calculateDamage ();
     // draw the player on a screen
     void drawPlayer(WINDOW *win, int verticalShift);
     // the player receives a certain amount of damage

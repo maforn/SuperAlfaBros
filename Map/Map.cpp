@@ -124,7 +124,7 @@ void Map::objectParser(wstring line) {
             // set y to the remaining number
             y = stoi(line.substr(0, line.find(',')));
 
-            this->objectList->addTail(new Spikes(x, y, this->player->calculateDamage()));
+            this->objectList->addTail(new Spikes(x, y, 20 * difficulty));
 
             break;
 
@@ -241,10 +241,8 @@ void Map::moveObjects(WINDOW *win, int vertical_shift) {
             case 'R': // case Patrol
 
                 cords = ((pPatrol) tmp->obj)->getNewPos();
-                //printw("[%d,%d](%d,%d)",tmp->obj->x,tmp->obj->y,cords->x,cords->y);
 
                 collision = this->detectCollision(cords->x, cords->y, pObj);
-                //printw("%c",collision);
                 if (collision == ' ' && player->x == cords->x && player->y == cords->y) {
                     collision = 'P';
                 } else if (collision == ' ' && player->getWeapon() != nullptr) {
@@ -270,20 +268,20 @@ void Map::moveObjects(WINDOW *win, int vertical_shift) {
                         break;
                     case 'F':
                         // it's a shootgun
-                        ((pPatrol) tmp->obj)->move(win, cords->x, cords->y);
+                        ((pPatrol) tmp->obj)->move(cords->x, cords->y);
                         break;
                     case 'G':
                         // it's a gun
-                        ((pPatrol) tmp->obj)->move(win, cords->x, cords->y);
+                        ((pPatrol) tmp->obj)->move(cords->x, cords->y);
                         break;
                     case ' ':
                         // blank space
-                        ((pPatrol) tmp->obj)->move(win, cords->x, cords->y);
+                        ((pPatrol) tmp->obj)->move(cords->x, cords->y);
                         break;
                     case 'V':
                         // it's an enemy bullet
                         removeObject(win, pObj);
-                        ((pPatrol) tmp->obj)->move(win, cords->x, cords->y);
+                        ((pPatrol) tmp->obj)->move(cords->x, cords->y);
                         break;
                     default:
                         // it's an object, we do nothing
@@ -306,7 +304,7 @@ void Map::moveObjects(WINDOW *win, int vertical_shift) {
                             collision = player->getWeapon()->objectType;
                     }
 
-                    if (collision == ' ') ((pBullet) tmp->obj)->move(win, cords->x, cords->y);
+                    if (collision == ' ') ((pBullet) tmp->obj)->move(cords->x, cords->y);
                     else if (collision == 'B') {
                         ((pBomb) pObj)->life -= ((pBullet) tmp->obj)->getDamage();
                         if (((pBomb) pObj)->life <= 0) {
@@ -360,7 +358,7 @@ void Map::moveObjects(WINDOW *win, int vertical_shift) {
                         collision = 'P';
                     }
 
-                    if (collision == ' ') ((pBullet) tmp->obj)->move(win, cords->x, cords->y);
+                    if (collision == ' ') ((pBullet) tmp->obj)->move(cords->x, cords->y);
                     else if (collision == 'P') {
                         player->receiveDamage(((pBullet) tmp->obj)->getDamage());
                         removeThis = true;

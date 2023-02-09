@@ -17,7 +17,7 @@ protected:
 public:
     int range;
     Bullet(int x, int y, int damage, char direction, int range, bool fromPlayer);
-    void move(WINDOW *win, int x, int y);
+    void move(int x, int y);
     pCords getNewPos();
     int getDamage();
 };
