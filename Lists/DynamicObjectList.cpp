@@ -1,5 +1,5 @@
 //
-// Created by admin on 23/11/2022.
+// Created by matteo on 23/11/2022.
 //
 
 #include "DynamicObjectList.hpp"
@@ -25,19 +25,6 @@ void DynamicObjectList:: addTail(pObject pObj) {
             iter = iter->next;
         }
         iter->next = tmp;
-    }
-}
-
-// add element to the head of the list
-void DynamicObjectList::addHead(pObject pObj) {
-    listObjects tmp = new listObject;
-    tmp->next = nullptr;
-    tmp->obj = pObj;
-    if (this->objects == nullptr) {
-        this->objects = tmp;
-    } else {
-        tmp->next = this->objects;
-        this->objects = tmp;
     }
 }
 
