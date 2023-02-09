@@ -14,6 +14,7 @@ using namespace std;
 
 #define TEMPO 500
 #define MINTEMPO 40.0
+#define vertical_shift  4
 inline double CurrentTime_milliseconds() {
     return chrono::duration_cast<std::chrono::milliseconds>
             (chrono::high_resolution_clock::now().time_since_epoch()).count();
@@ -76,6 +77,27 @@ void drawHeader(WINDOW *win, ProgressManager *progressManager, pPlayer player) {
     mvwaddwstr(win, start_y + 2, width - 1 - points.length(), points.c_str());
 }
 
+// call this function when market needs to be opened
+// the function returns when the user decides to exit the market
+// the function returns false if the user decides to quit the game within the market; false otherwise
+bool moveToMarket(WINDOW* win, MarketManager* marketManager){
+    nodelay(stdscr, FALSE);
+    nodelay(win, FALSE);
+    marketManager->openMarket(win, 5, 5);
+
+    marketAction nextAction = DISPLAY;
+    while (nextAction == DISPLAY) { //remain in market until closing or quitting is selected
+        marketManager->displayer.initializeDisplay(); //pass data to menu displayer
+        marketManager->displayer.display(); //display menu
+        int choice = wgetch(win);
+        nextAction = marketManager->executeInput(choice);
+    }
+
+    nodelay(stdscr, TRUE);
+    nodelay(win, TRUE);
+    return(nextAction != QUIT_GAME);
+}
+
 int main() {
     // seed the random number generator
     srand(time(nullptr));
@@ -84,7 +106,7 @@ int main() {
     pProgressManager progressManager = new ProgressManager("PlayerData.txt", "WeaponData.txt", "SkinData.txt");
     progressManager->loadSavedData();
 
-    const int vertical_shift = 4;
+    //const int vertical_shift = 4;
     // create a new player instance
     pPlayer player = new Player(1, 1, 100, vertical_shift);
 
@@ -138,14 +160,19 @@ int main() {
     // enable function keys
     keypad(win, true);
 
-    // clear the window
-    wclear(win);
-    // draw the base map, then all the objects and then the player
-    levels->currentMap()->drawBaseMap(win, vertical_shift);
-    levels->currentMap()->drawObjects(win, vertical_shift);
-    player->drawPlayer(win, vertical_shift);
+    // set to false if user decides to quit in the market menu
+    bool keepPlaying = moveToMarket(win, marketManager);
 
-    drawHeader(win, progressManager, player);
+    if(keepPlaying){
+        // clear the window
+        wclear(win);
+        // draw the base map, then all the objects and then the player
+        levels->currentMap()->drawBaseMap(win, vertical_shift);
+        levels->currentMap()->drawObjects(win, vertical_shift);
+        player->drawPlayer(win, vertical_shift);
+
+        drawHeader(win, progressManager, player);
+    }
 
     // refresh the window with the new data drawn
     wrefresh(win);
@@ -157,14 +184,13 @@ int main() {
     bool hasLanded = false;
     pMap lastMap;
     // detect player moves
-    int choice;
+    int choice = 0;
 
     auto frame = CurrentTime_milliseconds();
     auto start = frame;
     double appTime = 0;
 
-    bool keepPlaying = true; // set to false if user decides to quit in the market menu
-    do {
+    while (choice != 27 && player->getLife() > 0 && keepPlaying){
         lastlife = player->getLife();
         lastmoney = progressManager->getMoney();
         lastpoints = progressManager->getPoints();
@@ -204,22 +230,9 @@ int main() {
 
 
         if (levels->currentMap() != lastMap) { // if map changes, display market
-                nodelay(stdscr, FALSE);
-                nodelay(win, FALSE);
-                marketManager->openMarket(win, 5, 5);
-
-                marketAction nextAction = DISPLAY;
-                while (nextAction == DISPLAY) { //remain in market until closing or quitting is selected
-                    marketManager->displayer.initializeDisplay(); //pass data to menu displayer
-                    marketManager->displayer.display(); //display menu
-                    choice = wgetch(win);
-                    nextAction = marketManager->executeInput(choice);
-                }
-
-                nodelay(stdscr, TRUE);
-                nodelay(win, TRUE);
-                keepPlaying = nextAction != QUIT_GAME;
-
+                keepPlaying = moveToMarket(win, marketManager);
+                wclear(win);
+                drawHeader(win, progressManager, player);
             }
 
         // clear the window and draw Map and Objects
@@ -230,7 +243,7 @@ int main() {
         player->drawPlayer(win, vertical_shift);
         // refresh the window
         wrefresh(win);
-    } while (choice != 27 && player->getLife() > 0 && keepPlaying);
+    }
     nodelay(stdscr, FALSE);
 
     progressManager->updateArmour(player->getArmour());
