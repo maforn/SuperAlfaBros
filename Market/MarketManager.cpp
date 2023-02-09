@@ -6,16 +6,16 @@
 #include "MarketManager.hpp"
 
 void MarketManager::initializeRefills(){
-    refills.addRefill('L', L"Life", 10, 40);
-    refills.addRefill('A', L"Armour",5, 25);
+    refills.addRefill('L', L"Life", 10, 20);
+    refills.addRefill('A', L"Armour",5, 20);
 }
 
 void MarketManager::initializeWeapons() {
     weapons.addWeapon(new Gun(), 50);
     weapons.addWeapon(new Revolver(), 50);
-    weapons.addWeapon(new Shotgun(), 100);
-    weapons.addWeapon(new Rifle(), 150);
-    weapons.addWeapon(new Sniper(), 200);
+    weapons.addWeapon(new Shotgun(), 50);
+    weapons.addWeapon(new Rifle(), 50);
+    weapons.addWeapon(new Sniper(), 50);
 }
 
 void MarketManager::initializeSkins() {
@@ -34,15 +34,14 @@ void MarketManager::initializeDisplayer() {
 void MarketManager::purchaseRefill(char code){
     int price = refills.getPrice(code);
     if(price != -1){
-        int money = progressManager -> getMoney();
+        int money = progressManager->getMoney();
         if(price <= money){
             bool purchased = awardRefill(code);
             if(purchased)
-                progressManager -> incrementMoney(-price);
+                progressManager->incrementMoney(-price);
         }
     }
 }
-
 bool MarketManager::awardRefill(char code){
     int amount = refills.getAmount(code);
     bool awarded = false;
@@ -66,17 +65,19 @@ void MarketManager::purchaseWeapon(char code) {
     if(price == 0)
         activateWeapon(code);
     else if(price != -1 && price <= progressManager->getMoney())
-        unlockWeapon(code, price);
+        unlockWeapon(code);
 }
 void MarketManager::activateWeapon(char code) {
     progressManager->changeCurrentWeapon(code);
     pWeapon selectedWeapon = weapons.getWeapon(code);
-    player->setWeapon(selectedWeapon);
+
+    if(selectedWeapon != NULL)
+        player->changeWeapon(selectedWeapon);
 }
-void MarketManager::unlockWeapon(char code, int price) {
+void MarketManager::unlockWeapon(char code) {
+    progressManager->incrementMoney(-weapons.getPrice(code));
     weapons.removePrice(code);
     progressManager->unlockNewWeapon(code);
-    progressManager->incrementMoney(-price);
 }
 
 void MarketManager::purchaseSkin(char code) {
@@ -84,16 +85,16 @@ void MarketManager::purchaseSkin(char code) {
     if(price == 0)
         activateSkin(code);
     else if(price != -1 && price <= progressManager->getMoney())
-        unlockSkin(code, price);
+        unlockSkin(code);
 }
 void MarketManager::activateSkin(char code) {
     player->changeSkin(skins.getDrawing(code));
     progressManager->changeCurrentSkin(code);
 }
-void MarketManager::unlockSkin(char code, int price) {
+void MarketManager::unlockSkin(char code) {
+    progressManager->incrementMoney(-skins.getPrice(code));
     skins.removePrice(code);
     progressManager->unlockNewSkin(code);
-    progressManager->incrementMoney(-price);
 }
 
 void MarketManager::executeChoice(int choice) {
@@ -152,10 +153,13 @@ void MarketManager::back() {
 }
 
 bool MarketManager::isExitChosen(int choice) {
+    // in the market main page there are NUMBER_OF_PAGES-1 options for access to the other pages.
+    // the exit option is the following one; therefore its index is NUMBER_OF_PAGES-1
     return(displayer.getPage() == 0 && choice == NUMBER_OF_PAGES - 1);
 }
 
 bool MarketManager::isQuitChosen(int choice){
+    // the quit option follows the exit option; therefore its index is NUMBER_OF_PAGES (see isExitChosen())
     return(displayer.getPage() == 0 && choice == NUMBER_OF_PAGES);
 }
 
@@ -195,7 +199,7 @@ void MarketManager::openMarket(WINDOW* win, int start_y, int start_x){
     weapons.multiplyPrices(difficulty);
 
     displayer.changePage(0); //open first page
-    displayer.initMenuWindow(win, start_y, start_x); //setup menu top left corner
+    displayer.initMenuWindow(win, start_y, start_x); //setup market top left corner
 }
 
 marketAction MarketManager::executeInput(int input) {

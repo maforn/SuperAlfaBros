@@ -54,12 +54,12 @@ protected:
     // functions to purchase and award a skin of a given code
     void purchaseSkin(char code);
     void activateSkin(char code); // called by purchaseSkin if skin is already unlocked
-    void unlockSkin(char code, int price); // called by purchaseSkin to unlock a new skin
+    void unlockSkin(char code); // called by purchaseSkin to unlock a new skin
 
     // functions to purchase and award a weapon of a given code
     void purchaseWeapon(char code);
     void activateWeapon(char code); //called by purchaseWeapon if weapon is already unlocked
-    void unlockWeapon(char code, int price); // called by purchaseWeapon to unlock a new weapon
+    void unlockWeapon(char code); // called by purchaseWeapon to unlock a new weapon
 
     // functions to execute the user choice (when user presses ENTER), depending on the page the choice was made in
     void executeChoice(int choice);

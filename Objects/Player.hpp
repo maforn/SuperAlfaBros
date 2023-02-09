@@ -19,21 +19,17 @@ protected:
     int life;
     // reduces the damage inflicted to the player
     int armour;
-    // how much damage the player deals
-    int damage{};
 
     int vertical_shift;
 
     pWeapon weapon;
-    // how far the player can hit targets from
-    int range;
 
     // increments field by incr without exceeding maxVal. Returns false if field was already equal to maxVal
     bool incrementField(int& field, int incr, const int maxVal);
 
 public:
     // Constructor of the class: will set the new vars and use the constructor of the superclass
-    Player(int x, int y, int life, int vertical_shift);
+    Player(int x, int y, int life, int armour, int vertical_shift);
 
     // calculate damage scaled on the level TODO: use a decent equation
     int calculateDamage ();
@@ -57,15 +53,11 @@ public:
     
     // get the player armour
     int getArmour();
-    // get the player damage
-    int getDamage();
 
     // increments player life without exceeding max value. Returns false if player life was already equal to max.
     bool incrementLife(int incr);
     // increments player armour without exceeding max value. Returns false if player armour was already equal to max.
     bool incrementArmour(int incr);
-    // changes the player damage to newVal
-    void changeDamage(int newVal);
     // changes the player drawing to newSkin
     void changeSkin(std::wstring newSkin);
 

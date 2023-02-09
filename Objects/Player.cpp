@@ -20,11 +20,10 @@ bool Player::incrementField(int& field, int incr, const int maxVal){
 
 // Constructor of the class: will set the new vars and use the constructor of the superclass with '0' as drawing and 'P'
 // as object type
-Player::Player(int x, int y, int life, int vertical_shift): Object(x,y, L"0", 'P') {
+Player::Player(int x, int y, int life, int armour, int vertical_shift): Object(x,y, L"0", 'P') {
     this->life = life;
     weapon = nullptr;
     this->armour = armour;
-    this->damage = 0;
     this->vertical_shift = vertical_shift;
 }
 
@@ -114,20 +113,12 @@ int Player::getArmour(){
     return this->armour;
 }
 
-int Player::getDamage(){
-    return this->damage;
-}
-
 bool Player::incrementLife(int incr){
     return incrementField(this->life, incr, MAX_LIFE);
 }
 
 bool Player::incrementArmour(int incr){
     return incrementField(this->armour, incr, MAX_ARMOUR);
-}
-
-void Player::changeDamage(int newVal) {
-    this->damage = newVal;
 }
 
 void Player::changeSkin(std::wstring newSkin){

@@ -108,7 +108,7 @@ int main() {
 
     //const int vertical_shift = 4;
     // create a new player instance
-    pPlayer player = new Player(1, 1, 100, vertical_shift);
+    pPlayer player = new Player(1, 1, 100,0, vertical_shift);
 
     // create market manager instance and unlock purchased items
     MarketManager *marketManager = new MarketManager(player, progressManager);
@@ -160,6 +160,7 @@ int main() {
     // enable function keys
     keypad(win, true);
 
+    // open market at game start
     // set to false if user decides to quit in the market menu
     bool keepPlaying = moveToMarket(win, marketManager);
 
