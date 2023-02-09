@@ -1,7 +1,3 @@
-//
-// Created by matteo on 2/5/23.
-//
-
 #ifndef SUPERALFABROS_MOVEMENT_HPP
 #define SUPERALFABROS_MOVEMENT_HPP
 
@@ -24,9 +20,6 @@ protected:
     int nJumps;
 public:
     Movement(pPlayer player);
-    void show_title();
-    void show_endscreen(WINDOW *win);
-    void move(pPlayer player, char choice, pDynamicLevelList levels, bool hasLanded, WINDOW* win);
 
     void update_dx(int ndx);
     bool is_onJump();

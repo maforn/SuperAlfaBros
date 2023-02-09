@@ -3,7 +3,6 @@
 //
 
 #include "Object.hpp"
-#include "Patrol.hpp"
 
 // Constructor of the class: will set all the variables as specified
 Object::Object(int x, int y, std::wstring drawing, char objectType) {
@@ -16,13 +15,3 @@ void Object::draw(WINDOW *win, int verticalShift) {
     // draw the object on the screen
     mvwaddwstr(win, y + verticalShift, x, drawing.c_str());
 }
-
-/*
-void Object::move(WINDOW *win, int x, int y) {
-    // do nothing
-}
-
-void Object::getNewPos(int &x, int &y) {
-
-}
-*/

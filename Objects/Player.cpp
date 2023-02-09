@@ -27,11 +27,6 @@ Player::Player(int x, int y, int life, int armour, int vertical_shift): Object(x
     this->vertical_shift = vertical_shift;
 }
 
-// calculate damage scaled on the level TODO: use a decent equation
-int Player::calculateDamage() {
-    return this->life / 2;
-}
-
 // draw the player on a screen
 void Player::drawPlayer(WINDOW *win, int verticalShift) {
     mvwaddwstr(win, this->y + verticalShift, this->x, this->drawing.c_str());

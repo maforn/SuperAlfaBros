@@ -1,5 +1,5 @@
 //
-// Created by admin on 24/11/2022.
+// Created by matteo on 24/11/2022.
 //
 
 #ifndef SUPERALFABROS_DYNAMICLEVELLIST_HPP
@@ -30,8 +30,6 @@ private:
     void initialize(levelList &l);
     // add a new map to the tail of the dynamic pointer list
     void addTail();
-    // add a new map to the head of the dynamic pointer list
-    void addHead();
     // go to the next level (and if necessary create it)
     void nextLevel();
     // go to the previous level (and if necessary create it)
@@ -46,8 +44,6 @@ public:
 
     // move player to x y checking collisions
     void movePlayer(WINDOW* win, int x, int y);
-
-    bool detectCollisionWeapon(int x, int y);
 
     // Destructor of the class: delete free pointers
     ~DynamicLevelList();

@@ -13,7 +13,7 @@ Bullet::Bullet(int x, int y, int damage, char direction, int range, bool fromPla
     this->range = range;
 }
 
-void Bullet::move(WINDOW *win, int x, int y) {
+void Bullet::move(int x, int y) {
     this->x = x;
     this->y = y;
 }
