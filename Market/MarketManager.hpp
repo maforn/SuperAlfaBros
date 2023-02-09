@@ -104,4 +104,6 @@ public:
     marketAction executeInput(int choice);
 };
 
+typedef MarketManager* pMarketManager;
+
 #endif //SUPERALFABROS_MARKETMANAGER_HPP

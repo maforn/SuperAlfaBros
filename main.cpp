@@ -111,7 +111,7 @@ int main() {
     pPlayer player = new Player(1, 1, 100,0, vertical_shift);
 
     // create market manager instance and unlock purchased items
-    MarketManager *marketManager = new MarketManager(player, progressManager);
+    pMarketManager marketManager = new MarketManager(player, progressManager);
     marketManager->addUnlockedSkins(progressManager->getUnlockedSkinsString());
     marketManager->addUnlockedWeapons(progressManager->getUnlockedWeaponsString());
 
