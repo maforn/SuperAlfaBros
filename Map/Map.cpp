@@ -382,7 +382,7 @@ void Map::moveObjects(WINDOW *win, int vertical_shift) {
 
 void Map::shootBullet(WINDOW *win, int x, int y, char direction) {
     // player has weapon and it is not stuck on a wall
-    if (player->getWeapon() != nullptr && this->objectTable[player->getWeapon()->x][player->getWeapon()->y] == L' ') {
+    if (player->getWeapon() != nullptr && this->objectTable[player->getWeapon()->y][player->getWeapon()->x] == L' ') {
         pObject pObj = nullptr;
 
         char collision = detectCollision(x, y, pObj);
