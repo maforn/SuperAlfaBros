@@ -1,5 +1,5 @@
 //
-// Created by admin on 23/11/2022.
+// Created by matteo on 23/11/2022.
 //
 
 #ifndef SUPERALFABROS_DYNAMICOBJECTLIST_HPP
@@ -30,7 +30,6 @@ public:
 
     // add an element to the list
     void addTail(pObject pObj);
-    void addHead(pObject pObj);
 
     // remove an element from the list
     void removeElement(pObject obj);

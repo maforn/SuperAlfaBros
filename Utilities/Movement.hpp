@@ -1,7 +1,3 @@
-//
-// Created by matteo on 2/5/23.
-//
-
 #ifndef SUPERALFABROS_MOVEMENT_HPP
 #define SUPERALFABROS_MOVEMENT_HPP
 

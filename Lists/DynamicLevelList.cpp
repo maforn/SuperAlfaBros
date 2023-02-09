@@ -1,5 +1,5 @@
 //
-// Created by admin on 24/11/2022.
+// Created by matteo on 24/11/2022.
 //
 
 #include "DynamicLevelList.hpp"
@@ -43,16 +43,6 @@ void DynamicLevelList::addTail() {
     // append the new map
     iterator->next = tmp;
     tmp->prev = iterator;
-}
-
-// add a new map to the head of the dynamic pointer list
-void DynamicLevelList::addHead() {
-    // create and initialize a new map
-    levelList tmp;
-    initialize(tmp);
-    // set the pointers in the list
-    this->levels->prev = tmp;
-    tmp->next = this->levels;
 }
 
 // go to the next level (and if necessary create it)

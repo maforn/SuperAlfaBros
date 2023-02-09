@@ -1,7 +1,3 @@
-//
-// Created by matteo on 2/5/23.
-//
-
 #include "Movement.hpp"
 
 Movement::Movement(pPlayer player) {
