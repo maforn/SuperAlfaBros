@@ -5,7 +5,8 @@
 #include "Bomb.hpp"
 
 // Constructor of the class: will set the new vars and use the constructor of the superclass
-Bomb::Bomb(int x, int y, int life, int damage) : Object(x, y, L"¤", 'B') {
+Bomb::Bomb(int x, int y, int life, int damage, int value) : Object(x, y, L"¤", 'B') {
     this->damage = damage;
     this->life = life;
+    this->value = value;
 }

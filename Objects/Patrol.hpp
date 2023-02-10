@@ -16,7 +16,8 @@ protected:
 public:
     int damage;
     int life;
-    Patrol(int x, int y, int toX, int toY, int life, int damage);
+    int value;
+    Patrol(int x, int y, int toX, int toY, int life, int damage, int value);
     void drawPatrol(WINDOW *win);
     void move(int x, int y);
     pCords getNewPos();

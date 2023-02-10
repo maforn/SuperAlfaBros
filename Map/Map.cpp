@@ -139,7 +139,7 @@ void Map::objectParser(wstring line) {
             // set y to the remaining number
             y = stoi(line.substr(0, line.find(',')));
 
-            this->objectList->addTail(new Bomb(x, y, 50 * difficulty, 20 * difficulty));
+            this->objectList->addTail(new Bomb(x, y, 50 * difficulty, 20 * difficulty, 20));
 
             break;
 
@@ -164,7 +164,7 @@ void Map::objectParser(wstring line) {
             y2 = stoi(line.substr(0, line.find(',')));
 
             // add to the dynamic object list the new object as an object of type Patrol
-            this->objectList->addTail(new Patrol(x1, y1, x2, y2, 50 * difficulty, 20 * difficulty));
+            this->objectList->addTail(new Patrol(x1, y1, x2, y2, 50 * difficulty, 20 * difficulty, 50));
 
             break;
 
@@ -176,7 +176,7 @@ void Map::objectParser(wstring line) {
             line.erase(0, line.find(',') + 1);
             d = stoi(line.substr(0, line.find(',')));
             this->objectList->addTail(
-                    new Enemy(x, y, 20 * difficulty, 5 * difficulty, 10 * difficulty, d == 0 ? 'r' : 'l'));
+                    new Enemy(x, y, 20 * difficulty, 5 * difficulty, 10 * difficulty, d == 0 ? 'r' : 'l', 70));
             break;
 
         default: // none of the previous cases were matched
@@ -255,8 +255,8 @@ void Map::moveObjects(WINDOW *win, int vertical_shift) {
                         ((pPatrol) tmp->obj)->life -= ((pBullet) pObj)->getDamage();
                         if (((pPatrol) tmp->obj)->life <= 0) {
                             removeThis = true;
-                            progressManager->incrementMoney(50);
-                            progressManager->incrementPoints(50);
+                            progressManager->incrementMoney(((pPatrol) tmp->obj)->value);
+                            progressManager->incrementPoints(((pPatrol) tmp->obj)->value);
                         }
                         removeObject(win, pObj);
                         break;
@@ -309,24 +309,24 @@ void Map::moveObjects(WINDOW *win, int vertical_shift) {
                         ((pBomb) pObj)->life -= ((pBullet) tmp->obj)->getDamage();
                         if (((pBomb) pObj)->life <= 0) {
                             removeObject(win, pObj);
-                            progressManager->incrementMoney(20);
-                            progressManager->incrementPoints(20);
+                            progressManager->incrementMoney(((pBomb) pObj)->value);
+                            progressManager->incrementPoints(((pBomb) pObj)->value);
                         }
                         removeThis = true;
                     } else if (collision == 'R') {
                         ((pPatrol) pObj)->life -= ((pBullet) tmp->obj)->getDamage();
                         if (((pPatrol) pObj)->life <= 0) {
                             removeObject(win, pObj);
-                            progressManager->incrementMoney(50);
-                            progressManager->incrementPoints(50);
+                            progressManager->incrementMoney(((pPatrol) pObj)->value);
+                            progressManager->incrementPoints(((pPatrol) pObj)->value);
                         }
                         removeThis = true;
                     } else if (collision == 'N') {
                         ((pEnemy) pObj)->life -= ((pBullet) tmp->obj)->getDamage();
                         if (((pEnemy) pObj)->life <= 0) {
                             removeObject(win, pObj);
-                            progressManager->incrementMoney(70);
-                            progressManager->incrementPoints(70);
+                            progressManager->incrementMoney(((pEnemy) pObj)->value);
+                            progressManager->incrementPoints(((pEnemy) pObj)->value);
                         }
                         removeThis = true;
 
@@ -398,23 +398,23 @@ void Map::shootBullet(WINDOW *win, int x, int y, char direction) {
             ((pBomb) pObj)->life -= player->getWeapon()->getDamage();
             if (((pBomb) pObj)->life <= 0) {
                 removeObject(win, pObj);
-                progressManager->incrementMoney(20);
-                progressManager->incrementPoints(20);
+                progressManager->incrementMoney(((pBomb) pObj)->value);
+                progressManager->incrementPoints(((pBomb) pObj)->value);
             }
 
         } else if (collision == 'R') {
             ((pPatrol) pObj)->life -= player->getWeapon()->getDamage();
             if (((pPatrol) pObj)->life <= 0) {
                 removeObject(win, pObj);
-                progressManager->incrementMoney(50);
-                progressManager->incrementPoints(50);
+                progressManager->incrementMoney(((pPatrol) pObj)->value);
+                progressManager->incrementPoints(((pPatrol) pObj)->value);
             }
         } else if (collision == 'N') {
             ((pEnemy) pObj)->life -= player->getWeapon()->getDamage();
             if (((pEnemy) pObj)->life <= 0) {
                 removeObject(win, pObj);
-                progressManager->incrementMoney(70);
-                progressManager->incrementPoints(70);
+                progressManager->incrementMoney(((pEnemy) pObj)->value);
+                progressManager->incrementPoints(((pEnemy) pObj)->value);
             }
         } else if (collision == 'V') {
             removeObject(win, pObj);

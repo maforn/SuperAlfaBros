@@ -60,10 +60,8 @@ public:
     // loads all the saved data
     void loadSavedData();
 
-    // returns the saved value for the armour
-    int getSavedArmour();
-    // updates the saved value for the armour to newArmour and saves it to file
-    void updateArmour(int newArmour);
+    // saves all progress made
+    void saveProgress();
 
     // functions to get a string composed of the codes of the unlocked weapons/skins
     string getUnlockedWeaponsString();
@@ -81,8 +79,10 @@ public:
     char getCurrentWeaponCode();
     char getCurrentSkinCode();
 
-    // returns the difficulty for the current game
-    double getDifficulty();
+    // returns the saved value for the armour
+    int getSavedArmour();
+    // updates the saved value for the armour to newArmour and saves it to file
+    void updateArmour(int newArmour);
 
     // returns the current amount of money
     int getMoney();
@@ -94,8 +94,8 @@ public:
     // increments the current points by incr
     void incrementPoints(int incr);
 
-    // saves all progress made
-    void saveProgress();
+    // returns the difficulty for the current game
+    double getDifficulty();
 };
 
 typedef ProgressManager* pProgressManager;

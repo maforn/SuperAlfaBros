@@ -77,17 +77,18 @@ void ProgressManager::loadSavedData(){
     calculateDifficulty();
 }
 
-int ProgressManager::getSavedArmour(){
-    return(this->armour);
-}
-
-void ProgressManager::updateArmour(int newArmour){
-    this->armour = newArmour;
+void ProgressManager::saveProgress() {
     savePlayerData();
+    saveCodeData(weaponData, this->weaponFileName);
+    saveCodeData(skinData, this->skinFileName);
 }
 
 string ProgressManager::getUnlockedWeaponsString(){
     return ((this->weaponData).getCodesString());
+}
+
+string ProgressManager::getUnlockedSkinsString(){
+    return ((this->skinData).getCodesString());
 }
 
 void ProgressManager::unlockNewWeapon(char code){
@@ -96,22 +97,14 @@ void ProgressManager::unlockNewWeapon(char code){
     calculateDifficulty();
 }
 
-void ProgressManager::changeCurrentWeapon(char code){
-    (this->weaponData).selectCode(code);
-    saveCodeData(this->weaponData, this->weaponFileName);
-}
-
-char ProgressManager::getCurrentWeaponCode() {
-    return((this->weaponData).getCurrentCode());
-}
-
-string ProgressManager::getUnlockedSkinsString(){
-    return ((this->skinData).getCodesString());
-}
-
 void ProgressManager::unlockNewSkin(char code){
     (this->skinData).addCode(code);
     saveCodeData(this->skinData, this->skinFileName);
+}
+
+void ProgressManager::changeCurrentWeapon(char code){
+    (this->weaponData).selectCode(code);
+    saveCodeData(this->weaponData, this->weaponFileName);
 }
 
 void ProgressManager::changeCurrentSkin(char code){
@@ -119,12 +112,21 @@ void ProgressManager::changeCurrentSkin(char code){
     saveCodeData(this->skinData, this->skinFileName);
 }
 
+char ProgressManager::getCurrentWeaponCode() {
+    return((this->weaponData).getCurrentCode());
+}
+
 char ProgressManager::getCurrentSkinCode() {
     return((this->skinData).getCurrentCode());
 }
 
-double ProgressManager::getDifficulty(){
-    return (this->difficulty);
+int ProgressManager::getSavedArmour(){
+    return(this->armour);
+}
+
+void ProgressManager::updateArmour(int newArmour){
+    this->armour = newArmour;
+    savePlayerData();
 }
 
 int ProgressManager::getMoney(){
@@ -142,8 +144,6 @@ void ProgressManager::incrementPoints(int incr){
     calculateDifficulty();
 }
 
-void ProgressManager::saveProgress() {
-    savePlayerData();
-    saveCodeData(weaponData, this->weaponFileName);
-    saveCodeData(skinData, this->skinFileName);
+double ProgressManager::getDifficulty(){
+    return (this->difficulty);
 }

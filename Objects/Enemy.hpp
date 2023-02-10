@@ -15,7 +15,8 @@ protected:
     char direction;
 public:
     int life;
-    Enemy(int x, int y, int life, int damage, int range, char direction);
+    int value;
+    Enemy(int x, int y, int life, int damage, int range, char direction, int value);
     char getDirection();
     int getDamage();
     int getRange();
