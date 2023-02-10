@@ -1,5 +1,5 @@
 //
-// Created by vboxuser on 08.02.23.
+// Created by enrico on 24/01/23.
 //
 
 #ifndef SUPERALFABROS_SNIPER_HPP
