@@ -245,10 +245,8 @@ void Map::moveObjects(WINDOW *win, int vertical_shift) {
                 collision = this->detectCollision(cords->x, cords->y, pObj);
                 if (collision == ' ' && player->x == cords->x && player->y == cords->y) {
                     collision = 'P';
-                } else if (collision == ' ' && player->getWeapon() != nullptr) {
-                    if (player->getWeapon()->x == cords->x && player->getWeapon()->y == cords->y)
-                        collision = player->getWeapon()->objectType;
                 }
+
                 switch (collision) {
                     case 'U':
                         // it's a bullet
@@ -265,14 +263,6 @@ void Map::moveObjects(WINDOW *win, int vertical_shift) {
                         // it's the player
                         player->receiveDamage(((pPatrol) tmp->obj)->getDamage());
                         removeThis = true;
-                        break;
-                    case 'F':
-                        // it's a shootgun
-                        ((pPatrol) tmp->obj)->move(cords->x, cords->y);
-                        break;
-                    case 'G':
-                        // it's a gun
-                        ((pPatrol) tmp->obj)->move(cords->x, cords->y);
                         break;
                     case ' ':
                         // blank space
