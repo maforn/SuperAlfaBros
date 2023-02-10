@@ -138,3 +138,7 @@ void MarketDisplayer::changePage(int newPage) {
     this->openPage = newPage;
     this->highlight = 0;
 }
+
+void MarketDisplayer::back() {
+    changePage(0);
+}

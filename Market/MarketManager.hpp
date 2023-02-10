@@ -68,9 +68,6 @@ protected:
     void executeWeaponPageChoice(int choice);
     void executeSkinPageChoice(int choice);
 
-    // function to go back to market main page. Must be called before reloading market display
-    void back();
-
     // returns true if the user chose to exit market
     bool isExitChosen(int choice);
 

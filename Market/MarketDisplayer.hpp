@@ -66,6 +66,9 @@ public:
 
     // changes openPage value to newPage. Used before initializing display
     void changePage(int newPage);
+
+    // goes back to opening page of the market. Used before initializing display
+    void back();
 };
 
 #endif //SUPERALFABROS_MARKETDISPLAYER_HPP

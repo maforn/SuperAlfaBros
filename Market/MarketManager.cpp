@@ -42,6 +42,7 @@ void MarketManager::purchaseRefill(char code){
         }
     }
 }
+
 bool MarketManager::awardRefill(char code){
     int amount = refills.getAmount(code);
     bool awarded = false;
@@ -67,6 +68,7 @@ void MarketManager::purchaseWeapon(char code) {
     else if(price != -1 && price <= progressManager->getMoney())
         unlockWeapon(code);
 }
+
 void MarketManager::activateWeapon(char code) {
     progressManager->changeCurrentWeapon(code);
     pWeapon selectedWeapon = weapons.getWeapon(code);
@@ -74,6 +76,7 @@ void MarketManager::activateWeapon(char code) {
     if(selectedWeapon != NULL)
         player->changeWeapon(selectedWeapon);
 }
+
 void MarketManager::unlockWeapon(char code) {
     progressManager->incrementMoney(-weapons.getPrice(code));
     weapons.removePrice(code);
@@ -91,6 +94,7 @@ void MarketManager::activateSkin(char code) {
     player->changeSkin(skins.getDrawing(code));
     progressManager->changeCurrentSkin(code);
 }
+
 void MarketManager::unlockSkin(char code) {
     progressManager->incrementMoney(-skins.getPrice(code));
     skins.removePrice(code);
@@ -125,7 +129,7 @@ void MarketManager::executeRefillPageChoice(int choice) {
         purchaseRefill(refillCode);
     }
     else if(choice == refillCount)
-        back();
+        displayer.back();
 }
 
 void MarketManager::executeWeaponPageChoice(int choice) {
@@ -135,7 +139,7 @@ void MarketManager::executeWeaponPageChoice(int choice) {
         purchaseWeapon(weaponCode);
     }
     else if(choice == weaponCount)
-        back();
+        displayer.back();
 }
 
 void MarketManager::executeSkinPageChoice(int choice) {
@@ -145,11 +149,7 @@ void MarketManager::executeSkinPageChoice(int choice) {
         purchaseSkin(skinCode);
     }
     else if(choice == skinCount)
-        back();
-}
-
-void MarketManager::back() {
-    displayer.changePage(0);
+        displayer.back();
 }
 
 bool MarketManager::isExitChosen(int choice) {
@@ -205,7 +205,7 @@ void MarketManager::openMarket(WINDOW* win, int start_y, int start_x){
 marketAction MarketManager::executeInput(int input) {
     marketAction nextAction = DISPLAY;
     if(input != 10)
-        displayer.changeOptions(input);
+        displayer.changeSelectedOption(input);
     else{
         int choice = displayer.getChoice();
         if(isExitChosen(choice))

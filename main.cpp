@@ -15,6 +15,7 @@ using namespace std;
 #define TEMPO 500
 #define MINTEMPO 40.0
 #define vertical_shift  4
+
 inline double CurrentTime_milliseconds() {
     return chrono::duration_cast<std::chrono::milliseconds>
             (chrono::high_resolution_clock::now().time_since_epoch()).count();
@@ -62,6 +63,7 @@ void move(pPlayer player, char choice, pDynamicLevelList levels, bool hasLanded,
     }
 }
 
+// prints the header at the top of the game window. Header contains info about the player and game status
 void drawHeader(WINDOW *win, ProgressManager *progressManager, pPlayer player) {
     // format and print LIFE and ARMOUR strings
     wstring lifeStr = playerStatusFormatter(L"LIFE   > ", 13, player->getLife(), 10);
@@ -79,9 +81,9 @@ void drawHeader(WINDOW *win, ProgressManager *progressManager, pPlayer player) {
 
 // call this function when market needs to be opened
 // the function returns when the user decides to exit the market
-// the function returns false if the user decides to quit the game within the market; false otherwise
+// the function returns false if the user decides to quit the game within the market; true otherwise
 bool moveToMarket(WINDOW* win, MarketManager* marketManager){
-    nodelay(stdscr, FALSE);
+    nodelay(stdscr, FALSE); // make wgeth() wait for user input
     nodelay(win, FALSE);
     marketManager->openMarket(win, 5, 5);
 
@@ -93,7 +95,7 @@ bool moveToMarket(WINDOW* win, MarketManager* marketManager){
         nextAction = marketManager->executeInput(choice);
     }
 
-    nodelay(stdscr, TRUE);
+    nodelay(stdscr, TRUE); // make wgeth() not wait for user input
     nodelay(win, TRUE);
     return(nextAction != QUIT_GAME);
 }
@@ -106,7 +108,6 @@ int main() {
     pProgressManager progressManager = new ProgressManager("PlayerData.txt", "WeaponData.txt", "SkinData.txt");
     progressManager->loadSavedData();
 
-    //const int vertical_shift = 4;
     // create a new player instance
     pPlayer player = new Player(1, 1, 100,0, vertical_shift);
 
@@ -123,22 +124,18 @@ int main() {
     char weaponCode = progressManager->getCurrentWeaponCode();
     player->setWeapon(marketManager->getWeapon(weaponCode));
 
-    string mapsFolder = "../maps/";
     // create the levels dynamic lists
+    string mapsFolder = "../maps/";
     pDynamicLevelList levels = new DynamicLevelList(progressManager, player, mapsFolder);
 
     // initiate screen with ncurses
     initscr();
     cbreak();
+
     noecho(); //don't print the keys pressed while playing
-    // set locale so that special chars will be recognized
-    setlocale(LC_ALL, "");
-
-
+    setlocale(LC_ALL, ""); // set locale so that special chars will be recognized
     double delay = TEMPO;  //delay as gravity
-
-    // hide the blinking cursor
-    curs_set(0);
+    curs_set(0); // hide the blinking cursor
 
     addwstr(L"\n\n"
             " ███████╗██╗   ██╗██████╗ ███████╗██████╗      █████╗ ██╗     ███████╗ █████╗     ██████╗ ██████╗  ██████╗ ███████╗\n"
@@ -152,7 +149,6 @@ int main() {
     getch();
     clear();
 
-
     //creating the window
     WINDOW *win = newwin(height + vertical_shift, width, start_y, start_x);
     refresh();
@@ -161,17 +157,19 @@ int main() {
     keypad(win, true);
 
     // open market at game start
-    // set to false if user decides to quit in the market menu
+    // keepPlaying is set to false if user decides to quit in the market menu
     bool keepPlaying = moveToMarket(win, marketManager);
 
     if(keepPlaying){
         // clear the window
         wclear(win);
+
         // draw the base map, then all the objects and then the player
         levels->currentMap()->drawBaseMap(win, vertical_shift);
         levels->currentMap()->drawObjects(win, vertical_shift);
         player->drawPlayer(win, vertical_shift);
 
+        // draw header with game data
         drawHeader(win, progressManager, player);
     }
 
@@ -200,8 +198,8 @@ int main() {
         lastMap = levels->currentMap();
 
         // get choice from keyboard
-
         choice = wgetch(win);
+
         move(player, choice, levels, hasLanded, win);
 
         if ((CurrentTime_milliseconds() - start) > delay) // gravity, acts based on time passed
@@ -229,8 +227,8 @@ int main() {
             drawHeader(win, progressManager, player);
         }
 
-
-        if (levels->currentMap() != lastMap) { // if map changes, display market
+        // if map changes, display market
+        if (levels->currentMap() != lastMap) {
                 keepPlaying = moveToMarket(win, marketManager);
                 wclear(win);
                 drawHeader(win, progressManager, player);
@@ -247,11 +245,13 @@ int main() {
     }
     nodelay(stdscr, FALSE);
 
+    // final savings
     progressManager->updateArmour(player->getArmour());
     progressManager->saveProgress();
 
     wclear(win);
     wrefresh(win);
+
     addwstr(L"\n\n"
             "    ▄██████▄     ▄████████    ▄▄▄▄███▄▄▄▄      ▄████████       ▄██████▄   ▄█    █▄     ▄████████    ▄████████ \n"
             "   ███    ███   ███    ███  ▄██▀▀▀███▀▀▀██▄   ███    ███      ███    ███ ███    ███   ███    ███   ███    ███ \n"

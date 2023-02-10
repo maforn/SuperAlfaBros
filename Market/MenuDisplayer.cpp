@@ -20,13 +20,19 @@ void MenuDisplayer::initOptions(wstring options[], int optionsCount, wstring clo
 }
 
 void MenuDisplayer::printTitle() {
+    //title needs to be printed one line at the time in order to appear in the correct position.
+
+    // start index = first index of current line, current index = index of the currently analyzed character
     int startIndex = 0, currentIndex = 0, length = (this->title).length();
+
+    // go through the title one character at the time
     while(currentIndex < length){
+        //if end of line is reached, print the last read line and increment lastY to print in lower line next time
         if((this->title)[currentIndex] == '\n'){
             wstring subStr = (this->title).substr(startIndex, currentIndex - startIndex);
             mvwaddwstr(this->win, this->lastY, this->menuStartX, subStr.c_str());
             this->lastY += 1;
-            startIndex = currentIndex+ 1;
+            startIndex = currentIndex + 1;
         }
         currentIndex += 1;
     }
@@ -40,7 +46,6 @@ void MenuDisplayer::drawTopPart() {
         this->lastY += VERTICAL_SPACING;
         mvwaddwstr(win, lastY, menuStartX, topRows[i].c_str());
     }
-
     wrefresh(this->win);
 }
 
@@ -56,30 +61,36 @@ void MenuDisplayer::drawAllOptions() {
 void MenuDisplayer::drawOptions(int startY, int startX, int verticalShift) {
     for(int i = 0; i < this->optionsCount; i++){
         if(i == this->highlight)
-            wattron(win, A_REVERSE);
+            wattron(win, A_REVERSE); // turn highlight on
         mvwaddwstr(win, startY + i*verticalShift, startX, options[i].c_str());
-        wattroff(win, A_REVERSE);
+        wattroff(win, A_REVERSE); // turn highlight off
     }
 }
 
 void MenuDisplayer::drawClosingOptions(int startY, int startX, int verticalShift) {
     for(int i = 0; i < this->closingOptCount; i++){
         if(i + this->optionsCount == this->highlight)
-            wattron(win, A_REVERSE);
+            wattron(win, A_REVERSE); // turn highlight on
         mvwaddwstr(win, startY + i*verticalShift, startX, closingOptions[i].c_str());
-        wattroff(win, A_REVERSE);
+        wattroff(win, A_REVERSE); // turn highlight off
     }
 }
 
-void MenuDisplayer::calculateNewHighlight(int choice) {
+int MenuDisplayer::calculateNewHighlight(int choice) {
     switch(choice){
-        case KEY_UP: this->highlight -= 1; break;
-        case KEY_DOWN: this->highlight += 1; break;
-        default: break;
+        case KEY_UP:
+            this->highlight -= 1;
+            break;
+        case KEY_DOWN:
+            this->highlight += 1;
+            break;
+        default:
+            break;
     }
 
     int totalOptCount = this->optionsCount + this->closingOptCount;
-    this->highlight = (totalOptCount + this->highlight) % totalOptCount; //maintain highlight within option range
+    int newHighlight = (totalOptCount + this->highlight) % totalOptCount; //maintain highlight within option range
+    return newHighlight;
 }
 
 //PUBLIC
@@ -91,13 +102,16 @@ void MenuDisplayer::initMenuWindow(WINDOW *win, int startY, int startX) {
 }
 
 void MenuDisplayer::display() {
+    // clear window and draw outlining box
     wclear(this->win);
     box(this->win, 0, 0);
 
+    // draw menu
     this->lastY = this->menuStartY;
     drawTopPart();
     drawAllOptions();
 
+    // refresh window
     wrefresh(this->win);
 }
 
@@ -105,6 +119,6 @@ int MenuDisplayer::getChoice() {
     return(this->highlight);
 }
 
-void MenuDisplayer::changeOptions(int choice) {
-    calculateNewHighlight(choice);
+void MenuDisplayer::changeSelectedOption(int choice) {
+    this->highlight = calculateNewHighlight(choice);
 }

@@ -9,7 +9,7 @@
  * Distinction between the parts allows for organization within the display and a better user experience.
  * Title and top rows are non-interactive and are used to display information regarding the menu.
  * Options and closing options are interactive and can be selected using the UP and DOWN arrows. The currently
- * selected choice is highlighted.
+ * selected option is highlighted.
  *
  * The content of the menu must be passed to MenuDisplayer using initTopPart() and initOptions() before calling display().
  *
@@ -34,7 +34,7 @@ protected:
 
     // pointer to the open window
     WINDOW *win;
-    // coordinates of window sarting point (ie window top-left corner)
+    // coordinates of window starting point (ie window top-left corner)
     int menuStartY, menuStartX;
 
     // title of the menu
@@ -79,8 +79,8 @@ protected:
     // draws the closing options starting from (startX, startY) and shifting downwards by verticalShift after every option.
     void drawClosingOptions(int startY, int startX, int verticalShift);
 
-    // calculates the new highlight, ie determines which option to highlight, depending on the user input
-    void calculateNewHighlight(int choice);
+    // calculates and returns the new highlight, ie determines which option to highlight, depending on the user input
+    int calculateNewHighlight(int choice);
 
 public:
 
@@ -93,7 +93,9 @@ public:
     // returns the index of the option selected by the user
     int getChoice();
 
-    void changeOptions(int choice);
+    // changes the currently selected option after processing choice
+    // choice is the numeric code associated to the key pressed by the user
+    void changeSelectedOption(int choice);
 };
 
 #endif //SUPERALFABROS_MENUDISPLAYER_HPP
