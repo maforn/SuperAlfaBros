@@ -1,8 +1,12 @@
 # SuperAlfaBros
+A platformer game in ASCII graphic developed with C++ and ncurses library. 
+
+## Prerequisites
+### Install ncurses
+- Linux: <code>sudo apt-get install libncurses5-dev libncursesw5-dev</code><br>
+- MacOs: <code>brew install ncurses</code>
 
 ### Ricordarsi di installare la libreria ncurses:
-Comando Linux: <code>sudo apt-get install libncurses5-dev libncursesw5-dev</code><br>
-Comando MacOs: <code>brew install ncurses</code>
 ### Informazioni progetto
 
 SuperAlfaBros è un gioco platform realizzato in grafica ASCII, utilizzando la libreria ncurses.<br>
