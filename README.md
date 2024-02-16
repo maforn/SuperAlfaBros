@@ -1,7 +1,7 @@
 # SuperAlfaBros
 A platformer game in ASCII graphic developed with C++ and ncurses library. 
 
-### Prerequisites: Install ncurses
+### Prerequisite: Install ncurses
 - Linux: <code>sudo apt-get install libncurses5-dev libncursesw5-dev</code><br>
 - MacOs: <code>brew install ncurses</code>
 
